@@ -440,33 +440,39 @@
                     return;
                 }
 
-                var formData = new FormData();
-                formData.append('idCard', idCard);
-                formData.append('firstName', firstName);
-                formData.append('lastName', lastName);
-                formData.append('username', username);
-                formData.append('email', email);
-                formData.append('password', password);
-                formData.append('orgStructureProvince', orgStructureProvince);
-                $.ajax({
-                    url: '/saveRegister',
-                    type: 'POST',
-                    data: formData,
-                    processData: false,
-                    contentType: false,
-                    success: function(response) {
-                        if (response.api_status == 1) {
-
-                        }
-                    },
-                    error: function(xhr, status, error) {
-                        console.error('AJAX Error:', status, error);
+            var formData = new FormData();
+            formData.append('idCard', idCard);
+            formData.append('firstName', firstName);
+            formData.append('lastName', lastName);
+            formData.append('username', username);
+            formData.append('email', email);
+            formData.append('password', password);
+            formData.append('orgStructureProvince', orgStructureProvince);
+            $.ajax({
+                url: '/saveRegister',
+                type: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function(response) {
+                    if (response.api_status == 1) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'สำเร็จ!',
+                            text: 'บันทึกข้อมูลเรียบร้อย'
+                        }).then(function() {
+                            window.location.href = '/home';
+                        });
+                    } else if (data.api_status == 2) {
+                        swal("ยกเลิก!", data.api_message, "error");
+                    } else {
+                        swal("ยกเลิก!", data.api_message, "error");
                     }
-                });
+                },
+                error: function(xhr, status, error) {
+                    console.error('AJAX Error:', status, error);
+                }
             });
         });
-    </script>
-
-</body>
-
-</html>
+    });
+</script>
