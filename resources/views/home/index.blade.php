@@ -151,6 +151,7 @@
             -ms-flex-order: 1;
             order: 1;
             justify-content: space-between;
+            margin: 0 0 20px 0;
         }
 
         .subheader-title {
@@ -195,13 +196,143 @@
             line-height: 1.3;
             font-weight: 400;
         }
-        .card{
+
+        .card {
             border-radius: 10px;
 
         }
 
 
         /* CSS Dropdown */
+
+        .dropdown-header.bg-trans-gradient {
+            padding: 1.25rem 1.5rem;
+        }
+
+        .bg-trans-gradient {
+            background: linear-gradient(250deg, #039dab, #9ed8e1);
+        }
+
+        .rounded-top {
+            border-radius: 4px 4px 0 0;
+        }
+
+        .pb-4,
+        .py-4 {
+            padding-bottom: 1.5rem !important;
+        }
+
+        .pt-4,
+        .py-4 {
+            padding-top: 1.5rem !important;
+        }
+
+        .flex-row {
+            -webkit-box-orient: horizontal !important;
+            -webkit-box-direction: normal !important;
+            -ms-flex-direction: row !important;
+            flex-direction: row !important;
+        }
+
+        .d-flex {
+            display: -webkit-box !important;
+            display: -ms-flexbox !important;
+            display: flex !important;
+        }
+
+        .rounded-top {
+            border-top-left-radius: 4px !important;
+            border-top-right-radius: 4px !important;
+        }
+
+        .dropdown-header {
+            display: block;
+            padding: 0.3125rem 1.5rem;
+            margin-bottom: 0;
+            font-size: 0.75rem;
+            color: #868e96;
+            white-space: nowrap;
+        }
+
+        .user-profile-container {
+            position: relative;
+            display: inline-block;
+        }
+
+        .dropdown-menu {
+            border: none;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            animation: fadeInUp 0.3s ease-in-out;
+            padding: 0;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .dropdown-menu .dropdown-item {
+            font-weight: 400;
+            cursor: pointer;
+        }
+
+        a:link {
+            color: #B0E4EF;
+            text-decoration: none;
+        }
+
+        .dropdown-item {
+            display: block;
+            width: 100%;
+            padding: 0.75rem 1.5rem;
+            clear: both;
+            font-weight: 400;
+            color: #212529;
+            text-align: inherit;
+            white-space: nowrap;
+            background-color: transparent;
+            border: 0;
+        }
+
+        .color-white {
+            color: #fff;
+        }
+
+        .info-card-text {
+            font-size: 0.875rem;
+            display: inline-block;
+            vertical-align: middle;
+            font-weight: 500;
+            line-height: 1.35;
+        }
+
+        .profile-image {
+            width: 3.125rem;
+            height: 3.125rem;
+        }
+
+        .align-items-center {
+            -webkit-box-align: center !important;
+            -ms-flex-align: center !important;
+            align-items: center !important;
+        }
+
+        .dropdown-divider {
+            height: 0;
+            margin: 0.5rem 0;
+            overflow: hidden;
+            border-top: 1px solid #f3f3f3;
+        }
+
+        
     </style>
 </head>
 
@@ -222,12 +353,13 @@
                             aria-expanded="false">
                             <img src="/img/avatars/user-avatar-vfoc.png" class="profile-image rounded-circle">
                         </a>
-                        <div class="dropdown-menu dropdown-menu-animated dropdown-lg">
+                        <div class="dropdown-menu dropdown-menu-animated dropdown-lg dropdown-menu-right"
+                            style="width: 300px;">
                             <!-- Dropdown content -->
                             <div class="dropdown-header bg-trans-gradient d-flex flex-row py-4 rounded-top">
                                 <div class="d-flex flex-row align-items-center mt-1 mb-1 color-white">
-                                    <span class="mr-2">
-                                        <img src="/img/demo/avatars/user-avatar-vfoc.png"
+                                    <span class="mr-2" style="margin-right: 10px">
+                                        <img src="/img/avatars/user-avatar-vfoc.png"
                                             class="rounded-circle profile-image">
                                     </span>
                                     <div class="info-card-text">
@@ -236,17 +368,17 @@
                                     </div>
                                 </div>
                             </div>
-                            <a href="/Home/ProfileData" class="dropdown-item">
-                                <span data-i18n="drpdwn.settings"> แก้ไขข้อมูลส่วนตัว</span>
+                            <a href="/Home/ProfileData" class="dropdown-item" style="margin: 10px">
+                                <span data-i18n="drpdwn.settings">แก้ไขข้อมูลส่วนตัว</span>
                             </a>
                             <div class="dropdown-divider m-0"></div>
-                            <a href="#" class="dropdown-item" data-action="app-fullscreen">
-                                <span data-i18n="drpdwn.fullscreen"> แสดงเติมจอ</span>
-                                <i class="float-right text-muted fw-n">F11</i>
+                            <a href="#" class="dropdown-item" data-action="app-fullscreen" style="margin: 10px">
+                                <span data-i18n="drpdwn.fullscreen">แสดงเติมจอ</span>
+                                <i class="float-right text-muted fw-n" style="float: right !important; padding-right: 15px">F11</i>
                             </a>
                             <div class="dropdown-divider m-0"></div>
-                            <a class="dropdown-item fw-500 pt-3 pb-3" href="/Identity/Account/Logout?returnUrl=%2F">
-                                <span data-i18n="drpdwn.page-logout"> ออกจากระบบ</span>
+                            <a class="dropdown-item fw-500 pt-3 pb-3" href="/Identity/Account/Logout?returnUrl=%2F" style="margin: 10px">
+                                <span data-i18n="drpdwn.page-logout">ออกจากระบบ</span>
                                 <span class="float-right fw-n"></span>
                             </a>
                         </div>
@@ -261,8 +393,8 @@
                             โครงการบริหารกองทุนหมู่บ้านและชุมชนเมืองด้วยระบบเทคโนโลยีสารสนเทศ (VFOC Platform)</span>
                     </h1>
                     <h4 class="text-center col-lg-12 mt-3 kanit-font">
-                        <span
-                            class="font-weight-bold" style="font-size: 1.8rem">ระบบบริหารจัดการข้อมูลและการจัดเก็บของกองทุนหมู่บ้านและชุมชนเมืองในรูปแบบแพลตฟอร์มเดียวกัน
+                        <span class="font-weight-bold"
+                            style="font-size: 1.8rem">ระบบบริหารจัดการข้อมูลและการจัดเก็บของกองทุนหมู่บ้านและชุมชนเมืองในรูปแบบแพลตฟอร์มเดียวกัน
                             ซึ่งโครงการได้ออกแบบให้เป็น "VFOC Platform" โดยจะเชื่อมโยงไปยังทุกระบบ</span>
                     </h4>
                 </div>
