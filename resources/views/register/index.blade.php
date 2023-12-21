@@ -101,7 +101,7 @@
                                         <button type="submit" class="btn btn-success btn-block btn-lg"><i class="fal fa-save"></i> ลงทะเบียน</button>
                                     </div>
                                     <div class="col-lg-12 pr-lg-1 my-2 text-center">
-                                        <a href="/Identity/Account/Login" class="hidden-sm-up"> เข้าสู่ระบบ</a>
+                                        <a href="/admin/login" class="hidden-sm-up"> เข้าสู่ระบบ</a>
                                     </div>
                                 </div>
                                 <div class="card-body pb-1">
