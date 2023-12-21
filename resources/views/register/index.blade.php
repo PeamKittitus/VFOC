@@ -461,7 +461,7 @@
                             title: 'สำเร็จ!',
                             text: 'บันทึกข้อมูลเรียบร้อย'
                         }).then(function() {
-                            window.location.href = '/home';
+                            window.location.href = '/admin/login';
                         });
                     } else if (data.api_status == 2) {
                         swal("ยกเลิก!", data.api_message, "error");
