@@ -23,3 +23,7 @@ Route::get('/register', function () {
 Route::get('/home', function () {
     return view('home/index');
 });
+//========================================================================================== API
+Route::get('/getOrgStructure', '\App\Http\Controllers\ApiRegisterController@getOrgStructure');
+Route::post('/getOrgStructureProvince', '\App\Http\Controllers\ApiRegisterController@getOrgStructureProvince');
+//========================================================================================== API
