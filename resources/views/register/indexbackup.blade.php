@@ -147,10 +147,9 @@
             transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
             transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out, -webkit-box-shadow 0.15s ease-in-out;
         }
-
-        .font {
+        .font{
             font-family: 'Kanit', sans-serif !important;
-
+            
         }
 
 
@@ -172,45 +171,37 @@
             </div>
         </div>
     </div>
-    <div class="flex-1 bg-pattern" style="background: #8dcde1">
+    <div class="flex-1">
         <div class="container py-4 py-lg-5 my-lg-5 px-4 px-sm-0">
             <div class="row">
                 <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
-                    <h1 class="text-white text-center fw-300 mb-3 d-sm-block font"
-                        style='color: white ; font-weight: 300 ; font-size: 3rem'>ลงทะเบียนใช้งานระบบ </h1>
+                    <h1 class="text-white text-center fw-300 mb-3 d-sm-block font">ลงทะเบียนใช้งานระบบ </h1>
                     <div class="card p-4 rounded-plus bg-faded">
                         <form id="register" name="register" method="post" enctype="multipart/form-data">
 
                             <div class="card-body pb-1">
                                 <div class="section-title">
-                                    <h3 class='font'><strong style="color:red ;font-weight: 400;">*
-                                            กรุณากรอกข้อมูลให้ครบถ้วน</strong></h3>
+                                    <h3 class='font'><strong style="color:red ;font-weight: 400;">* กรุณากรอกข้อมูลให้ครบถ้วน</strong></h3>
                                 </div>
                                 <hr />
                                 <div class="form-group basic">
                                     <div class="input-wrapper">
-                                        <label class="label" for="IDCard">เลขบัตรประจำตัวประชาชน <strong
-                                                style="color:red">*</strong></label>
-                                        <input type="text" class="form-control" maxlength="13" placeholder="ID card"
-                                            id="IDCard">
+                                        <label class="label" for="IDCard">เลขบัตรประจำตัวประชาชน <strong style="color:red">*</strong></label>
+                                        <input type="text" class="form-control" maxlength="13" placeholder="ID card" id="IDCard">
                                         <i class="clear-input"><ion-icon name="close-circle"></ion-icon></i>
                                     </div>
                                 </div>
                                 <div class="form-group basic">
                                     <div class="input-wrapper">
-                                        <label class="label" for="Firstname">ชื่อ <strong
-                                                style="color:red">*</strong></label>
-                                        <input type="text" class="form-control" placeholder="First name"
-                                            id="FirstName">
+                                        <label class="label" for="Firstname">ชื่อ <strong style="color:red">*</strong></label>
+                                        <input type="text" class="form-control" placeholder="First name" id="FirstName">
                                         <i class="clear-input"><ion-icon name="close-circle"></ion-icon></i>
                                     </div>
                                 </div>
                                 <div class="form-group basic">
                                     <div class="input-wrapper">
-                                        <label class="label" for="Lastname">นามสกุล <strong
-                                                style="color:red">*</strong></label>
-                                        <input type="text" class="form-control" placeholder="Last name"
-                                            id="LastName">
+                                        <label class="label" for="Lastname">นามสกุล <strong style="color:red">*</strong></label>
+                                        <input type="text" class="form-control" placeholder="Last name" id="LastName">
                                         <i class="clear-input"><ion-icon name="close-circle"></ion-icon></i>
                                     </div>
                                 </div>
@@ -221,50 +212,37 @@
                                 <hr />
                                 <div class="form-group basic">
                                     <div class="input-wrapper">
-                                        <label class="label" for="UserName"> ชื่อใช้งาน <strong
-                                                style="color:red">*</strong></label>
-                                        <input type="text" class="form-control" placeholder="User Name"
-                                            id="Username" />
+                                        <label class="label" for="UserName"> ชื่อใช้งาน <strong style="color:red">*</strong></label>
+                                        <input type="text" class="form-control" placeholder="User Name" id="Username" />
                                         <i class="clear-input"><ion-icon name="close-circle"></ion-icon></i>
                                     </div>
                                 </div>
                                 <div class="form-group basic">
                                     <div class="input-wrapper">
-                                        <label class="label" for="Email">อีเมล <strong
-                                                style="color:red">*</strong></label>
-                                        <input type="text" class="form-control" placeholder="E-mail"
-                                            id="Email" />
+                                        <label class="label" for="Email">อีเมล <strong style="color:red">*</strong></label>
+                                        <input type="text" class="form-control" placeholder="E-mail" id="Email" />
                                         <i class="clear-input"><ion-icon name="close-circle"></ion-icon></i>
                                     </div>
                                 </div>
                                 <div class="form-group basic">
                                     <div class="input-wrapper">
-                                        <label class="label" for="Password">รหัสผ่าน <strong
-                                                style="color:red">*</strong></label>
-                                        <input type="password" class="form-control" placeholder="Password"
-                                            maxlength="12" id="Password">
+                                        <label class="label" for="Password">รหัสผ่าน <strong style="color:red">*</strong></label>
+                                        <input type="password" class="form-control" placeholder="Password" maxlength="12" id="Password">
                                         <i class="clear-input"><ion-icon name="close-circle"></ion-icon></i>
-                                        <span style="color:gray ; font-size:  1rem">รหัสผ่านควรมีความยาวอย่างน้อย 6
-                                            ตัวอักษร* (ตัวพิมพ์ใหญ่, พิมพ์เล็ก, ตัวเลข, อักขระพิเศษ) เช่น
-                                            P@sswOrd*</span>
+                                        <span style="color:gray ; font-size:  1rem">รหัสผ่านควรมีความยาวอย่างน้อย 6 ตัวอักษร* (ตัวพิมพ์ใหญ่, พิมพ์เล็ก, ตัวเลข, อักขระพิเศษ) เช่น P@sswOrd*</span>
                                     </div>
                                 </div>
                                 <div class="form-group basic">
                                     <div class="input-wrapper">
-                                        <label class="label" for="ConfirmPassword">ยืนยันรหัสผ่าน <strong
-                                                style="color:red">*</strong></label>
-                                        <input type="password" class="form-control" placeholder="Confirm password"
-                                            maxlength="12" id="ConfirmPassword">
+                                        <label class="label" for="ConfirmPassword">ยืนยันรหัสผ่าน <strong style="color:red">*</strong></label>
+                                        <input type="password" class="form-control" placeholder="Confirm password" maxlength="12" id="ConfirmPassword">
                                         <i class="clear-input"><ion-icon name="close-circle"></ion-icon></i>
-                                        <span style="color:gray ; font-size: 1rem">รหัสผ่านควรมีความยาวอย่างน้อย 6
-                                            ตัวอักษร* (ตัวพิมพ์ใหญ่, พิมพ์เล็ก, ตัวเลข, อักขระพิเศษ) เช่น
-                                            P@sswOrd*</span>
+                                        <span style="color:gray ; font-size: 1rem">รหัสผ่านควรมีความยาวอย่างน้อย 6 ตัวอักษร* (ตัวพิมพ์ใหญ่, พิมพ์เล็ก, ตัวเลข, อักขระพิเศษ) เช่น P@sswOrd*</span>
                                     </div>
                                 </div>
                                 <div class="form-group basic">
                                     <div class="input-wrapper">
-                                        <label class="label">กองทุนหมู่บ้าน สาขา <strong
-                                                style="color:red">*</strong></label>
+                                        <label class="label">กองทุนหมู่บ้าน สาขา <strong style="color:red">*</strong></label>
                                         <select class="form-control" id="OrgStructure" maxlength="12">
                                             <option value="0" readonly>----กองทุนหมู่บ้าน สาขา----</option>
                                         </select>
@@ -273,8 +251,7 @@
                                 </div>
                                 <div class="form-group basic">
                                     <div class="input-wrapper">
-                                        <label class="label">พื้นที่รับผิดชอบ <strong
-                                                style="color:red">*</strong></label>
+                                        <label class="label">พื้นที่รับผิดชอบ <strong style="color:red">*</strong></label>
                                         <select class="form-control" id="OrgStructureProvince">
                                             <option value="0" readonly>----พื้นที่รับผิดชอบ----</option>
                                         </select>
@@ -282,10 +259,10 @@
                                     </div>
                                 </div>
                                 <div class="form-button-group  transparent">
-                                    <button type="submit" class="btn btn-success btn-block btn-lg">
-                                        <i class="fa fa-save" style='padding-right:10px'></i>ลงทะเบียน</button>
+                                    <button type="submit" class="btn btn-success btn-block btn-lg"><svg xmlns="http://www.w3.org/2000/svg" height="16" width="14" viewBox="0 0 448 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2023 Fonticons, Inc.--><path d="M433.9 129.9l-83.9-83.9A48 48 0 0 0 316.1 32H48C21.5 32 0 53.5 0 80v352c0 26.5 21.5 48 48 48h352c26.5 0 48-21.5 48-48V163.9a48 48 0 0 0 -14.1-33.9zM224 416c-35.3 0-64-28.7-64-64 0-35.3 28.7-64 64-64s64 28.7 64 64c0 35.3-28.7 64-64 64zm96-304.5V212c0 
+                                        6.6-5.4 12-12 12H76c-6.6 0-12-5.4-12-12V108c0-6.6 5.4-12 12-12h228.5c3.2 0 6.2 1.3 8.5 3.5l3.5 3.5A12 12 0 0 1 320 111.5z"/></svg> ลงทะเบียน</button>
                                 </div>
-
+                                
                             </div>
                             <div class="card-body pb-1">
                             </div>
@@ -307,6 +284,7 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
     <script type="text/javascript">
         $(document).ready(function() {
+    
             //=============getOrgStructure
             $.ajax({
                 url: '/getOrgStructure',
@@ -321,7 +299,7 @@
                             });
                             selectElement.append(option);
                         });
-
+    
                         //onchange event
                         selectElement.on('change', handleOrgStructureChange);
                     }
@@ -330,7 +308,7 @@
                     console.error('AJAX Error:', status, error);
                 }
             });
-
+    
             //=============Onchange
             function handleOrgStructureChange() {
                 var selectedValue = $('#OrgStructure').val();
@@ -360,26 +338,26 @@
                     }
                 });
             }
-
+    
             //=============ValidIDCard
             function isValidThaiIDCard(idCard) {
-
+    
                 var idCardRegex = /^\d{13}$/;
-
+    
                 return idCardRegex.test(idCard);
             }
-
+    
             //=============Email
             function isValidEmail(email) {
                 var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
+    
                 return emailRegex.test(email);
             }
-
+    
             //=============Submit
             $("form[name=register]").submit(function(event) {
                 event.preventDefault();
-
+    
                 // Get values from form fields
                 var idCard = $('#IDCard').val();
                 var firstName = $('#FirstName').val();
@@ -390,10 +368,9 @@
                 var confirmPassword = $('#ConfirmPassword').val();
                 var passwordPolicyRegex = /^(?=.*[A-Z])(?=.*\d).+$/;
                 var orgStructureProvince = $('#OrgStructureProvince').val();
-
+    
                 // Check for empty values
-                if (idCard === '' || firstName === '' || lastName === '' || username === '' || email ===
-                    '' || password === '' || confirmPassword === '' || orgStructureProvince === '') {
+                if (idCard === '' || firstName === '' || lastName === '' || username === '' || email === '' || password === '' || confirmPassword === '' || orgStructureProvince === '') {
                     Swal.fire({
                         icon: 'error',
                         title: 'Empty Fields',
@@ -401,7 +378,7 @@
                     });
                     return;
                 }
-
+    
                 // Perform specific validations
                 if (!isValidThaiIDCard(idCard)) {
                     Swal.fire({
@@ -411,7 +388,7 @@
                     });
                     return;
                 }
-
+    
                 if (!isValidEmail(email)) {
                     Swal.fire({
                         icon: 'error',
@@ -420,7 +397,7 @@
                     });
                     return;
                 }
-
+    
                 // Check if password meets the policy
                 if (!passwordPolicyRegex.test(password)) {
                     Swal.fire({
@@ -430,7 +407,7 @@
                     });
                     return;
                 }
-
+    
                 if (password != confirmPassword) {
                     Swal.fire({
                         icon: 'error',
@@ -439,7 +416,7 @@
                     });
                     return;
                 }
-
+    
                 var formData = new FormData();
                 formData.append('idCard', idCard);
                 formData.append('firstName', firstName);
@@ -456,7 +433,7 @@
                     contentType: false,
                     success: function(response) {
                         if (response.api_status == 1) {
-
+                            
                         }
                     },
                     error: function(xhr, status, error) {

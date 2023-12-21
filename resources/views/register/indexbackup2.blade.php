@@ -1,161 +1,137 @@
-<!DOCTYPE html>
-<html>
+{{-- @extends('crudbooster::admin_template') --}}
+{{-- @section('content') --}}
+<link href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css"
+    integrity="sha384-xrRvkv7YtOb8eSUc8PZSbf7EFqj3sJz7WA49F0DI2RfxUe3AqgPnpxiFhvJ0u8KL" crossorigin="anonymous">
+<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet"
+    type="text/css" />
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<!-- <script src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script> -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.15.1/moment.min.js"></script>
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap');
+</style>
+<style type="text/css">
+    .register-page {
 
-<head>
-    <meta charset="UTF-8">
-    <title>{{ cbLang('page_title_login') }} : {{ Session::get('appname') }}</title>
-    <meta name='generator' content='CRUDBooster' />
-    <meta name='robots' content='noindex,nofollow' />
-    <link rel="shortcut icon"
-        href="{{ CRUDBooster::getSetting('favicon') ? asset(CRUDBooster::getSetting('favicon')) : asset('vendor/crudbooster/assets/logo_crudbooster.png') }}">
-
-    <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
-    <!-- Bootstrap 3.3.2 -->
-    <link href="{{ asset('vendor/crudbooster/assets/adminlte/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet"
-        type="text/css" />
-    <!-- Font Awesome Icons -->
-    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet"
-        type="text/css" />
-    <!-- Theme style -->
-    <link href="{{ asset('vendor/crudbooster/assets/adminlte/dist/css/AdminLTE.min.css') }}" rel="stylesheet"
-        type="text/css" />
-
-
-
-    <!-- support rtl-->
-    @if (in_array(App::getLocale(), ['ar', 'fa']))
-        <link rel="stylesheet" href="//cdn.rawgit.com/morteza/bootstrap-rtl/v3.3.4/dist/css/bootstrap-rtl.min.css">
-        <link href="{{ asset('vendor/crudbooster/assets/rtl.css') }}" rel="stylesheet" type="text/css" />
-    @endif
-    <!-- font kanit -->
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap');
-    </style>
-    <!-- end font kanit -->
-    <link rel='stylesheet' href='{{ asset('vendor/crudbooster/assets/css/main.css') }}' />
-    <style type="text/css">
-        .register-page {
-
-            /* background: {{ CRUDBooster::getSetting('login_background_color') ?: '#9ed8e1' }} url('{{ CRUDBooster::getSetting('login_background_image') ? asset(CRUDBooster::getSetting('login_background_image')) : asset('vendor/crudbooster/assets/bg_blur3.jpg') }}'); */
-            color: {
-                    {
-                    CRUDBooster: :getSetting("login_font_color")?:'#ffffff'
-                }
+        /* background: {{ CRUDBooster::getSetting('login_background_color') ?: '#9ed8e1' }} url('{{ CRUDBooster::getSetting('login_background_image') ? asset(CRUDBooster::getSetting('login_background_image')) : asset('vendor/crudbooster/assets/bg_blur3.jpg') }}'); */
+        color: {
+                {
+                CRUDBooster: :getSetting("login_font_color")?:'#ffffff'
             }
-
-            !important;
-            background-repeat: no-repeat;
-            background-position: center;
-            background-size: cover;
-            background-color: #9ed8e1;
         }
 
-        .login-box,
-        .register-box {
-            margin: 2% auto;
-        }
+        !important;
+        background-repeat: no-repeat;
+        background-position: center;
+        background-size: cover;
+        background-color: #9ed8e1;
+    }
 
-        .login-box-body {
-            /* box-shadow: 0px 0px 50px rgba(0, 0, 0, 0.8); */
-            background: rgba(255, 255, 255, 0.9);
+    .login-box,
+    .register-box {
+        margin: 2% auto;
+    }
 
-            color: {
-                    {
-                    CRUDBooster: :getSetting("login_font_color")?:'#666666'
-                }
+    .login-box-body {
+        /* box-shadow: 0px 0px 50px rgba(0, 0, 0, 0.8); */
+        background: rgba(255, 255, 255, 0.9);
+
+        color: {
+                {
+                CRUDBooster: :getSetting("login_font_color")?:'#666666'
             }
-
-            !important;
         }
 
-        html,
-        body {
-            overflow-x: hidden;
-            overflow-y: auto;
-            font-family: 'Kanit', sans-serif !important;
-        }
+        !important;
+    }
 
-        img {
-            vertical-align: middle;
-            border-style: none;
-        }
+    html,
+    body {
+        overflow-x: hidden;
+        overflow-y: auto;
+        font-family: 'Kanit', sans-serif !important;
+    }
 
-        .rounded-plus {
-            border-radius: 10px;
-        }
+    img {
+        vertical-align: middle;
+        border-style: none;
+    }
 
-        .bg-faded {
-            background-color: #f7f9fa;
-        }
+    .rounded-plus {
+        border-radius: 10px;
+    }
 
-        .card,
-        .card-group {
-            -webkit-box-shadow: 0px 0px 13px 0px rgba(74, 53, 107, 0.08);
-            box-shadow: 0px 0px 13px 0px rgba(74, 53, 107, 0.08);
-        }
+    .bg-faded {
+        background-color: #f7f9fa;
+    }
 
-        .p-4 {
-            padding: 1.5rem !important;
-        }
+    .card,
+    .card-group {
+        -webkit-box-shadow: 0px 0px 13px 0px rgba(74, 53, 107, 0.08);
+        box-shadow: 0px 0px 13px 0px rgba(74, 53, 107, 0.08);
+    }
 
-        .card {
-            position: relative;
-            display: -webkit-box;
-            display: -ms-flexbox;
-            display: flex;
-            -webkit-box-orient: vertical;
-            -webkit-box-direction: normal;
-            -ms-flex-direction: column;
-            flex-direction: column;
-            min-width: 0;
-            word-wrap: break-word;
-            background-color: #fff;
-            background-clip: border-box;
-            border: 1px solid rgba(0, 0, 0, 0.08);
-            border-radius: 4px;
-        }
+    .p-4 {
+        padding: 1.5rem !important;
+    }
 
-        label {
-            display: inline-block;
-            /* margin-bottom: 0.6rem !important; */
-            color: #212529 !important;
-            font-size: 1.2rem !important;
-            font-weight: 400 !important;
-        }
+    .card {
+        position: relative;
+        display: -webkit-box;
+        display: -ms-flexbox;
+        display: flex;
+        -webkit-box-orient: vertical;
+        -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+        flex-direction: column;
+        min-width: 0;
+        word-wrap: break-word;
+        background-color: #fff;
+        background-clip: border-box;
+        border: 1px solid rgba(0, 0, 0, 0.08);
+        border-radius: 4px;
+    }
 
-        .btn-primary {
-            background-color: #039dab;
-            border-color: #039dab;
-            color: #fff;
-        }
+    label {
+        display: inline-block;
+        /* margin-bottom: 0.6rem !important; */
+        color: #212529 !important;
+        font-size: 1.2rem !important;
+        font-weight: 400 !important;
+    }
 
-        .form-control {
-            display: block;
-            width: 100%;
-            height: calc(1.47em + 1rem + 2px);
-            padding: 0.5rem 0.875rem;
-            font-size: 0.8125rem;
-            font-weight: 400;
-            line-height: 1.47;
-            color: #495057;
-            background-color: #fff;
-            background-clip: padding-box;
-            border: 1px solid #E5E5E5;
-            border-radius: 4px;
-            -webkit-transition: border-color 0.15s ease-in-out, -webkit-box-shadow 0.15s ease-in-out;
-            transition: border-color 0.15s ease-in-out, -webkit-box-shadow 0.15s ease-in-out;
-            transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
-            transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out, -webkit-box-shadow 0.15s ease-in-out;
-        }
+    .btn-primary {
+        background-color: #039dab;
+        border-color: #039dab;
+        color: #fff;
+    }
 
-        .font {
-            font-family: 'Kanit', sans-serif !important;
+    .form-control {
+        display: block;
+        width: 100%;
+        height: calc(1.47em + 1rem + 2px);
+        padding: 0.5rem 0.875rem;
+        font-size: 0.8125rem;
+        font-weight: 400;
+        line-height: 1.47;
+        color: #495057;
+        background-color: #fff;
+        background-clip: padding-box;
+        border: 1px solid #E5E5E5;
+        border-radius: 4px;
+        -webkit-transition: border-color 0.15s ease-in-out, -webkit-box-shadow 0.15s ease-in-out;
+        transition: border-color 0.15s ease-in-out, -webkit-box-shadow 0.15s ease-in-out;
+        transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+        transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out, -webkit-box-shadow 0.15s ease-in-out;
+    }
 
-        }
+    .font {
+        font-family: 'Kanit', sans-serif !important;
 
-
-    </style>
-</head>
+    }
+    
+</style>
 
 <body class="login-page">
     <div class="height-10 w-100 shadow-lg px-4 bg-brand-gradient"
@@ -172,12 +148,11 @@
             </div>
         </div>
     </div>
-    <div class="flex-1 bg-pattern" style="background: #8dcde1">
+    <div class="flex-1">
         <div class="container py-4 py-lg-5 my-lg-5 px-4 px-sm-0">
             <div class="row">
                 <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
-                    <h1 class="text-white text-center fw-300 mb-3 d-sm-block font"
-                        style='color: white ; font-weight: 300 ; font-size: 3rem'>ลงทะเบียนใช้งานระบบ </h1>
+                    <h1 class="text-white text-center fw-300 mb-3 d-sm-block font">ลงทะเบียนใช้งานระบบ </h1>
                     <div class="card p-4 rounded-plus bg-faded">
                         <form id="register" name="register" method="post" enctype="multipart/form-data">
 
@@ -282,8 +257,9 @@
                                     </div>
                                 </div>
                                 <div class="form-button-group  transparent">
-                                    <button type="submit" class="btn btn-success btn-block btn-lg">
-                                        <i class="fa fa-save" style='padding-right:10px'></i>ลงทะเบียน</button>
+                                    <button type="submit" class="btn btn-success btn-block btn-lg"><i
+                                            class="fa fa-save"></i>
+                                        ลงทะเบียน</button>
                                 </div>
 
                             </div>
@@ -295,18 +271,9 @@
             </div>
         </div>
     </div>
-
-
-    <!-- jQuery 2.2.3 -->
-    <script src="{{ asset('vendor/crudbooster/assets/adminlte/plugins/jQuery/jquery-2.2.3.min.js') }}"></script>
-    <!-- Bootstrap 3.4.1 JS -->
-    <script src="{{ asset('vendor/crudbooster/assets/adminlte/bootstrap/js/bootstrap.min.js') }}" type="text/javascript">
-    </script>
-
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
     <script type="text/javascript">
         $(document).ready(function() {
+    
             //=============getOrgStructure
             $.ajax({
                 url: '/getOrgStructure',
@@ -321,7 +288,7 @@
                             });
                             selectElement.append(option);
                         });
-
+    
                         //onchange event
                         selectElement.on('change', handleOrgStructureChange);
                     }
@@ -330,7 +297,7 @@
                     console.error('AJAX Error:', status, error);
                 }
             });
-
+    
             //=============Onchange
             function handleOrgStructureChange() {
                 var selectedValue = $('#OrgStructure').val();
@@ -360,26 +327,26 @@
                     }
                 });
             }
-
+    
             //=============ValidIDCard
             function isValidThaiIDCard(idCard) {
-
+    
                 var idCardRegex = /^\d{13}$/;
-
+    
                 return idCardRegex.test(idCard);
             }
-
+    
             //=============Email
             function isValidEmail(email) {
                 var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
+    
                 return emailRegex.test(email);
             }
-
+    
             //=============Submit
             $("form[name=register]").submit(function(event) {
                 event.preventDefault();
-
+    
                 // Get values from form fields
                 var idCard = $('#IDCard').val();
                 var firstName = $('#FirstName').val();
@@ -390,10 +357,9 @@
                 var confirmPassword = $('#ConfirmPassword').val();
                 var passwordPolicyRegex = /^(?=.*[A-Z])(?=.*\d).+$/;
                 var orgStructureProvince = $('#OrgStructureProvince').val();
-
+    
                 // Check for empty values
-                if (idCard === '' || firstName === '' || lastName === '' || username === '' || email ===
-                    '' || password === '' || confirmPassword === '' || orgStructureProvince === '') {
+                if (idCard === '' || firstName === '' || lastName === '' || username === '' || email === '' || password === '' || confirmPassword === '' || orgStructureProvince === '') {
                     Swal.fire({
                         icon: 'error',
                         title: 'Empty Fields',
@@ -401,7 +367,7 @@
                     });
                     return;
                 }
-
+    
                 // Perform specific validations
                 if (!isValidThaiIDCard(idCard)) {
                     Swal.fire({
@@ -411,7 +377,7 @@
                     });
                     return;
                 }
-
+    
                 if (!isValidEmail(email)) {
                     Swal.fire({
                         icon: 'error',
@@ -420,7 +386,7 @@
                     });
                     return;
                 }
-
+    
                 // Check if password meets the policy
                 if (!passwordPolicyRegex.test(password)) {
                     Swal.fire({
@@ -430,7 +396,7 @@
                     });
                     return;
                 }
-
+    
                 if (password != confirmPassword) {
                     Swal.fire({
                         icon: 'error',
@@ -439,7 +405,7 @@
                     });
                     return;
                 }
-
+    
                 var formData = new FormData();
                 formData.append('idCard', idCard);
                 formData.append('firstName', firstName);
@@ -456,7 +422,7 @@
                     contentType: false,
                     success: function(response) {
                         if (response.api_status == 1) {
-
+                            
                         }
                     },
                     error: function(xhr, status, error) {
@@ -467,6 +433,4 @@
         });
     </script>
 
-</body>
-
-</html>
+    {{-- @endsection --}}
