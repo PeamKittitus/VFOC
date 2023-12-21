@@ -267,7 +267,17 @@
                 contentType: false,
                 success: function(response) {
                     if (response.api_status == 1) {
-                        
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'สำเร็จ!',
+                            text: 'บันทึกข้อมูลเรียบร้อย'
+                        }).then(function() {
+                            window.location.href = '/home';
+                        });
+                    } else if (data.api_status == 2) {
+                        swal("ยกเลิก!", data.api_message, "error");
+                    } else {
+                        swal("ยกเลิก!", data.api_message, "error");
                     }
                 },
                 error: function(xhr, status, error) {
