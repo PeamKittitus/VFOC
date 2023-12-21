@@ -26,4 +26,5 @@ Route::get('/home', function () {
 //========================================================================================== API
 Route::get('/getOrgStructure', '\App\Http\Controllers\ApiRegisterController@getOrgStructure');
 Route::post('/getOrgStructureProvince', '\App\Http\Controllers\ApiRegisterController@getOrgStructureProvince');
+Route::post('/saveRegister', '\App\Http\Controllers\ApiRegisterController@saveRegister');
 //========================================================================================== API

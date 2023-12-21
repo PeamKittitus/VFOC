@@ -28,21 +28,21 @@
                                     <div class="form-group basic">
                                         <div class="input-wrapper">
                                             <label class="label" for="IDCard">เลขบัตรประจำตัวประชาชน <strong style="color:red">*</strong></label>
-                                            <input type="text" class="form-control" maxlength="13" placeholder="ID card">
+                                            <input type="text" class="form-control" maxlength="13" placeholder="ID card" id="IDCard">
                                             <i class="clear-input"><ion-icon name="close-circle"></ion-icon></i>
                                         </div>
                                     </div>
                                     <div class="form-group basic">
                                         <div class="input-wrapper">
                                             <label class="label" for="Firstname">ชื่อ <strong style="color:red">*</strong></label>
-                                            <input type="text" class="form-control" placeholder="First name">
+                                            <input type="text" class="form-control" placeholder="First name" id="FirstName">
                                             <i class="clear-input"><ion-icon name="close-circle"></ion-icon></i>
                                         </div>
                                     </div>
                                     <div class="form-group basic">
                                         <div class="input-wrapper">
                                             <label class="label" for="Lastname">นามสกุล <strong style="color:red">*</strong></label>
-                                            <input type="text" class="form-control" placeholder="Last name">
+                                            <input type="text" class="form-control" placeholder="Last name" id="LastName">
                                             <i class="clear-input"><ion-icon name="close-circle"></ion-icon></i>
                                         </div>
                                     </div>
@@ -54,42 +54,46 @@
                                     <div class="form-group basic">
                                         <div class="input-wrapper">
                                             <label class="label" for="UserName"> ชื่อใช้งาน <strong style="color:red">*</strong></label>
-                                            <input type="text" class="form-control" placeholder="User Name" />
+                                            <input type="text" class="form-control" placeholder="User Name" id="Username" />
                                             <i class="clear-input"><ion-icon name="close-circle"></ion-icon></i>
                                         </div>
                                     </div>
                                     <div class="form-group basic">
                                         <div class="input-wrapper">
                                             <label class="label" for="Email">อีเมล <strong style="color:red">*</strong></label>
-                                            <input type="text" class="form-control" placeholder="E-mail" />
+                                            <input type="text" class="form-control" placeholder="E-mail" id="Email" />
                                             <i class="clear-input"><ion-icon name="close-circle"></ion-icon></i>
                                         </div>
                                     </div>
                                     <div class="form-group basic">
                                         <div class="input-wrapper">
                                             <label class="label" for="Password">รหัสผ่าน <strong style="color:red">*</strong></label>
-                                            <input type="password" class="form-control" placeholder="Password" maxlength="12">
+                                            <input type="password" class="form-control" placeholder="Password" maxlength="12" id="Password">
                                             <i class="clear-input"><ion-icon name="close-circle"></ion-icon></i>
                                         </div>
                                     </div>
                                     <div class="form-group basic">
                                         <div class="input-wrapper">
                                             <label class="label" for="ConfirmPassword">ยืนยันรหัสผ่าน <strong style="color:red">*</strong></label>
-                                            <input type="password" class="form-control" placeholder="Confirm password" maxlength="12">
+                                            <input type="password" class="form-control" placeholder="Confirm password" maxlength="12" id="ConfirmPassword">
                                             <i class="clear-input"><ion-icon name="close-circle"></ion-icon></i>
                                         </div>
                                     </div>
                                     <div class="form-group basic">
                                         <div class="input-wrapper">
                                             <label class="label">กองทุนหมู่บ้าน สาขา <strong style="color:red">*</strong></label>
-                                            <select class="form-control" id="OrgStructure" maxlength="12"></select>
+                                            <select class="form-control" id="OrgStructure" maxlength="12">
+                                                <option value="0" readonly>----กองทุนหมู่บ้าน สาขา----</option>
+                                            </select>
                                             <i class="clear-input"><ion-icon name="close-circle"></ion-icon></i>
                                         </div>
                                     </div>
                                     <div class="form-group basic">
                                         <div class="input-wrapper">
                                             <label class="label">พื้นที่รับผิดชอบ <strong style="color:red">*</strong></label>
-                                            <select class="form-control" id="OrgStructureProvince" maxlength="12"></select>
+                                            <select class="form-control" id="OrgStructureProvince">
+                                                <option value="0" readonly>----พื้นที่รับผิดชอบ----</option>
+                                            </select>
                                             <i class="clear-input"><ion-icon name="close-circle"></ion-icon></i>
                                         </div>
                                     </div>
@@ -111,6 +115,7 @@
     </div>
 </div>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 <script type="text/javascript">
     $(document).ready(function() {
 
@@ -168,10 +173,107 @@
             });
         }
 
+        //=============ValidIDCard
+        function isValidThaiIDCard(idCard) {
+
+            var idCardRegex = /^\d{13}$/;
+
+            return idCardRegex.test(idCard);
+        }
+
+        //=============Email
+        function isValidEmail(email) {
+            var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+            return emailRegex.test(email);
+        }
+
         //=============Submit
         $("form[name=register]").submit(function(event) {
             event.preventDefault();
-            alert('ok');
+
+            // Get values from form fields
+            var idCard = $('#IDCard').val();
+            var firstName = $('#FirstName').val();
+            var lastName = $('#LastName').val();
+            var username = $('#Username').val();
+            var email = $('#Email').val();
+            var password = $('#Password').val();
+            var confirmPassword = $('#ConfirmPassword').val();
+            var passwordPolicyRegex = /^(?=.*[A-Z])(?=.*\d).+$/;
+            var orgStructureProvince = $('#OrgStructureProvince').val();
+
+            // Check for empty values
+            if (idCard === '' || firstName === '' || lastName === '' || username === '' || email === '' || password === '' || confirmPassword === '' || orgStructureProvince === '') {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Empty Fields',
+                    text: 'Please fill in all required fields.'
+                });
+                return;
+            }
+
+            // Perform specific validations
+            if (!isValidThaiIDCard(idCard)) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Invalid Thai ID Card Format',
+                    text: 'Please enter a valid Thai ID card number consisting of 13 digits.'
+                });
+                return;
+            }
+
+            if (!isValidEmail(email)) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Invalid Email Format',
+                    text: 'Please enter a valid email address.'
+                });
+                return;
+            }
+
+            // Check if password meets the policy
+            if (!passwordPolicyRegex.test(password)) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Invalid Password Format',
+                    text: 'Password must contain at least one uppercase letter and one digit.'
+                });
+                return;
+            }
+
+            if (password != confirmPassword) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Passwords Do Not Match',
+                    text: 'Please make sure the passwords match.'
+                });
+                return;
+            }
+
+            var formData = new FormData();
+            formData.append('idCard', idCard);
+            formData.append('firstName', firstName);
+            formData.append('lastName', lastName);
+            formData.append('username', username);
+            formData.append('email', email);
+            formData.append('password', password);
+            formData.append('orgStructureProvince', orgStructureProvince);
+            $.ajax({
+                url: '/saveRegister',
+                type: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function(response) {
+                    if (response.api_status == 1) {
+                        
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error('AJAX Error:', status, error);
+                }
+            });
         });
     });
 </script>
