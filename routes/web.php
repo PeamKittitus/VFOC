@@ -19,3 +19,8 @@ Route::get('/', function () {
 Route::get('/register', function () {
     return view('register/index');
 });
+
+//========================================================================================== API
+Route::get('/getOrgStructure', '\App\Http\Controllers\ApiRegisterController@getOrgStructure');
+Route::post('/getOrgStructureProvince', '\App\Http\Controllers\ApiRegisterController@getOrgStructureProvince');
+//========================================================================================== API

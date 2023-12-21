@@ -18,7 +18,7 @@
                     <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
                         <h1 class="text-white text-center fw-300 mb-3 d-sm-block">ลงทะเบียนใช้งานระบบ </h1>
                         <div class="card p-4 rounded-plus bg-faded">
-                            <form id="register" name="register" method="post">
+                            <form id="register" name="register" method="post" enctype="multipart/form-data">
 
                                 <div class="card-body pb-1">
                                     <div class="section-title">
@@ -34,15 +34,15 @@
                                     </div>
                                     <div class="form-group basic">
                                         <div class="input-wrapper">
-                                            <label class="label"  for="Firstname">ชื่อ <strong style="color:red">*</strong></label>
-                                            <input type="text" class="form-control"  placeholder="First name">
+                                            <label class="label" for="Firstname">ชื่อ <strong style="color:red">*</strong></label>
+                                            <input type="text" class="form-control" placeholder="First name">
                                             <i class="clear-input"><ion-icon name="close-circle"></ion-icon></i>
                                         </div>
                                     </div>
                                     <div class="form-group basic">
                                         <div class="input-wrapper">
-                                            <label class="label"  for="Lastname">นามสกุล <strong style="color:red">*</strong></label>
-                                            <input type="text" class="form-control"  placeholder="Last name">
+                                            <label class="label" for="Lastname">นามสกุล <strong style="color:red">*</strong></label>
+                                            <input type="text" class="form-control" placeholder="Last name">
                                             <i class="clear-input"><ion-icon name="close-circle"></ion-icon></i>
                                         </div>
                                     </div>
@@ -53,15 +53,15 @@
                                     <hr />
                                     <div class="form-group basic">
                                         <div class="input-wrapper">
-                                            <label class="label"for="UserName"> ชื่อใช้งาน <strong style="color:red">*</strong></label>
-                                            <input type="text" class="form-control"placeholder="User Name" />
+                                            <label class="label" for="UserName"> ชื่อใช้งาน <strong style="color:red">*</strong></label>
+                                            <input type="text" class="form-control" placeholder="User Name" />
                                             <i class="clear-input"><ion-icon name="close-circle"></ion-icon></i>
                                         </div>
                                     </div>
                                     <div class="form-group basic">
                                         <div class="input-wrapper">
-                                            <label class="label"  for="Email">อีเมล <strong style="color:red">*</strong></label>
-                                            <input type="text" class="form-control"  placeholder="E-mail" />
+                                            <label class="label" for="Email">อีเมล <strong style="color:red">*</strong></label>
+                                            <input type="text" class="form-control" placeholder="E-mail" />
                                             <i class="clear-input"><ion-icon name="close-circle"></ion-icon></i>
                                         </div>
                                     </div>
@@ -74,15 +74,22 @@
                                     </div>
                                     <div class="form-group basic">
                                         <div class="input-wrapper">
-                                            <label class="label"  for="ConfirmPassword">ยืนยันรหัสผ่าน <strong style="color:red">*</strong></label>
-                                            <input type="password" class="form-control"  placeholder="Confirm password" maxlength="12">
+                                            <label class="label" for="ConfirmPassword">ยืนยันรหัสผ่าน <strong style="color:red">*</strong></label>
+                                            <input type="password" class="form-control" placeholder="Confirm password" maxlength="12">
                                             <i class="clear-input"><ion-icon name="close-circle"></ion-icon></i>
                                         </div>
                                     </div>
                                     <div class="form-group basic">
                                         <div class="input-wrapper">
                                             <label class="label">กองทุนหมู่บ้าน สาขา <strong style="color:red">*</strong></label>
-                                            <select class="form-control" " maxlength="12"></select>
+                                            <select class="form-control" id="OrgStructure" maxlength="12"></select>
+                                            <i class="clear-input"><ion-icon name="close-circle"></ion-icon></i>
+                                        </div>
+                                    </div>
+                                    <div class="form-group basic">
+                                        <div class="input-wrapper">
+                                            <label class="label">พื้นที่รับผิดชอบ <strong style="color:red">*</strong></label>
+                                            <select class="form-control" id="OrgStructureProvince" maxlength="12"></select>
                                             <i class="clear-input"><ion-icon name="close-circle"></ion-icon></i>
                                         </div>
                                     </div>
@@ -94,7 +101,6 @@
                                     </div>
                                 </div>
                                 <div class="card-body pb-1">
-
                                 </div>
                             </form>
                         </div>
@@ -104,3 +110,68 @@
         </div>
     </div>
 </div>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function() {
+
+        //=============getOrgStructure
+        $.ajax({
+            url: '/getOrgStructure',
+            type: 'GET',
+            success: function(data) {
+                if (data.api_status == 1) {
+                    var selectElement = $('#OrgStructure');
+                    data.data.forEach(function(org) {
+                        var option = $('<option>', {
+                            value: org.id,
+                            text: org.orgName
+                        });
+                        selectElement.append(option);
+                    });
+
+                    //onchange event
+                    selectElement.on('change', handleOrgStructureChange);
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error('AJAX Error:', status, error);
+            }
+        });
+
+        //=============Onchange
+        function handleOrgStructureChange() {
+            var selectedValue = $('#OrgStructure').val();
+            var formData = new FormData();
+            formData.append('id', selectedValue);
+            $.ajax({
+                url: '/getOrgStructureProvince',
+                type: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function(response) {
+                    if (response.api_status == 1) {
+                        var selectElement = $('#OrgStructureProvince');
+                        selectElement.empty();
+                        response.data.forEach(function(org) {
+                            var option = $('<option>', {
+                                value: org.id,
+                                text: org.provinceName
+                            });
+                            selectElement.append(option);
+                        });
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error('AJAX Error:', status, error);
+                }
+            });
+        }
+
+        //=============Submit
+        $("form[name=register]").submit(function(event) {
+            event.preventDefault();
+            alert('ok');
+        });
+    });
+</script>
