@@ -1,0 +1,516 @@
+@extends('crudbooster::admin_template')
+@section('content')
+
+    <head>
+        <!-- Include Kanit font from Google Fonts -->
+        <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+        <link href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" rel="stylesheet">
+        <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.15.1/moment.min.js"></script>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.0.0/css/font-awesome.min.css">
+
+        <!-- DataTables -->
+        <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.css">
+        <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.js"></script>
+        <link rel="stylesheet" type="text/css"
+            href="https://cdn.datatables.net/responsive/2.2.9/css/responsive.dataTables.min.css">
+        <script type="text/javascript" charset="utf8"
+            src="https://cdn.datatables.net/responsive/2.2.9/js/dataTables.responsive.min.js"></script>
+        <script src="https://cdn.ckeditor.com/ckeditor5/40.2.0/classic/ckeditor.js"></script>
+
+        <!-- Select2 -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+
+        <style>
+            body {
+                font-family: 'Kanit', sans-serif;
+            }
+
+            #example thead th {
+                background-color: #1ab3a3;
+                color: #fff;
+            }
+
+            table.dataTable.dtr-inline.collapsed>tbody>tr>td.dtr-control:before {
+                background-color: #886ab5;
+            }
+
+            .dataTables_wrapper {
+                position: relative;
+                clear: both;
+                margin-top: 25px !important;
+            }
+
+            .select2-container2 {
+                box-sizing: border-box;
+                display: inline-block;
+                margin: 0;
+                position: relative;
+                vertical-align: middle;
+                width: 200px !important;
+            }
+
+            img {
+                vertical-align: middle;
+                border-style: none;
+            }
+
+            .rounded-plus {
+                border-radius: 10px;
+            }
+
+            .bg-faded {
+                background-color: #f7f9fa;
+            }
+
+            .card,
+            .card-group {
+                -webkit-box-shadow: 0px 0px 13px 0px rgba(74, 53, 107, 0.08);
+                box-shadow: 0px 0px 13px 0px rgba(74, 53, 107, 0.08);
+            }
+
+            .p-4 {
+                padding: 1.5rem !important;
+            }
+
+            .card {
+                position: relative;
+                display: -webkit-box;
+                display: -ms-flexbox;
+                display: flex;
+                -webkit-box-orient: vertical;
+                -webkit-box-direction: normal;
+                -ms-flex-direction: column;
+                flex-direction: column;
+                min-width: 0;
+                word-wrap: break-word;
+                background-color: #fff;
+                background-clip: border-box;
+                border: 1px solid rgba(0, 0, 0, 0.08);
+                border-radius: 4px;
+            }
+
+            label {
+                display: inline-block;
+                /* margin-bottom: 0.6rem !important; */
+                color: #212529 !important;
+                font-size: 1.2rem !important;
+                font-weight: 400 !important;
+            }
+
+            .btn-primary {
+                background-color: #039dab;
+                border-color: #039dab;
+                color: #fff;
+            }
+
+            .form-control {
+                display: block;
+                width: 100%;
+                height: 50px;
+                /* height: calc(1.47em + 1rem + 2px); */
+                padding: 0.5rem 0.875rem;
+                /* font-size: 0.8125rem; */
+                font-weight: 400;
+                line-height: 1.47;
+                color: #495057;
+                background-color: #fff;
+                background-clip: padding-box;
+                border: 1px solid #E5E5E5;
+                border-radius: 4px;
+                -webkit-transition: border-color 0.15s ease-in-out, -webkit-box-shadow 0.15s ease-in-out;
+                transition: border-color 0.15s ease-in-out, -webkit-box-shadow 0.15s ease-in-out;
+                transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+                transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out, -webkit-box-shadow 0.15s ease-in-out;
+            }
+
+            .label {
+                font-size: 20px !important;
+                margin-left: -10px;
+                margin-bottom: 5px !important;
+            }
+
+            input::placeholder,
+            input {
+                font-size: 14px;
+                color: #333;
+            }
+
+            input[type=file]::file-selector-button {
+                margin-right: 20px;
+                border: none;
+                background: #084cdf;
+                padding: 10px 20px;
+                border-radius: 10px;
+                color: #fff;
+                cursor: pointer;
+                transition: background .2s ease-in-out;
+            }
+
+            input[type=file]::file-selector-button:hover {
+                background: #0d45a5;
+            }
+
+            .custom-input {
+                width: 80%;
+                /* height: 40px; */
+                padding: 10px;
+                font-size: 16px;
+                border: 2px solid grey;
+                border-radius: 5px;
+                outline: none;
+                transition: border-color 0.3s;
+            }
+
+            /* Style when the input is focused */
+            .custom-input:focus {
+                border-color: #2ecc71;
+            }
+
+            #editor {
+                height: 300px;
+                /* Adjust the height as needed */
+            }
+        </style>
+    </head>
+
+    <body>
+
+        <div>
+            <ol class="breadcrumb page-breadcrumb">
+                <li class="breadcrumb-item"><a href="/Home/Index">หน้าหลัก</a></li>
+                <li class="breadcrumb-item"><a href="/EAccount/StructureIndex">ผังบัญชีงบประมาณโครงการ</a></li>
+                <li class="breadcrumb-item active">สร้างใหม่</li>
+            </ol>
+        </div>
+
+
+        <div class="flex-1 bg-pattern" style="background: #8dcde1">
+            <div class="card p-4 rounded-plus bg-faded">
+                <form id="register" name="register" method="post" enctype="multipart/form-data">
+
+                    <div class="card-body pb-1">
+                        <div class="section-title">
+                            <h4 class='font'><strong style="font-weight: 400;"><i class="fa fa-file-text-o"
+                                        aria-hidden="true" style='margin-right: 10px'></i>สร้างใหม่</strong></h4>
+                        </div>
+                        <hr />
+                        <div class="form-group basic">
+                            <div class="input-wrapper">
+                                <label class="label" for="Firstname">ชื่อโครงการ<strong
+                                        style="color:red">*</strong></label>
+                                <input type="text" class="form-control" placeholder="ชื่อโครงการ" id="projectname">
+                                <i class="clear-input"><ion-icon name="close-circle"></ion-icon></i>
+                            </div>
+                        </div>
+                        <div class="form-group basic">
+                            <div class="input-wrapper">
+                                <label class="label" for="Firstname">วงเงินงบประมาณ<strong
+                                        style="color:red">*</strong></label>
+                                <input type="text" class="form-control" placeholder="วงเงินงบประมาณ" id="projectname">
+                                <i class="clear-input"><ion-icon name="close-circle"></ion-icon></i>
+                            </div>
+                        </div>
+                        <div class="form-group basic">
+                            <div class="input-wrapper">
+                                <label class="label" for="Firstname">งบประมาณต่อกองทุน<strong
+                                        style="color:red">*</strong></label>
+                                <input type="text" class="form-control" placeholder="งบประมาณต่อกองทุน"
+                                    id="projectbudget">
+                                <i class="clear-input"><ion-icon name="close-circle"></ion-icon></i>
+                            </div>
+                        </div>
+                        <div class="form-group basic">
+                            <div class="input-wrapper">
+                                <label class="label" for="Firstname"
+                                    style='color: red !important ; margin-bottom: 10px'>กำหนดแบ่งจ่ายเงินงบประมาณ</label><br>
+                                <div class="d-flex flex-wrap" style="margin-top: 10px">
+                                    <button id="add_input" class="btn btn-warning"
+                                        style='width: 150px ; margin-right: 10px ; color: white ; '>
+                                        <i class="fa fa-plus" style='padding-right:10px'></i>เพิ่มงวดแบ่งจ่าย</button>
+                                    <button id="del_input" class="btn btn-danger" style='width: 150px ; color: white'>
+                                        <i class="fa fa-eraser" style='padding-right:10px'></i>ลบ</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group basic" id="budget_form">
+                            <div class="d-flex" style="margin-bottom: 10px">
+                                <div style="width: 20%; margin-right: 10px; display: inline-block;">
+                                    งวดที่
+                                    <input type="text" class="form-control" placeholder="งบประมาณต่อกองทุน"
+                                        id="projectbudget1" style="width: 100%" value="1">
+                                </div>
+                                <div style="width: 20%; display: inline-block;">
+                                    อัตราจ่ายร้อยละ
+                                    <input type="number" class="form-control" placeholder="อัตราจ่ายร้อยละ"
+                                        id="projectbudget2" style="width: 100%">
+                                </div>
+                            </div>
+                        </div>
+                        <hr>
+                        <h4 style="color:red">กำหนดเกณฑ์ความเสี่ยงของผู้ยื่นขอโครงการ ด้านกิจกรรมและระยะเวลาของโครงการ</h4>
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <label style="font-size: 14px">ความเสี่ยงด้านกิจกรรม(จำนวนกิจกรรมในโครงการที่ควรมี)</label>
+                            </div>
+                        </div>
+                        <div class="form-group basic">
+                            <div class="input-wrapper">
+                                <div class="flex-wrap "
+                                    style="display: flex;margin-top: 10px ;justify-content: space-between;">
+                                    <div>
+                                        <div>ระดับต่ำ<strong style="color: red">*</strong></div>
+                                        <input type="text" class="custom-input">
+                                    </div>
+                                    <div>
+                                        <div>ระดับกลาง<strong style="color: red">*</strong></div>
+                                        <input type="text" class="custom-input">
+                                    </div>
+                                    <div>
+                                        <div>ระดับสูง<strong style="color: red">*</strong></div>
+                                        <input type="text" class="custom-input">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <label
+                                    style="font-size: 14px">ความเสี่ยงด้านระยะเวลาดำเนินการโครงการ(จำนวนวันรวมในโครงการที่ไม่ควรเกิน)</label>
+                            </div>
+                        </div>
+                        <div class="form-group basic">
+                            <div class="input-wrapper">
+                                <div class="flex-wrap "
+                                    style="display: flex;margin-top: 10px ;justify-content: space-between;">
+                                    <div>
+                                        <div>ระดับต่ำ<strong style="color: red">*</strong></div>
+                                        <input type="text" class="custom-input">
+                                    </div>
+                                    <div>
+                                        <div>ระดับกลาง<strong style="color: red">*</strong></div>
+                                        <input type="text" class="custom-input">
+                                    </div>
+                                    <div>
+                                        <div>ระดับสูง<strong style="color: red">*</strong></div>
+                                        <input type="text" class="custom-input">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <hr>
+
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 20px">
+                            <div style="width: 45%;">
+                                <div>
+                                    วันที่เริ่มต้นโครงการ <strong style="color: red">*</strong>
+                                </div>
+                                <div style="display: flex; justify-content: space-between;">
+                                    <div>
+                                        <select class="select2" style="width: 60px;">
+                                            <?php
+                                            for ($day = 1; $day <= 31; $day++) {
+                                                echo "<option value='$day'>$day</option>";
+                                            }
+                                            ?>
+                                        </select>
+                                    </div>
+                                    <div style="margin-right: 10px;">
+                                        <select class="select2" style="width: 100px;">
+                                            <?php
+                                            for ($monthNumber = 1; $monthNumber <= 12; $monthNumber++) {
+                                                $monthName = date('F', mktime(0, 0, 0, $monthNumber, 1));
+                                                echo "<option value='$monthNumber'>$monthName</option>";
+                                            }
+                                            ?>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <select class="select2" style="width: 100px;">
+                                            <?php
+                                            $currentYear = date('Y');
+                                            for ($year = $currentYear - 1; $year <= $currentYear + 1; $year++) {
+                                                echo "<option value='$year'>$year</option>";
+                                            }
+                                            ?>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div style="width: 45%;">
+                                <div>
+                                    วันที่สิ้นสุดโครงการ <strong style="color: red">*</strong>
+                                </div>
+                                <div style="display: flex; justify-content: space-between;">
+                                    <div>
+                                        <select class="select2" style="width: 60px;">
+                                            <?php
+                                            for ($day = 1; $day <= 31; $day++) {
+                                                echo "<option value='$day'>$day</option>";
+                                            }
+                                            ?>
+                                        </select>
+                                    </div>
+                                    <div style="margin-right: 10px;">
+                                        <select class="select2" style="width: 100px;">
+                                            <?php
+                                            for ($monthNumber = 1; $monthNumber <= 12; $monthNumber++) {
+                                                $monthName = date('F', mktime(0, 0, 0, $monthNumber, 1));
+                                                echo "<option value='$monthNumber'>$monthName</option>";
+                                            }
+                                            ?>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <select class="select2" style="width: 100px;">
+                                            <?php
+                                            $currentYear = date('Y');
+                                            for ($year = $currentYear - 1; $year <= $currentYear + 1; $year++) {
+                                                echo "<option value='$year'>$year</option>";
+                                            }
+                                            ?>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 20px">
+                            <div style="width: 45%;">
+                                <div>
+                                    วันที่เปิดรับโครงการ <strong style="color: red">*</strong>
+                                </div>
+                                <div style="display: flex; justify-content: space-between;">
+                                    <div>
+                                        <select class="select2" style="width: 60px;">
+                                            <?php
+                                            for ($day = 1; $day <= 31; $day++) {
+                                                echo "<option value='$day'>$day</option>";
+                                            }
+                                            ?>
+                                        </select>
+                                    </div>
+                                    <div style="margin-right: 10px;">
+                                        <select class="select2" style="width: 100px;">
+                                            <?php
+                                            for ($monthNumber = 1; $monthNumber <= 12; $monthNumber++) {
+                                                $monthName = date('F', mktime(0, 0, 0, $monthNumber, 1));
+                                                echo "<option value='$monthNumber'>$monthName</option>";
+                                            }
+                                            ?>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <select class="select2" style="width: 100px;">
+                                            <?php
+                                            $currentYear = date('Y');
+                                            for ($year = $currentYear - 1; $year <= $currentYear + 1; $year++) {
+                                                echo "<option value='$year'>$year</option>";
+                                            }
+                                            ?>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div style="width: 45%;">
+                                <div>
+                                    วันที่ปิดรับโครงการ <strong style="color: red">*</strong>
+                                </div>
+                                <div style="display: flex; justify-content: space-between;">
+                                    <div>
+                                        <select class="select2" style="width: 60px;">
+                                            <?php
+                                            for ($day = 1; $day <= 31; $day++) {
+                                                echo "<option value='$day'>$day</option>";
+                                            }
+                                            ?>
+                                        </select>
+                                    </div>
+                                    <div style="margin-right: 10px;">
+                                        <select class="select2" style="width: 100px;">
+                                            <?php
+                                            for ($monthNumber = 1; $monthNumber <= 12; $monthNumber++) {
+                                                $monthName = date('F', mktime(0, 0, 0, $monthNumber, 1));
+                                                echo "<option value='$monthNumber'>$monthName</option>";
+                                            }
+                                            ?>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <select class="select2" style="width: 100px;">
+                                            <?php
+                                            $currentYear = date('Y');
+                                            for ($year = $currentYear - 1; $year <= $currentYear + 1; $year++) {
+                                                echo "<option value='$year'>$year</option>";
+                                            }
+                                            ?>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <hr>
+                        <label style="font-size: 14px">เอกสารแนบ <span style="color:red">(ขนาดไฟล์ของเอกสารแนบรวมไม่เกิน
+                                50MB/1ครั้ง) </span></label>
+                        <input type="file" name="" id="">
+                        <hr>
+                        <label style="font-size: 14px"> แหล่งที่มา/วัตถุประสงค์</span></label>
+                        <textarea id="editor"></textarea>
+
+
+                        <br>
+                        <div class="form-button-group  transparent">
+                            <button type="submit" class="btn btn-success btn-block"
+                                style='background-color: #1ab3a3;width: 150px ; float: right;'>
+                                <i class="fa fa-save" style='padding-right:10px'></i>บันทึก</button>
+                        </div>
+
+                    </div>
+
+                </form>
+            </div>
+        </div>
+
+
+
+    </body>
+
+    <script>
+        jQuery(document).ready(function($) {
+            $('.select2').select2();
+        });
+        $(document).ready(function() {
+            let inputIndex = 2;
+            $("#add_input").on("click", function(e) {
+                e.preventDefault();
+                var newBudgetInput = `
+            <div class="d-flex" style="margin-bottom: 10px">
+                <div style="width: 20%; margin-right: 10px; display: inline-block;">
+                    <input type="text" class="form-control" placeholder="งบประมาณต่อกองทุน" style="width: 100%" value="${inputIndex}">
+                </div>
+                <div style="width: 20%; display: inline-block;">
+                    <input type="number" class="form-control" placeholder="งบประมาณต่อกองทุน" style="width: 100%" >
+                </div>
+            </div>`;
+                $("#budget_form").append(newBudgetInput);
+                inputIndex++;
+            });
+            $("#del_input").on("click", function(e) {
+                e.preventDefault();
+                if ($("#budget_form .d-flex").length > 1) {
+                    $("#budget_form .d-flex:last").remove();
+                    inputIndex--;
+                }
+            });
+        });
+    </script>
+    <script>
+        ClassicEditor
+            .create(document.querySelector('#editor'))
+            .catch(error => {
+                console.error(error);
+            });
+    </script>
+@endsection

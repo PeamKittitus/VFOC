@@ -22,6 +22,17 @@ Route::get('/register', function () {
 Route::get('/home', function () {
     return view('home/index');
 });
+
+// Route page Project
+Route::get('/project', function () {
+    return view('project/index');
+});
+Route::get('/addproject', function () {
+    return view('project/addproject');
+});
+Route::get('/addsubproject', function () {
+    return view('project/addsubproject');
+});
 //========================================================================================== API
 Route::get('/getOrgStructure', '\App\Http\Controllers\ApiRegisterController@getOrgStructure');
 Route::post('/getOrgStructureProvince', '\App\Http\Controllers\ApiRegisterController@getOrgStructureProvince');
