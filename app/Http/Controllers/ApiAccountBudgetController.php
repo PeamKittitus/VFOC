@@ -13,6 +13,27 @@ class ApiAccountBudgetController extends Controller
 {
     function getAccountBudget()
     {
+        $dataAccBudget = DB::table('accountBudget')
+        ->select('accountBudget.id','accountBudget.AccName','accountBudget.AccCode','accountBudget.Amount','accountBudget.is_active')
+        ->where('is_active', 1)
+        ->get();
+        return $dataAccBudget;
+    }
+    function getAccountBudgetSub()
+    {
+        $dataAccBudgetSub = DB::table('accountBudgetSub')
+        ->select('accountBudgetSub.id',
+            'accountBudgetSub.account_id',
+            'accountBudgetSub.AccName',
+            'accountBudgetSub.AccCode',
+            'accountBudgetSub.Amount',
+            'accountBudgetSub.SubAmount',
+            'accountBudgetSub.AccStartDate',
+            'accountBudgetSub.AccEndDate',
+        )
+        ->where('is_active', 1)
+        ->get();
+        return $dataAccBudgetSub;
     }
     function saveAccountBudget(Request $request)
     {
