@@ -151,7 +151,7 @@
 
         <div class="flex-1 bg-pattern" style="background: #8dcde1">
             <div class="card p-4 rounded-plus bg-faded">
-                <form id="register" name="register" method="post" enctype="multipart/form-data">
+                <form id="addaccountbudget" name="addaccountbudget" method="post" enctype="multipart/form-data">
 
                     <div class="card-body pb-1">
                         <div class="section-title">
@@ -162,7 +162,7 @@
                         <div class="form-group basic">
                             <div class="input-wrapper">
                                 <label class="label" for="IDCard">ปีงบระมาณ</label> <br>
-                                <select id="CurrentBudgetYear" class="select2 select2-container2"
+                                <select id="BudgetYear" class="select2 select2-container2"
                                     style="width: 100% ; height: 50px !important;">
                                     <option value="2572">2572</option>
                                     <option value="2571">2571</option>
@@ -174,6 +174,7 @@
                                     <option value="2565">2565</option>
                                     <option value="2564">2564</option>
                                     <option value="2563">2563</option>
+                                    <option value="2563">2562</option>
                                 </select>
                                 <i class="clear-input"><ion-icon name="close-circle"></ion-icon></i>
                             </div>
@@ -183,14 +184,14 @@
                                 <label class="label" for="Firstname">ชื่องบประมาณโครงการ<strong
                                         style="color:red">*</strong></label>
                                 <input type="text" class="form-control" placeholder="ชื่องบประมาณโครงการ"
-                                    id="projectname">
+                                    id="AccName">
                                 <i class="clear-input"><ion-icon name="close-circle"></ion-icon></i>
                             </div>
                         </div>
                         <div class="form-group basic">
                             <div class="input-wrapper">
                                 <label class="label" for="Firstname">จำนวนเงิน<strong style="color:red">*</strong></label>
-                                <input type="text" class="form-control" placeholder="จำนวนเงิน" id="projectbudget">
+                                <input type="number" class="form-control" placeholder="จำนวนเงิน" id="Amount">
                                 <i class="clear-input"><ion-icon name="close-circle"></ion-icon></i>
                             </div>
                         </div>
@@ -209,10 +210,75 @@
 
 
     </body>
-
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.5/dist/jquery.validate.js"></script>
     <script>
         jQuery(document).ready(function($) {
             $('.select2').select2();
+        });
+        $(document).ready(function() {
+
+
+            $("form[name=addaccountbudget]").submit(function(event) {
+                event.preventDefault();
+
+                var AccName = $('#AccName').val();
+                var BudgetYear = $('#BudgetYear').val();
+                var Amount = $('#Amount').val();
+
+                var formData = new FormData();
+                formData.append('AccName', AccName);
+                formData.append('BudgetYear', BudgetYear);
+                formData.append('Amount', Amount);
+
+                // เก็บภาพที่ tb_temp_files
+                for (var pair of formData.entries()) {
+                    console.log(pair[0] + ', ' + pair[1]);
+                }
+
+
+                Swal.fire({
+                    title: "ยืนยัน",
+                    text: "คุณต้องการเพิ่มโครงการใช่หรือไม่?",
+                    icon: "question",
+                    showCancelButton: true,
+                    confirmButtonText: "Yes",
+                    cancelButtonText: "No",
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            url: '/saveAccountBudget',
+                            method: 'POST',
+                            data: formData,
+                            contentType: false,
+                            processData: false,
+                            success: function(response) {
+                                Swal.fire({
+                                    title: "Success",
+                                    text: "Form data saved successfully!",
+                                    icon: "success",
+                                    showCancelButton: false,
+                                    confirmButtonText: "OK",
+                                }).then((result) => {
+                                    if (result.isConfirmed) {
+                                        window.location.href =
+                                            "/project";
+                                    }
+                                });
+                            },
+                            error: function(xhr, status, error) {
+                                Swal.fire({
+                                    title: "Error",
+                                    text: "An error occurred while saving the form data.",
+                                    icon: "error",
+                                    showCancelButton: false,
+                                    confirmButtonText: "OK",
+                                });
+                            }
+                        });
+                    }
+                });
+            });
         });
     </script>
 @endsection

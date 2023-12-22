@@ -213,5 +213,13 @@ class AdminAccountBudgetController extends \crocodicstudio\crudbooster\controlle
 	        |
 	        */
 		$this->load_css = array();
+
+		
+	}
+
+	public function getIndex()
+	{
+		// $data['name'] = 'เพิ่มบุคคลากร';
+		return view('project/index');
 	}
 }
