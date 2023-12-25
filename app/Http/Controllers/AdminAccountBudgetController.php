@@ -219,7 +219,11 @@ class AdminAccountBudgetController extends \crocodicstudio\crudbooster\controlle
 
 	public function getIndex()
 	{
-		// $data['name'] = 'เพิ่มบุคคลากร';
-		return view('project/index');
+		$getAccountBudget = (new ApiAccountBudgetController)->getAccountBudget();
+		$getAccountBudgetSub = (new ApiAccountBudgetController)->getAccountBudgetSub();
+		$data['getAccountBudget'] = $getAccountBudget;
+		$data['getAccountBudgetSub'] = $getAccountBudgetSub;
+		// dd($data);
+		return view('project/index',$data);
 	}
 }

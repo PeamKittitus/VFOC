@@ -1,5 +1,8 @@
 @extends('crudbooster::admin_template')
 @section('content')
+    @php
+        use Carbon\Carbon;
+    @endphp
 
     <head>
         <!-- Include Kanit font from Google Fonts -->
@@ -82,7 +85,10 @@
             <option value="2563">2563</option>
         </select>
 
-        <table id="example" class="table table-striped table-bordered" cellspacing="0" width="100%">
+
+
+        <table id="example" class="table table-striped table-bordered" cellspacing="0" width="100%"
+            style="margin-top: 20px !important">
             <thead>
                 <tr>
                     <th>ลำดับ</th>
@@ -95,32 +101,76 @@
                     <th>Action</th>
                 </tr>
             </thead>
+
             <tbody>
-                <tr>
-                    <td>John Doe</td>
-                    <td>john@example.com</td>
-                    <td>John Doe</td>
-                    <td>john@example.com</td>
-                    <td>John Doe</td>
-                    <td>john@example.com</td>
-                    <td>john@example.com</td>
-                    <td><button class='primary-button'>+</button></td>
-                </tr>
+                @php
+                    $mainProjectNumber = 1;
+                @endphp
+                @foreach ($getAccountBudget as $get)
+                    <tr>
+                        <td class="text-left">{{ $mainProjectNumber }}.</td>
+                        <td>{{ $get->AccCode }}</td>
+                        <td>{{ $get->AccName }}</td>
+                        <td>-</td>
+                        <td class="text-left">{{ number_format($get->Amount, 2) }}</td>
+                        <td class="text-left">-</td>
+                        <td class="text-left">-</td>
+                        <td class="text-left">-</td>
+                    </tr>
+                    @php
+                        $subProjectNumber = 1; // Reset sub-project number for each main project
+                    @endphp
+                    @foreach ($getAccountBudgetSub as $get2)
+                        @if ($get2->account_id == $get->id)
+                            <tr>
+                                <td class="text-center" style="text-align: center"> -
+                                    {{ $mainProjectNumber }}.{{ $subProjectNumber }}</td>
+                                <td style="text-align: center"> - {{ $get2->AccCode }}</td>
+                                <td style="text-align: center"> - {{ $get2->AccName }}</td>
+                                <td style="text-align: center">
+                                    {{ \Carbon\Carbon::parse($get2->AccStartDate)->toDateString() }} -
+                                    {{ \Carbon\Carbon::parse($get2->AccEndDate)->toDateString() }}</td>
+                                <td class="text-right" style="text-align: center"> - {{ number_format($get2->Amount, 2) }}
+                                </td>
+                                <td class="text-right" style="text-align: center"> -
+                                    {{ number_format($get2->SubAmount, 2) }}</td>
+                                <td class="text-center">-</td>
+                                <td class="text-center">-</td>
+                            </tr>
+                            @php
+                                $subProjectNumber++;
+                            @endphp
+                        @endif
+                    @endforeach
+                    @php
+                        $mainProjectNumber++;
+                    @endphp
+                @endforeach
             </tbody>
         </table>
+
+
 
     </body>
 
     <script>
         jQuery(document).ready(function($) {
-            $('#example').DataTable({
-                responsive: true,
-                language: {
-                // Customize the pagination information text
-                info: "แสดง _START_ ถึง _END_ จาก _TOTAL_ แถว"
-            }
-            }); 
             $('.select2').select2();
+        });
+        // datatable custom sub td
+        // $(document).ready(function() {
+        //     var table = $('#example2').DataTable({
+        //         "order": [
+        //             [1, 'asc']
+        //         ], 
+        //     });
+        // });
+        $(document).ready(function() {
+            $('#example').DataTable({
+                "order": [
+                    [7, 'asc']
+                ]
+            });
         });
     </script>
 @endsection
