@@ -144,10 +144,10 @@ class ApiAccountBudgetController extends Controller
         $AccName = $request['AccName'];
         $Amount = $request['Amount'];
         $SubAmount = $request['SubAmount'];
-        $AccStartDate = $request['AccStartDate'];
-        $AccEndDate = $request['AccEndDate'];
-        $OpenDate = $request['OpenDate'];
-        $CloseDate = $request['CloseDate'];
+        $AccStartDate = $request['AccStartCombine'];
+        $AccEndDate = $request['AccEndCombine'];
+        $OpenDate = $request['OpenStartCombine'];
+        $CloseDate = $request['EndStartCombine'];
         $Detail = $request['Detail'];
         //===========================================AccountBudgetSub
         
@@ -162,6 +162,7 @@ class ApiAccountBudgetController extends Controller
 
         //===========================================File
         $file = $request['file'];
+        $totalfiles = $request['totalfiles'];
         $array_file = [];
         //===========================================File
 
@@ -170,6 +171,24 @@ class ApiAccountBudgetController extends Controller
         $dataAccBudgetSub = DB::table('accountBudgetSub')->where('account_id', $AccId)->count();
         $BudgetYear = $dataAccBudget->BudgetYear;
         $AccCode = $dataAccBudget->AccCode;
+        $AccBudgetAmount = $dataAccBudget->Amount;
+
+
+        $dataAccBudgetSubSumAmount = DB::table('accountBudgetSub')->where('account_id', $AccId)->get();
+        $sumAmount = $dataAccBudgetSubSumAmount->sum('Amount')+$Amount;
+
+        if($sumAmount > $AccBudgetAmount){
+            DB::rollback();
+            $data['api_status'] = 0;
+            $data['api_message'] = 'กรุณาทำรายการใหม่อีกครั้ง';
+            return response()->json($data, 200);
+        }
+        if($Amount < $SubAmount){
+            DB::rollback();
+            $data['api_status'] = 0;
+            $data['api_message'] = 'กรุณาทำรายการใหม่อีกครั้ง';
+            return response()->json($data, 200);
+        }
         $AccCodeSub = $AccCode . '-' . sprintf('%03d', $dataAccBudgetSub+1);
         //============================================GetData
         DB::beginTransaction();

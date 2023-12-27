@@ -478,7 +478,7 @@ use Carbon\Carbon;
 
 
 </body>
-
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
     jQuery(document).ready(function($) {
         $('.select2').select2();
@@ -526,7 +526,7 @@ use Carbon\Carbon;
             event.preventDefault();
             // Get values from form fields
             // var AccId = $('#AccId').val();
-            var AccId = 14;
+            var AccId = 19;
             var AccName = $('#AccName').val();
             var Amount = $('#Amount').val();
             var SubAmount = $('#SubAmount').val();
@@ -541,78 +541,73 @@ use Carbon\Carbon;
             var AccStartDate = $('#AccStartDate').val();
             var AccStartMonth = $('#AccStartMonth').val();
             var AccStartYear = $('#AccStartYear').val();
+            var AccStartCombine = AccStartYear+'-'+AccStartMonth+'-'+AccStartDate;
             var AccEndDate = $('#AccEndDate').val();
             var AccEndMonth = $('#AccEndMonth').val();
             var AccEndYear = $('#AccEndYear').val();
+            var AccEndCombine = AccEndYear+'-'+AccEndMonth+'-'+AccEndDate;
             var OpenStartDate = $('#OpenStartDate').val();
             var OpenStartMonth = $('#OpenStartMonth').val();
             var OpenStartYear = $('#OpenStartYear').val();
+            var OpenStartCombine = OpenStartYear+'-'+OpenStartMonth+'-'+OpenStartDate;
             var EndStartDate = $('#EndStartDate').val();
             var EndStartMonth = $('#EndStartMonth').val();
             var EndStartYear = $('#EndStartYear').val();
+            var EndStartCombine = EndStartYear+'-'+EndStartMonth+'-'+EndStartDate;
             var totalfiles = document.getElementById("file").files.length;
             var editorData = editor.getData();
             var Detail = editorData;
-            console.log("AccId:", AccId);
-            console.log("AccName:", AccName);
-            console.log("Amount:", Amount);
-            console.log("SubAmount:", SubAmount);
-            console.log("PeriodNo:", PeriodNo);
-            console.log("PeriodPercent:", PeriodPercent);
-            console.log("LowActivity:", LowActivity);
-            console.log("MidActivity:", MidActivity);
-            console.log("HighActivity:", HighActivity);
-            console.log("LowTiming:", LowTiming);
-            console.log("MidTiming:", MidTiming);
-            console.log("HighTiming:", HighTiming);
-            console.log("AccStartDate:", AccStartDate);
-            console.log("AccStartMonth:", AccStartMonth);
-            console.log("AccStartYear:", AccStartYear);
-            console.log(AccStartYear+'-'+AccStartMonth+'-'+AccStartDate);
-            console.log("AccEndDate:", AccEndDate);
-            console.log("AccEndMonth:", AccEndMonth);
-            console.log("AccEndYear:", AccEndYear);
-            console.log("OpenStartDate:", OpenStartDate);
-            console.log("OpenStartMonth:", OpenStartMonth);
-            console.log("OpenStartYear:", OpenStartYear);
-            console.log("EndStartDate:", EndStartDate);
-            console.log("EndStartMonth:", EndStartMonth);
-            console.log("EndStartYear:", EndStartYear);
-            console.log("Total Files:", totalfiles);
-            console.log("Editor Data:", Detail);
-            // var formData = new FormData();
-            // formData.append('idCard', idCard);
-            // for (var index = 0; index < totalfiles; ++index) {
-            //   formData.append(
-            //     "file[]",
-            //     document.getElementById("file").files[index]
-            //   );
-            // }
-            // $.ajax({
-            //     url: '/saveRegister',
-            //     type: 'POST',
-            //     data: formData,
-            //     processData: false,
-            //     contentType: false,
-            //     success: function(response) {
-            //         if (response.api_status == 1) {
-            //             Swal.fire({
-            //                 icon: 'success',
-            //                 title: 'สำเร็จ!',
-            //                 text: 'บันทึกข้อมูลเรียบร้อย'
-            //             }).then(function() {
-            //                 window.location.href = '/admin/login';
-            //             });
-            //         } else if (data.api_status == 2) {
-            //             swal("ยกเลิก!", data.api_message, "error");
-            //         } else {
-            //             swal("ยกเลิก!", data.api_message, "error");
-            //         }
-            //     },
-            //     error: function(xhr, status, error) {
-            //         console.error('AJAX Error:', status, error);
-            //     }
-            // });
+
+            var formData = new FormData();
+            formData.append('AccId', AccId);
+            formData.append('AccName', AccName);
+            formData.append('Amount', Amount);
+            formData.append('SubAmount', SubAmount);
+            formData.append('PeriodNo', PeriodNo);
+            formData.append('PeriodPercent', PeriodPercent);
+            formData.append('LowActivity', LowActivity);
+            formData.append('MidActivity', MidActivity);
+            formData.append('HighActivity', HighActivity);
+            formData.append('LowTiming', LowTiming);
+            formData.append('MidTiming', MidTiming);
+            formData.append('HighTiming', HighTiming);
+            formData.append('AccStartCombine', AccStartCombine);
+            formData.append('AccEndCombine', AccEndCombine);
+            formData.append('OpenStartCombine', OpenStartCombine);
+            formData.append('EndStartCombine', EndStartCombine);
+            formData.append('totalfiles', totalfiles);
+            formData.append('Detail', Detail);
+            for (var index = 0; index < totalfiles; ++index) {
+              formData.append(
+                "file[]",
+                document.getElementById("file").files[index]
+              );
+            }
+            $.ajax({
+                url: '/saveAccountBudgetSub',
+                type: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function(response) {
+                    if (response.api_status == 1) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'สำเร็จ!',
+                            text: 'บันทึกข้อมูลเรียบร้อย'
+                        }).then(function() {
+                            window.location.href = '/admin/login';
+                        });
+                    } else if (data.api_status == 2) {
+                        swal("ยกเลิก!", data.api_message, "error");
+                    } else {
+                        swal("ยกเลิก!", data.api_message, "error");
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error('AJAX Error:', status, error);
+                }
+            });
         });
     });
 </script>
