@@ -136,7 +136,7 @@
         </div>
         <div class="card-footer">
             <button type="submit" class="btn btn-info">บันทึก</button>
-            <button type="submit" class="btn btn-default">ยกเลิก</button>
+            <a href="javascript:history.back()" class="btn btn-default">ยกเลิก</a>
         </div>
     </form>
 </div>

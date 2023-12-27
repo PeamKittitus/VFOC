@@ -72,6 +72,7 @@ class ApiRegisterController extends Controller
 
                     $data_user = [];
                     $data_user['idCard'] = $idCard;
+                    $data_user['cmsUserId'] = $userCmsID;
                     $data_user['firstName'] = $firstName;
                     $data_user['lastName'] = $lastName;
                     $data_user['email'] = $email;
