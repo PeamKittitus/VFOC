@@ -50,7 +50,8 @@ class ApiRegisterController extends Controller
         $email = $request['email'];
         $password = $request['password'];
         $orgStructureProvince = $request['orgStructureProvince'];
-
+        $OrgData = DB::table('systemOrgStructureProvince')->where('id', $orgStructureProvince)->first();
+        $OrgId = $OrgData->orgId;
         DB::beginTransaction();
         try {
             $existingEmail = DB::table('cms_users')->where('email', $email)->exists();
@@ -59,6 +60,8 @@ class ApiRegisterController extends Controller
                 $data_cms_user = [];
                 $data_cms_user['name'] = $username;
                 $data_cms_user['email'] = $email;
+                $data_cms_user['orgId'] = $OrgId;
+                
                 $data_cms_user['password'] = bcrypt($password);
                 $data_cms_user['id_cms_privileges'] = 1;
                 $data_cms_user['created_at'] = date('Y-m-d H:i:s');

@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
-
+//==========================================================================================Route
 Route::get('/', function () {
     return redirect('/admin');
 });
@@ -22,8 +22,6 @@ Route::get('/register', function () {
 Route::get('/home', function () {
     return view('home/index');
 });
-
-// Route page Project
 Route::get('/project', function () {
     return view('project/index');
 });
@@ -33,6 +31,11 @@ Route::get('/addproject', function () {
 Route::get('/addsubproject', function () {
     return view('project/addsubproject');
 });
+Route::get('/addBookBank', '\App\Http\Controllers\AdminAccountBookbankController@addBookBank');
+Route::get('/editbookbank/{id}', '\App\Http\Controllers\AdminAccountBookbankController@editBookBank');
+//==========================================================================================Route
+
+
 //========================================================================================== API
 Route::get('/getOrgStructure', '\App\Http\Controllers\ApiRegisterController@getOrgStructure');
 Route::post('/getOrgStructureProvince', '\App\Http\Controllers\ApiRegisterController@getOrgStructureProvince');
@@ -43,4 +46,7 @@ Route::post('/saveAccountBudget', '\App\Http\Controllers\ApiAccountBudgetControl
 Route::post('/delAccountBudget', '\App\Http\Controllers\ApiAccountBudgetController@delAccountBudget');
 Route::post('/saveAccountBudgetSub', '\App\Http\Controllers\ApiAccountBudgetController@saveAccountBudgetSub');
 Route::get('/getCurrentBudgetYear', '\App\Http\Controllers\FunctionController@getCurrentBudgetYear');
+Route::post('/saveBookbank', '\App\Http\Controllers\ApiBookbankController@saveBookbank');
+Route::post('/editBookbank', '\App\Http\Controllers\ApiBookbankController@editBookbank');
+Route::post('/delBookBank', '\App\Http\Controllers\ApiBookbankController@delBookBank');
 //========================================================================================== API
