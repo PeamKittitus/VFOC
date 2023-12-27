@@ -15,7 +15,7 @@ class ApiAccountBudgetController extends Controller
     {
         $dataAccBudget = DB::table('accountBudget')
         ->select('accountBudget.id','accountBudget.AccName','accountBudget.AccCode','accountBudget.Amount','accountBudget.is_active')
-        ->where('is_active', 1)
+        // ->where('is_active', 1)
         ->get();
         return $dataAccBudget;
     }
@@ -30,8 +30,9 @@ class ApiAccountBudgetController extends Controller
             'accountBudgetSub.SubAmount',
             'accountBudgetSub.AccStartDate',
             'accountBudgetSub.AccEndDate',
+            'accountBudgetSub.is_active',
         )
-        ->where('is_active', 1)
+        // ->where('is_active', 1)
         ->get();
         return $dataAccBudgetSub;
     }
@@ -89,11 +90,16 @@ class ApiAccountBudgetController extends Controller
         DB::beginTransaction();
         try {
             $existingActive = DB::table('accountBudget')->where('id', $AccId)->first();
+            $allsub = DB::table('accountBudgetSub')->where('account_id', $AccId)->get();
+            // dd($allsub);
             if ($existingActive->is_active == 0) {
                 $dataUpdate['is_active'] = 1;
                 $dataUpdate['updated_at'] = date('Y-m-d H:i:s');
                 $dataUpdate['updated_by'] = CRUDBooster::myId();
                 $UpdateIsActive = DB::table('accountBudget')->where('id', $AccId)->update($dataUpdate);
+                foreach ($allsub as $subId) {
+                    $UpdatesubIsActive = DB::table('accountBudgetSub')->where('id', $subId->id)->update($dataUpdate);
+                }
                 if ($UpdateIsActive) {
                     DB::commit();
                     $data['api_status'] = 1;
@@ -113,6 +119,64 @@ class ApiAccountBudgetController extends Controller
                 $dataUpdate['updated_at'] = date('Y-m-d H:i:s');
                 $dataUpdate['updated_by'] = CRUDBooster::myId();
                 $UpdateIsActive = DB::table('accountBudget')->where('id', $AccId)->update($dataUpdate);
+                foreach ($allsub as $subId) {
+                    $UpdatesubIsActive = DB::table('accountBudgetSub')->where('id', $subId->id)->update($dataUpdate);
+                }
+                if ($UpdateIsActive) {
+                    DB::commit();
+                    $data['api_status'] = 1;
+                    $data['api_message'] = 'Success';
+                    $data['id'] = $UpdateIsActive;
+                    return response()->json($data, 200)
+                        ->header("Access-Control-Allow-Origin", config('cors.allowed_origins'))
+                        ->header("Access-Control-Allow-Methods", config('cors.allowed_methods'));
+                } else {
+                    DB::rollback();
+                    $data['api_status'] = 0;
+                    $data['api_message'] = 'กรุณาทำรายการใหม่อีกครั้ง';
+                    return response()->json($data, 200);
+                }
+            }
+        } catch (\Exception $e) {
+            DB::rollback();
+            $data['api_status'] = 0;
+            $data['api_message'] = 'กรุณาทำรายการใหม่อีกครั้ง';
+            $data['api_data'] = $e;
+        }
+        response()->json($data, 200)->header("Access-Control-Allow-Origin", config('cors.allowed_origins'))
+            ->header("Access-Control-Allow-Methods", config('cors.allowed_methods'))->send();
+    }
+
+    function delsubAccountBudget(Request $request)
+    {   
+        $AccId = $request['AccSubId'];
+        DB::beginTransaction();
+        try {
+            $existingActive = DB::table('accountBudgetSub')->where('id', $AccId)->first();
+            if ($existingActive->is_active == 0) {
+                $dataUpdate['is_active'] = 1;
+                $dataUpdate['updated_at'] = date('Y-m-d H:i:s');
+                $dataUpdate['updated_by'] = CRUDBooster::myId();
+                $UpdateIsActive = DB::table('accountBudgetSub')->where('id', $AccId)->update($dataUpdate);
+                if ($UpdateIsActive) {
+                    DB::commit();
+                    $data['api_status'] = 1;
+                    $data['api_message'] = 'Success';
+                    $data['id'] = $UpdateIsActive;
+                    return response()->json($data, 200)
+                        ->header("Access-Control-Allow-Origin", config('cors.allowed_origins'))
+                        ->header("Access-Control-Allow-Methods", config('cors.allowed_methods'));
+                } else {
+                    DB::rollback();
+                    $data['api_status'] = 0;
+                    $data['api_message'] = 'กรุณาทำรายการใหม่อีกครั้ง';
+                    return response()->json($data, 200);
+                }
+            } else {
+                $dataUpdate['is_active'] = 0;
+                $dataUpdate['updated_at'] = date('Y-m-d H:i:s');
+                $dataUpdate['updated_by'] = CRUDBooster::myId();
+                $UpdateIsActive = DB::table('accountBudgetSub')->where('id', $AccId)->update($dataUpdate);
                 if ($UpdateIsActive) {
                     DB::commit();
                     $data['api_status'] = 1;
