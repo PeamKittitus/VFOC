@@ -106,41 +106,48 @@
             </div>
             <div class="form-group">
                 <label>ชื่อ <span style="color:red">*</span></label>
-                <input type="text" class="form-control checkNumber" id="BookBankNumber" value="{{$getDataUser->firstName}}">
+                <input type="text" class="form-control checkNumber" id="firstName" value="{{$getDataUser->firstName}}">
             </div>
             <div class="form-group">
                 <label>นามสกุล <span style="color:red">*</span></label>
-                <input type="text" class="form-control" id="WithdrawName" value="{{$getDataUser->lastName}}">
+                <input type="text" class="form-control" id="lastName" value="{{$getDataUser->lastName}}">
             </div>
             <div class="form-group">
                 <label>เลขบัตรประจำตัวประชาชน <span style="color:red">*</span></label>
-                <input type="text" class="form-control checkNumber" id="WithdrawName2" value="{{$getDataUser->idCard}}">
+                <input type="text" class="form-control checkNumber" id="idCard" value="{{$getDataUser->idCard}}" maxlength="13">
             </div>
             <div class="form-group">
                 <label>เบอร์โทร<span style="color:red">*</span></label>
-                <input type="text" class="form-control" id="WithdrawName3" value="{{$getDataUser->phoneNumber}}">
+                <input type="text" class="form-control checkNumber" id="phoneNumber" value="{{$getDataUser->phoneNumber}}" maxlength="10">
             </div>
             <div class="form-group">
                 <label>อีเมล (e-mail)<span style="color:red">*</span></label>
-                <input type="text" class="form-control" id="WithdrawName4" value="{{$getDataUser->email}}">
+                <input type="text" class="form-control" id="email" value="{{$getDataUser->email}}">
             </div>
             <div class="form-group">
                 <label>ชื่อบัญชีผู้ใช้งานระบบ<span style="color:red">*</span></label>
-                <input type="text" class="form-control" id="WithdrawName5" value="{{$getDataUser->name}}">
+                <input type="text" class="form-control" id="username" value="{{$getDataUser->name}}">
             </div>
             <div class="form-group">
                 <label>รหัสผ่าน <span style="color:red">*</span></label>
-                <input type="password" class="form-control" id="WithdrawName5">
+                <input type="password" class="form-control" id="Password">
+                <span style="color:gray ; font-size: 1rem">รหัสผ่านควรมีความยาวอย่างน้อย 6
+                    ตัวอักษร* (ตัวพิมพ์ใหญ่, พิมพ์เล็ก, ตัวเลข, อักขระพิเศษ) เช่น
+                    P@sswOrd*</span>
             </div>
             <div class="form-group">
                 <label>ยืนยันรหัสผ่าน <span style="color:red">*</span></label>
-                <input type="password" class="form-control" id="WithdrawName5">
+                <input type="password" class="form-control" id="ConfirmPassword">
+                <span style="color:gray ; font-size: 1rem">รหัสผ่านควรมีความยาวอย่างน้อย 6
+                    ตัวอักษร* (ตัวพิมพ์ใหญ่, พิมพ์เล็ก, ตัวเลข, อักขระพิเศษ) เช่น
+                    P@sswOrd*</span>
             </div>
         </div>
         <div class="card-footer">
             <button type="submit" class="btn btn-info">บันทึก</button>
             <a href="javascript:history.back()" class="btn btn-default">ยกเลิก</a>
         </div>
+        <input type="hidden" class="form-control" id="cmsUserId" value="{{$getDataUser->cmsUserId}}">
     </form>
 </div>
 @push('bottom')
@@ -163,10 +170,171 @@
             }
         }
     }
+    //=============NumberOnly
     $(".checkNumber").keypress(function() {
         var dInput = $(this).val();
         return bannedKey(dInput, 1);
 
+    });
+
+    //=============ValidIDCard
+    function isValidThaiIDCard(idCard) {
+
+        var idCardRegex = /^\d{13}$/;
+
+        return idCardRegex.test(idCard);
+    }
+    //=============Email
+    function isValidEmail(email) {
+        var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+        return emailRegex.test(email);
+    }
+
+    $("form[name=editProfile]").submit(function(event) {
+        event.preventDefault();
+
+        var cmsUserId = $('#cmsUserId').val();
+        var firstName = $('#firstName').val();
+        var lastName = $('#lastName').val();
+        var phoneNumber = $('#phoneNumber').val();
+        var username = $('#username').val();
+        var Password = $('#Password').val();
+        var ConfirmPassword = $('#ConfirmPassword').val();
+        var passwordPolicyRegex = /^(?=.*[A-Z])(?=.*\d).+$/;
+        var phoneNumberRegex = /^\d{10}$/;
+        var idCard = $('#idCard').val();
+        var email = $('#email').val();
+
+        // Perform specific validations
+        if (!isValidThaiIDCard(idCard)) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Invalid Thai ID Card Format',
+                text: 'Please enter a valid Thai ID card number consisting of 13 digits.'
+            });
+            return;
+        }
+        // Perform specific validations
+        if (!isValidEmail(email)) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Invalid Email Format',
+                text: 'Please enter a valid email address.'
+            });
+            return;
+        }
+        // Perform specific validations
+        if (!phoneNumberRegex.test(phoneNumber)) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Invalid Phone Number Format',
+                text: 'Please enter a valid 10-digit phone number.'
+            });
+            return;
+        }
+        // Check if Password is provided
+        if (Password) {
+            // Check if password meets the policy
+            if (!passwordPolicyRegex.test(Password)) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Invalid Password Format',
+                    text: 'Password must contain at least one uppercase letter and one digit.'
+                });
+                return;
+            }
+
+            // Check if ConfirmPassword is provided
+            if (ConfirmPassword) {
+                // Check if Password and ConfirmPassword match
+                if (Password !== ConfirmPassword) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Passwords Do Not Match',
+                        text: 'Please make sure the passwords match.'
+                    });
+                    return;
+                }
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Passwords Do Not Match',
+                    text: 'Please make sure the passwords match.'
+                });
+                return;
+            }
+        }
+        var formData = new FormData();
+
+        formData.append('cmsUserId', cmsUserId);
+        formData.append('idCard', idCard);
+        formData.append('firstName', firstName);
+        formData.append('lastName', lastName);
+        formData.append('username', username);
+        formData.append('phoneNumber', phoneNumber);
+        formData.append('email', email);
+        formData.append('password', Password);
+        Swal.fire({
+            title: "ยืนยัน",
+            text: "คุณต้องการแก้ไขข้อมูลส่วนตัวใช่หรือไม่?",
+            icon: "question",
+            showCancelButton: true,
+            confirmButtonText: "ใช่",
+            cancelButtonText: "ไม่",
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: '/editProfile',
+                    method: 'POST',
+                    data: formData,
+                    contentType: false,
+                    processData: false,
+                    success: function(response) {
+                        if (response.api_status == 1) {
+                            Swal.fire({
+                                title: "สำเร็จ",
+                                text: "แก้ข้อมูลสำเร็จ!",
+                                icon: "success",
+                                showCancelButton: false,
+                                confirmButtonText: "OK",
+                            }).then((result) => {
+                                if (result.isConfirmed) {
+                                    window.location.href =
+                                        "/admin/user";
+                                }
+                            });
+                        } else if(response.api_status == 2) {
+                            Swal.fire({
+                                title: "Error",
+                                text: "ไม่สามารถใช้ email นี้ได้ เนื่องจากมี email นี้ในระบบแล้ว",
+                                icon: "error",
+                                showCancelButton: false,
+                                confirmButtonText: "OK",
+                            });
+                        }else{
+                            Swal.fire({
+                                title: "Error",
+                                text: "An error occurred while saving the form data.",
+                                icon: "error",
+                                showCancelButton: false,
+                                confirmButtonText: "OK",
+                            });
+                        }
+
+                    },
+                    error: function(xhr, status, error) {
+                        Swal.fire({
+                            title: "Error",
+                            text: "An error occurred while saving the form data.",
+                            icon: "error",
+                            showCancelButton: false,
+                            confirmButtonText: "OK",
+                        });
+                    }
+                });
+            }
+        });
     });
 </script>
 @endpush

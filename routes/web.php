@@ -50,4 +50,5 @@ Route::get('/getCurrentBudgetYear', '\App\Http\Controllers\FunctionController@ge
 Route::post('/saveBookbank', '\App\Http\Controllers\ApiBookbankController@saveBookbank');
 Route::post('/editBookbank', '\App\Http\Controllers\ApiBookbankController@editBookbank');
 Route::post('/delBookBank', '\App\Http\Controllers\ApiBookbankController@delBookBank');
+Route::post('/editProfile', '\App\Http\Controllers\ApiUserController@editProfile');
 //========================================================================================== API
