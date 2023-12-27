@@ -44,6 +44,7 @@ Route::get('/getAccountBudget', '\App\Http\Controllers\ApiAccountBudgetControlle
 Route::get('/getAccountBudgetSub', '\App\Http\Controllers\ApiAccountBudgetController@getAccountBudgetSub');
 Route::post('/saveAccountBudget', '\App\Http\Controllers\ApiAccountBudgetController@saveAccountBudget');
 Route::post('/delAccountBudget', '\App\Http\Controllers\ApiAccountBudgetController@delAccountBudget');
+Route::post('/delsubAccountBudget', '\App\Http\Controllers\ApiAccountBudgetController@delsubAccountBudget');
 Route::post('/saveAccountBudgetSub', '\App\Http\Controllers\ApiAccountBudgetController@saveAccountBudgetSub');
 Route::get('/getCurrentBudgetYear', '\App\Http\Controllers\FunctionController@getCurrentBudgetYear');
 Route::post('/saveBookbank', '\App\Http\Controllers\ApiBookbankController@saveBookbank');
