@@ -317,7 +317,7 @@ use Carbon\Carbon;
     </div>
 
     <select id="CurrentBudgetYear" class="select2 select2-container2">
-        <option selected></option>
+        <option selected disabled>All</option>
         <option value="2572">2572</option>
         <option value="2571">2571</option>
         <option value="2570">2570</option>
@@ -382,7 +382,7 @@ use Carbon\Carbon;
                                                             <i class="fa fa-plus" aria-hidden="true"></i> เพิ่มรายการ
                                                         </a>
                                                         <a href="/editproject/{{$get->id}}" data-parent="MAIN" data-val="10241" class="btn btn-xs btn-warning edit" title="Edit"><i class="fa fa-edit" aria-hidden="true"></i> แก้ไข </a>
-                                                        <a href="javascript:void(0);" data-val="10241" class="btn btn-xs btn-danger  delete" title="Delete"><i class="fa fa-times" aria-hidden="true"></i> ลบ </a>
+                                                        <button class="btn btn-xs btn-danger  delete del_icon" title="Delete" data-id="{{$get->id}}"><i class="fa fa-times" aria-hidden="true"></i> ลบ </button>
                                                     </td>
                                                 </tr>
                                                 @php
@@ -418,7 +418,7 @@ use Carbon\Carbon;
                                                     <td class="text-center" style="">
 
                                                         <a href="/editsubproject/{{$get2->id}}" data-parent="PARENT" data-val="10242" class="btn btn-xs btn-warning edit" title="Edit"><i class="fa fa-edit" aria-hidden="true"></i> แก้ไข </a>
-                                                        <a href="javascript:void(0);" data-val="10242" class="btn btn-xs btn-danger  delete" title="Delete"><i class="fa fa-times" aria-hidden="true"></i> ลบ </a>
+                                                        <button class="btn btn-xs btn-danger  delete del_iconSub" data-id="{{$get2->id}}" title="Delete"><i class="fa fa-times" aria-hidden="true"></i> ลบ </button>
 
                                                     </td>
                                                 </tr>
@@ -692,5 +692,111 @@ use Carbon\Carbon;
 
     });
 
+</script>
+<script>
+    $(document).ready(function() {
+        $('.del_iconSub').on('click', function() {
+            var AccSubId = $(this).data('id');
+            var formData = new FormData();
+            formData.append('AccSubId', AccSubId);
+            Swal.fire({
+                title: "ยืนยัน",
+                text: "คุณต้องการลบข้อมูลใช่หรือไม่?",
+                icon: "question",
+                showCancelButton: true,
+                confirmButtonText: "ใช่",
+                cancelButtonText: "ไม่",
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: '/delSubAccountBudget',
+                        method: 'POST',
+                        data: formData,
+                        contentType: false,
+                        processData: false,
+                        success: function(response) {
+                            if (response.api_status == 1) {
+                                Swal.fire({
+                                    title: "สำเร็จ",
+                                    text: "ลบข้อมูลสำเร็จ!",
+                                    icon: "success",
+                                    showCancelButton: false,
+                                    confirmButtonText: "OK",
+                                }).then((result) => {
+                                    if (result.isConfirmed) {
+                                        window.location.href =
+                                            "/admin/accountBudget";
+                                    }
+                                });
+                            }else {
+                                swal("ยกเลิก!", response.api_message, "error");
+                            }
+
+                        },
+                        error: function(xhr, status, error) {
+                            Swal.fire({
+                                title: "Error",
+                                text: "An error occurred while saving the form data.",
+                                icon: "error",
+                                showCancelButton: false,
+                                confirmButtonText: "OK",
+                            });
+                        }
+                    });
+                }
+            });
+        });
+        $('.del_icon').on('click', function() {
+            var AccId = $(this).data('id');
+            var formData = new FormData();
+            formData.append('AccId', AccId);
+            Swal.fire({
+                title: "ยืนยัน",
+                text: "คุณต้องการลบข้อมูลใช่หรือไม่?",
+                icon: "question",
+                showCancelButton: true,
+                confirmButtonText: "ใช่",
+                cancelButtonText: "ไม่",
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: '/delAccountBudget',
+                        method: 'POST',
+                        data: formData,
+                        contentType: false,
+                        processData: false,
+                        success: function(response) {
+                            if (response.api_status == 1) {
+                                Swal.fire({
+                                    title: "สำเร็จ",
+                                    text: "ลบข้อมูลสำเร็จ!",
+                                    icon: "success",
+                                    showCancelButton: false,
+                                    confirmButtonText: "OK",
+                                }).then((result) => {
+                                    if (result.isConfirmed) {
+                                        window.location.href =
+                                            "/admin/accountBudget";
+                                    }
+                                });
+                            }else {
+                                swal("ยกเลิก!", response.api_message, "error");
+                            }
+
+                        },
+                        error: function(xhr, status, error) {
+                            Swal.fire({
+                                title: "Error",
+                                text: "An error occurred while saving the form data.",
+                                icon: "error",
+                                showCancelButton: false,
+                                confirmButtonText: "OK",
+                            });
+                        }
+                    });
+                }
+            });
+        });
+    });
 </script>
 @endsection
