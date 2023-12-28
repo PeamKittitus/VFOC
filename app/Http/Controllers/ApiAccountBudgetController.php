@@ -17,6 +17,7 @@ class ApiAccountBudgetController extends Controller
         $dataAccBudget = DB::table('accountBudget')
             ->select('accountBudget.id', 'accountBudget.AccName', 'accountBudget.AccCode', 'accountBudget.Amount', 'accountBudget.is_active', 'accountBudget.BudgetYear')
             ->where('BudgetYear', $BudgetYear)
+            ->where('is_delete', 0)
             ->get();
 
         $dataAccBudgetSub = DB::table('accountBudgetSub')
@@ -30,7 +31,8 @@ class ApiAccountBudgetController extends Controller
             'accountBudgetSub.AccEndDate',
             'accountBudgetSub.is_active',
         )
-         ->get();
+        ->where('is_delete', 0)
+        ->get();
 
         $data = [];
         $data['api_status'] = 1;
@@ -358,7 +360,6 @@ class ApiAccountBudgetController extends Controller
 
         $dataAccBudgetSubSumAmount = DB::table('accountBudgetSub')->where('account_id', $AccId)->where('is_delete', 0)->get();
         if ($dataAccBudgetSubSumAmount->isEmpty()) {
-            // dd($AccBudgetAmount);
             if($Amount > $AccBudgetAmount){
                 DB::rollback();
                 $data['api_status'] = 0;
@@ -502,6 +503,160 @@ class ApiAccountBudgetController extends Controller
                 return response()->json($data, 200)
                 ->header("Access-Control-Allow-Origin", config('cors.allowed_origins'))
                 ->header("Access-Control-Allow-Methods", config('cors.allowed_methods'));
+            } else {
+                DB::rollback();
+                $data['api_status'] = 0;
+                $data['api_message'] = 'กรุณาทำรายการใหม่อีกครั้ง';
+                return response()->json($data, 200);
+            }
+        } catch (\Exception $e) {
+            DB::rollback();
+            $data['api_status'] = 0;
+            $data['api_message'] = 'กรุณาทำรายการใหม่อีกครั้ง';
+            $data['api_data'] = $e;
+        }
+        response()->json($data, 200)->header("Access-Control-Allow-Origin", config('cors.allowed_origins'))
+            ->header("Access-Control-Allow-Methods", config('cors.allowed_methods'))->send();
+    }
+    function editAccountBudgetSub(Request $request)
+    {
+        //===========================================AccountBudgetSub
+        $AccId = $request['AccId'];
+        $AccSubId = $request['AccSubId'];
+        $AccName = $request['AccName'];
+        $Amount = $request['Amount'];
+        $SubAmount = $request['SubAmount'];
+        $AccStartDate = $request['AccStartCombine'];
+        $AccEndDate = $request['AccEndCombine'];
+        $OpenDate = $request['OpenStartCombine'];
+        $CloseDate = $request['EndStartCombine'];
+        $Detail = $request['Detail'];
+        //===========================================AccountBudgetSub
+        
+        //===========================================AccountBudgetRiskSub
+        $LowActivity = $request['LowActivity'];
+        $MidActivity = $request['MidActivity'];
+        $HighActivity = $request['HighActivity'];
+        $LowTiming = $request['LowTiming'];
+        $MidTiming = $request['MidTiming'];
+        $HighTiming = $request['HighTiming'];
+        //===========================================AccountBudgetRiskSub
+
+        //===========================================File
+        $file = $request['file'];
+        $totalfiles = $request['totalfiles'];
+        $array_file = [];
+        //===========================================File
+
+        //============================================GetData
+        $dataAccBudget = DB::table('accountBudget')->where('id', $AccId)->first();
+        $dataAccBudgetSub = DB::table('accountBudgetSub')->where('account_id', $AccId)->count();
+        $BudgetYear = $dataAccBudget->BudgetYear;
+        $AccCode = $dataAccBudget->AccCode;
+        $AccBudgetAmount = $dataAccBudget->Amount;
+
+
+        $dataAccBudgetSubSumAmount = DB::table('accountBudgetSub')->where('account_id', $AccId)->where('is_delete', 0)->get();
+        if ($dataAccBudgetSubSumAmount->isEmpty()) {
+            if($Amount > $AccBudgetAmount){
+                DB::rollback();
+                $data['api_status'] = 0;
+                $data['api_message'] = 'กรุณาตรวจสอบข้อมูลวงเงินในโครงการ';
+                return response()->json($data, 200);
+            }
+        } else {
+            $sumAmount = $dataAccBudgetSubSumAmount->sum('Amount')+$Amount;
+            if($sumAmount > $AccBudgetAmount){
+                DB::rollback();
+                $data['api_status'] = 0;
+                $data['api_message'] = 'กรุณาตรวจสอบข้อมูลวงเงินในโครงการ';
+                return response()->json($data, 200);
+            }
+        }   
+        if($SubAmount > $Amount){
+            DB::rollback();
+            $data['api_status'] = 0;
+            $data['api_message'] = 'กรุณาตรวจสอบงบประมาณต่อกองทุน';
+            return response()->json($data, 200);
+        }
+        $AccCodeSub = $AccCode . '-' . sprintf('%03d', $dataAccBudgetSub+1);
+        //============================================GetData
+        DB::beginTransaction();
+        try {
+            $dataUpdateSub = [];
+            $dataUpdateSub['AccName'] = $AccName;
+            $dataUpdateSub['Amount'] = $Amount;
+            $dataUpdateSub['SubAmount'] = $SubAmount;
+            $dataUpdateSub['Detail'] = $Detail;
+            $dataUpdateSub['AccStartDate'] = $AccStartDate;
+            $dataUpdateSub['AccEndDate'] = $AccEndDate;
+            $dataUpdateSub['OpenDate'] = $OpenDate;
+            $dataUpdateSub['CloseDate'] = $CloseDate;
+            $dataUpdateSub['updated_at'] = date('Y-m-d H:i:s');
+            $dataUpdateSub['updated_by'] = CRUDBooster::myId();
+            $AccountBudgetSubId = DB::table('accountBudgetSub')->where('id', $AccSubId)->update($dataUpdateSub);
+            if ($AccountBudgetSubId) {
+                
+                $dataUpdateSubRisk = [];
+                $dataUpdateSubRisk['LowActivity'] = $LowActivity;
+                $dataUpdateSubRisk['MidActivity'] = $MidActivity;
+                $dataUpdateSubRisk['HighActivity'] = $HighActivity;
+                $dataUpdateSubRisk['LowTiming'] = $LowTiming;
+                $dataUpdateSubRisk['MidTiming'] = $MidTiming;
+                $dataUpdateSubRisk['HighTiming'] = $HighTiming;
+                $dataUpdateSubRisk['updated_at'] = date('Y-m-d H:i:s');
+                $dataUpdateSubRisk['updated_by'] = CRUDBooster::myId();
+                $ProjectSubRiskId = DB::table('projectSubRisk')->where('account_sub_id', $AccSubId)->update($dataUpdateSubRisk);
+                if($ProjectSubRiskId){
+
+                    $PeriodNo = $request['PeriodNo'];
+                    $PeriodPercent = $request['PeriodPercent'];
+
+                    $dataAccBudgetSub = DB::table('accountBudgetSub')->where('id', $AccountBudgetSubId)->first();
+                    $dataAccBudgetSubAmount =  $dataAccBudgetSub->SubAmount;
+                    $PeriodAmount = $dataAccBudgetSubAmount * ($PeriodPercent / 100);
+
+                    $dataUpdateSubPeriod = [];
+                    $dataUpdateSubPeriod['PeriodNo'] = $PeriodNo;
+                    $dataUpdateSubPeriod['PeriodPercent'] = $PeriodPercent;
+                    $dataUpdateSubPeriod['PeriodAmount'] = $PeriodAmount;
+                    $dataUpdateSubPeriod['updated_at'] = date('Y-m-d H:i:s');
+                    $dataUpdateSubPeriod['updated_by'] = CRUDBooster::myId();
+                    $ProjectSubPeriodId = DB::table('projectSubPeriod')->where('account_sub_id', $AccSubId)->update($dataUpdateSubPeriod);
+                    if($ProjectSubPeriodId){
+                        //
+                        $dataUpdateSubDocument = [];
+                        if($file){
+                            foreach ($file as $index => $val) {
+                                $dataUpdateSubDocument['FileName'] = $val->getClientOriginalName();
+                                $dataUpdateSubDocument['FilePath'] = "uploads/" . $val->getClientOriginalName();
+                            }
+                        }
+                        $dataUpdateSubDocument['updated_at'] = date('Y-m-d H:i:s');
+                        $dataUpdateSubDocument['updated_by'] = CRUDBooster::myId();
+                        
+                        $ProjectSubDocumentId = DB::table('projectBudgetDocument')->where('account_sub_id', $AccSubId)->update($dataUpdateSubDocument);
+                        if($ProjectSubDocumentId){
+                            DB::commit();
+                            $data['api_status'] = 1;
+                            $data['api_message'] = 'Success';
+                            $data['id'] = $ProjectSubDocumentId;
+                            return response()->json($data, 200)
+                                ->header("Access-Control-Allow-Origin", config('cors.allowed_origins'))
+                                ->header("Access-Control-Allow-Methods", config('cors.allowed_methods'));
+                        }else{
+                            DB::rollback();
+                            $data['api_status'] = 0;
+                            $data['api_message'] = 'กรุณาทำรายการใหม่อีกครั้ง';
+                            return response()->json($data, 200);
+                        }
+                    }
+                }else{
+                    DB::rollback();
+                    $data['api_status'] = 0;
+                    $data['api_message'] = 'กรุณาทำรายการใหม่อีกครั้ง';
+                    return response()->json($data, 200);
+                }
             } else {
                 DB::rollback();
                 $data['api_status'] = 0;
