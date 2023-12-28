@@ -450,7 +450,16 @@ use Carbon\Carbon;
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
+   function addToLocalStorage(event, value) {
+        // Prevent the default link behavior (navigation)
+        event.preventDefault();
 
+        // Store the value in localStorage
+        localStorage.setItem('AccId', value);
+
+        // Navigate to the specified page
+        window.location.href = event.target.getAttribute('href');
+        }
     // jQuery(document).ready(function($) {
     //     $('select').select2(); 
     // });
@@ -472,16 +481,7 @@ use Carbon\Carbon;
             }
         });
 
-        function addToLocalStorage(event, value) {
-        // Prevent the default link behavior (navigation)
-        event.preventDefault();
-
-        // Store the value in localStorage
-        localStorage.setItem('AccId', value);
-
-        // Navigate to the specified page
-        window.location.href = event.target.getAttribute('href');
-        }
+     
         
         // $('.select2').on('change', function() {
         $('#CurrentBudgetYear').on('change', function() {

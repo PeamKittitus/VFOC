@@ -357,14 +357,24 @@ class ApiAccountBudgetController extends Controller
 
 
         $dataAccBudgetSubSumAmount = DB::table('accountBudgetSub')->where('account_id', $AccId)->where('is_delete', 0)->get();
-        $sumAmount = $dataAccBudgetSubSumAmount->sum('Amount')+$Amount;
-        if($sumAmount > $AccBudgetAmount){
-            DB::rollback();
-            $data['api_status'] = 0;
-            $data['api_message'] = 'กรุณาตรวจสอบข้อมูลวงเงินในโครงการ';
-            return response()->json($data, 200);
-        }
-        else if($SubAmount > $Amount){
+        if ($dataAccBudgetSubSumAmount->isEmpty()) {
+            // dd($AccBudgetAmount);
+            if($Amount > $AccBudgetAmount){
+                DB::rollback();
+                $data['api_status'] = 0;
+                $data['api_message'] = 'กรุณาตรวจสอบข้อมูลวงเงินในโครงการ';
+                return response()->json($data, 200);
+            }
+        } else {
+            $sumAmount = $dataAccBudgetSubSumAmount->sum('Amount')+$Amount;
+            if($sumAmount > $AccBudgetAmount){
+                DB::rollback();
+                $data['api_status'] = 0;
+                $data['api_message'] = 'กรุณาตรวจสอบข้อมูลวงเงินในโครงการ';
+                return response()->json($data, 200);
+            }
+        }   
+        if($SubAmount > $Amount){
             DB::rollback();
             $data['api_status'] = 0;
             $data['api_message'] = 'กรุณาตรวจสอบงบประมาณต่อกองทุน';
