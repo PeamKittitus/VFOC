@@ -375,7 +375,9 @@ use Carbon\Carbon;
                                                         </div>
                                                     </td>
                                                     <td class="text-center" style="">
-                                                        <a href="javascript:void(0);" data-val="10241" class="btn btn-xs btn-success addParent" title="Create"><i class="fa fa-plus" aria-hidden="true"></i> เพิ่มรายการ </a>
+                                                        <a href="/addsubproject" class="btn btn-xs btn-success addParent" title="Create" onclick="addToLocalStorage(event, {{$get->id}})">
+                                                            <i class="fa fa-plus" aria-hidden="true"></i> เพิ่มรายการ
+                                                        </a>
                                                         <a href="javascript:void(0);" data-parent="MAIN" data-val="10241" class="btn btn-xs btn-warning edit" title="Edit"><i class="fa fa-edit" aria-hidden="true"></i> แก้ไข </a>
                                                         <a href="javascript:void(0);" data-val="10241" class="btn btn-xs btn-danger  delete" title="Delete"><i class="fa fa-times" aria-hidden="true"></i> ลบ </a>
                                                     </td>
@@ -477,7 +479,17 @@ use Carbon\Carbon;
             }
         });
 
+        function addToLocalStorage(event, value) {
+        // Prevent the default link behavior (navigation)
+        event.preventDefault();
 
+        // Store the value in localStorage
+        localStorage.setItem('AccId', value);
+
+        // Navigate to the specified page
+        window.location.href = event.target.getAttribute('href');
+        }
+        
         $('.select2').on('change', function() {
             var BudgetYear = $(this).val();
             var formData = new FormData();
