@@ -33,8 +33,8 @@ Route::get('/addsubproject', function () {
 });
 Route::get('/addBookBank', '\App\Http\Controllers\AdminAccountBookbankController@addBookBank');
 Route::get('/editbookbank/{id}', '\App\Http\Controllers\AdminAccountBookbankController@editBookBank');
-Route::get('/editproject/{id}', '\App\Http\Controllers\ApiAccountBudgetController@editsubproject');
-Route::get('/editsubproject/{id}', '\App\Http\Controllers\ApiAccountBudgetController@editproject');
+Route::get('/editsubproject/{id}', '\App\Http\Controllers\AdminAccountBudgetController@editsubproject');
+Route::get('/editproject/{id}', '\App\Http\Controllers\AdminAccountBudgetController@editproject');
 //==========================================================================================Route
 
 

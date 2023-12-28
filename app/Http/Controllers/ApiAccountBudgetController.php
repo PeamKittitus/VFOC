@@ -43,6 +43,18 @@ class ApiAccountBudgetController extends Controller
         ->header("Access-Control-Allow-Origin", config('cors.allowed_origins'))
         ->header("Access-Control-Allow-Methods", config('cors.allowed_methods'));
     }
+
+    function getAccountBudgetByID($id)
+    {
+        $dataAccBudget = DB::table('accountBudget')
+            ->select('accountBudget.id', 'accountBudget.AccName', 'accountBudget.AccCode', 'accountBudget.Amount', 'accountBudget.is_active', 'accountBudget.BudgetYear')
+            ->where('id', $id)
+            ->first();
+        $data = [];
+        $data = $dataAccBudget;
+        return $data ;
+    }
+
     function getAccountBudget()
     {
         $dataAccBudget = DB::table('accountBudget')
