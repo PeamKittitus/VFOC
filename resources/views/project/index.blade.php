@@ -9,7 +9,7 @@ use Carbon\Carbon;
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.6/css/jquery.dataTables.css">
 
     <!-- Include jQuery -->
-    <script type="text/javascript" charset="utf8" src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script type="text/javascript" charset="utf8" src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 
     <!-- Include DataTables JS -->
     <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.6/js/jquery.dataTables.js"></script>
@@ -317,6 +317,7 @@ use Carbon\Carbon;
     </div>
 
     <select id="CurrentBudgetYear" class="select2 select2-container2">
+        <option selected></option>
         <option value="2572">2572</option>
         <option value="2571">2571</option>
         <option value="2570">2570</option>
@@ -328,6 +329,8 @@ use Carbon\Carbon;
         <option value="2564">2564</option>
         <option value="2563">2563</option>
     </select>
+
+
 
     <div class="row">
         <div class="col-lg-12 sortable-grid ui-sortable" style="padding: 10px;">
@@ -447,24 +450,14 @@ use Carbon\Carbon;
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
-    //  $(document).ready(function() {
-    //     $('#example').DataTable({
-    //         responsive: true,
-    //         "columnDefs": [{
-    //                 "orderable": false,
-    //                 "targets": [0, 1, 2, 3, 4, 5, 6]
-    //             } // Disable sorting for certain columns
-    //         ],
-    //         "order": [],
-    //         "drawCallback": function(settings) {
 
-    //         }
-    //     });
+    // jQuery(document).ready(function($) {
+    //     $('select').select2(); 
     // });
-
-    jQuery(document).ready(function($) {
-        // Select2 initialization
-        $('.select2').select2();
+    // $('.select2').select2();
+    $(document).ready(function() {
+        // Select2 initializationa
+        
 
         // DataTable initialization
         $('#example').DataTable({
@@ -489,8 +482,9 @@ use Carbon\Carbon;
         // Navigate to the specified page
         window.location.href = event.target.getAttribute('href');
         }
-
-        $('.select2').on('change', function() {
+        
+        // $('.select2').on('change', function() {
+        $('#CurrentBudgetYear').on('change', function() {
             var BudgetYear = $(this).val();
             var formData = new FormData();
             formData.append('BudgetYear', BudgetYear);
@@ -501,18 +495,21 @@ use Carbon\Carbon;
                 contentType: false,
                 processData: false,
                 success: function(response) {
-                    if (response.api_status == 1) {
-                        Swal.fire({
-                            title: "สำเร็จ",
-                            text: "เปลี่ยนข้อมูลสำเร็จ!",
-                            icon: "success",
-                            showCancelButton: false,
-                            confirmButtonText: "OK",
-                        }).then((result) => {
-                            var dataTable = $('#example').DataTable();
-                            dataTable.clear().destroy();
-                        });
-                    }
+                    // if (response.api_status == 1) {
+                    //     Swal.fire({
+                    //         title: "สำเร็จ",
+                    //         text: "เปลี่ยนข้อมูลสำเร็จ!",
+                    //         icon: "success",
+                    //         showCancelButton: false,
+                    //         confirmButtonText: "OK",
+                    //     }).then((result) => {
+                    //         console.log(response);
+                    //         // var dataTable = $('#example').DataTable();
+                    //         // dataTable.clear().destroy();
+                    //         updateTable(response.getAccountBudget, response.getAccountBudgetSub);
+                    //     });
+                    // }
+                    updateTable(response.getAccountBudget, response.getAccountBudgetSub);
                 },
                 error: function(xhr, status, error) {
                     Swal.fire({
@@ -526,7 +523,71 @@ use Carbon\Carbon;
             });
         });
 
-
+        function updateTable(getAccountBudget, getAccountBudgetSub) {
+            // var dataTable = $('#example').DataTable();
+            // dataTable.clear().destroy();
+            var tableBody = $('#example tbody');
+            tableBody.empty(); 
+            if(getAccountBudget != ""){
+                var mainProjectNumber = 1;
+                getAccountBudget.forEach(function (get) {
+                    tableBody.append(`
+                        <tr>
+                            <td class="text-left">${mainProjectNumber}.</td>
+                            <td>${get.AccCode}</td>
+                            <td>${get.AccName}</td>
+                            <td>-</td>
+                            <td class="text-left">${get.Amount}</td>
+                            <td class="text-left">-</td>
+                            <td class="text-center">
+                                <div class="checkbox-wrapper-7" style="display: flex; justify-content: center; align-items: center; height: 100%;">
+                                    <input class="tgl tgl-ios accdel" id="cb2-7-${mainProjectNumber}" type="checkbox" data-val="${get.id}" ${get.is_active == 1 ? 'checked' : ''} />
+                                    <label class="tgl-btn" for="cb2-7-${mainProjectNumber}"></label>
+                                </div>
+                            </td>
+                            <td class="text-center">
+                                <a href="/addsubproject" class="btn btn-xs btn-success addParent" title="Create" onclick="addToLocalStorage(event, ${get.id})">
+                                    <i class="fa fa-plus" aria-hidden="true"></i> เพิ่มรายการ
+                                </a>
+                                <a href="javascript:void(0);" data-parent="MAIN" data-val="10241" class="btn btn-xs btn-warning edit" title="Edit"><i class="fa fa-edit" aria-hidden="true"></i> แก้ไข </a>
+                                <a href="javascript:void(0);" data-val="10241" class="btn btn-xs btn-danger  delete" title="Delete"><i class="fa fa-times" aria-hidden="true"></i> ลบ </a>
+                            </td>
+                        </tr>
+                    `);
+                    var subProjectNumber = 1;
+                    getAccountBudgetSub.forEach(function (get2) {
+                    if (get2.account_id == get.id) {
+                            var startDate = new Date(get2.AccStartDate);
+                            var endDate = new Date(get2.AccEndDate);
+                            var formattedStartDate = startDate.toLocaleDateString();
+                            var formattedEndDate = endDate.toLocaleDateString();
+                            tableBody.append(`
+                                <tr>
+                                    <td class="text-center" style="text-align: center"> - ${mainProjectNumber}.${subProjectNumber}</td>
+                                    <td style="text-align: center"> - ${get2.AccCode}</td>
+                                    <td style="text-align: center"> - ${get2.AccName}</td>
+                                    <td style="text-align: center">${formattedStartDate} - ${formattedEndDate}</td>
+                                    <td class="text-right" style="text-align: center"> - ${get2.Amount}</td>
+                                    <td class="text-right" style="text-align: center"> - ${get2.SubAmount}</td>
+                                    <td class="text-center">
+                                        <div class="checkbox-wrapper-7" style="display: flex; justify-content: center; align-items: center; height: 100%;">
+                                            <input class="tgl tgl-ios subaccdel" id="cb2-7-${mainProjectNumber}-${subProjectNumber}" type="checkbox" data-val="${get2.id}" ${get2.is_active == 1 ? 'checked' : ''} />
+                                            <label class="tgl-btn" for="cb2-7-${mainProjectNumber}-${subProjectNumber}"></label>
+                                        </div>
+                                    </td>
+                                    <td class="text-center">
+                                        <a href="javascript:void(0);" data-parent="PARENT" data-val="10242" class="btn btn-xs btn-warning edit" title="Edit"><i class="fa fa-edit" aria-hidden="true"></i> แก้ไข </a>
+                                        <a href="javascript:void(0);" data-val="10242" class="btn btn-xs btn-danger  delete" title="Delete"><i class="fa fa-times" aria-hidden="true"></i> ลบ </a>
+                                    </td>
+                                </tr>
+                            `);                     
+                            subProjectNumber++;
+                        }
+                    });
+                    mainProjectNumber++;
+                });
+            }else{}
+        }
     });
 
     $(document).on('change', '.accdel', function() {
@@ -630,6 +691,7 @@ use Carbon\Carbon;
         });
 
     });
+
 </script>
 <script>
     $(document).ready(function() {
