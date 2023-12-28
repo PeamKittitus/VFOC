@@ -391,22 +391,22 @@ use Carbon\Carbon;
                                                 @foreach ($getAccountBudgetSub as $get2)
                                                 @if ($get2->account_id == $get->id)
                                                 <tr>
-                                                    <td class="text-center" style="text-align: center"> -
+                                                    <td class="text-center" style="text-align: center"> 
                                                         {{ $mainProjectNumber }}.{{ $subProjectNumber }}
                                                     </td>
-                                                    <td style="text-align: center"> - {{ $get2->AccCode }}
+                                                    <td style="text-align: center"> {{ $get2->AccCode }}
                                                     </td>
-                                                    <td style="text-align: center"> - {{ $get2->AccName }}
+                                                    <td style="text-align: center"> {{ $get2->AccName }}
                                                     </td>
                                                     <td style="text-align: center">
-                                                        {{ \Carbon\Carbon::parse($get2->AccStartDate)->toDateString() }}
-                                                        -
-                                                        {{ \Carbon\Carbon::parse($get2->AccEndDate)->toDateString() }}
+                                                        {{ \Carbon\Carbon::parse($get2->AccStartDate)->locale('th')->isoFormat('LL') }}
+                                                        ถึง <br>
+                                                        {{ \Carbon\Carbon::parse($get2->AccEndDate)->locale('th')->isoFormat('LL') }}
                                                     </td>
-                                                    <td class="text-right" style="text-align: center"> -
+                                                    <td class="text-right" style="text-align: center">
                                                         {{ number_format($get2->Amount, 2) }}
                                                     </td>
-                                                    <td class="text-right" style="text-align: center"> -
+                                                    <td class="text-right" style="text-align: center">
                                                         {{ number_format($get2->SubAmount, 2) }}
                                                     </td>
                                                     <td class="text-center">
