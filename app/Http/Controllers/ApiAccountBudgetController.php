@@ -117,7 +117,7 @@ class ApiAccountBudgetController extends Controller
         response()->json($data, 200)->header("Access-Control-Allow-Origin", config('cors.allowed_origins'))
             ->header("Access-Control-Allow-Methods", config('cors.allowed_methods'))->send();
     }
-    function delAccountBudget(Request $request)
+    function subStatusAccountBudget(Request $request)
     {
         $AccId = $request['AccId'];
 
@@ -125,7 +125,6 @@ class ApiAccountBudgetController extends Controller
         try {
             $existingActive = DB::table('accountBudget')->where('id', $AccId)->first();
             $allsub = DB::table('accountBudgetSub')->where('account_id', $AccId)->get();
-            // dd($allsub);
             if ($existingActive->is_active == 0) {
                 $dataUpdate['is_active'] = 1;
                 $dataUpdate['updated_at'] = date('Y-m-d H:i:s');
@@ -181,7 +180,7 @@ class ApiAccountBudgetController extends Controller
             ->header("Access-Control-Allow-Methods", config('cors.allowed_methods'))->send();
     }
 
-    function delsubAccountBudget(Request $request)
+    function subStatusSubAccountBudget(Request $request)
     {   
         $AccId = $request['AccSubId'];
         DB::beginTransaction();
@@ -242,10 +241,10 @@ class ApiAccountBudgetController extends Controller
         $AccName = $request['AccName'];
         $Amount = $request['Amount'];
         $SubAmount = $request['SubAmount'];
-        $AccStartDate = $request['AccStartDate'];
-        $AccEndDate = $request['AccEndDate'];
-        $OpenDate = $request['OpenDate'];
-        $CloseDate = $request['CloseDate'];
+        $AccStartDate = $request['AccStartCombine'];
+        $AccEndDate = $request['AccEndCombine'];
+        $OpenDate = $request['OpenStartCombine'];
+        $CloseDate = $request['EndStartCombine'];
         $Detail = $request['Detail'];
         //===========================================AccountBudgetSub
         
@@ -260,6 +259,7 @@ class ApiAccountBudgetController extends Controller
 
         //===========================================File
         $file = $request['file'];
+        $totalfiles = $request['totalfiles'];
         $array_file = [];
         //===========================================File
 
@@ -268,6 +268,23 @@ class ApiAccountBudgetController extends Controller
         $dataAccBudgetSub = DB::table('accountBudgetSub')->where('account_id', $AccId)->count();
         $BudgetYear = $dataAccBudget->BudgetYear;
         $AccCode = $dataAccBudget->AccCode;
+        $AccBudgetAmount = $dataAccBudget->Amount;
+
+
+        $dataAccBudgetSubSumAmount = DB::table('accountBudgetSub')->where('account_id', $AccId)->get();
+        $sumAmount = $dataAccBudgetSubSumAmount->sum('Amount')+$Amount;
+        if($sumAmount > $AccBudgetAmount){
+            DB::rollback();
+            $data['api_status'] = 0;
+            $data['api_message'] = 'กรุณาตรวจสอบข้อมูลวงเงินในโครงการ';
+            return response()->json($data, 200);
+        }
+        else if($SubAmount > $Amount){
+            DB::rollback();
+            $data['api_status'] = 0;
+            $data['api_message'] = 'กรุณาตรวจสอบงบประมาณต่อกองทุน';
+            return response()->json($data, 200);
+        }
         $AccCodeSub = $AccCode . '-' . sprintf('%03d', $dataAccBudgetSub+1);
         //============================================GetData
         DB::beginTransaction();
