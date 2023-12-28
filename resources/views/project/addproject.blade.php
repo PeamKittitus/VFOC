@@ -144,7 +144,7 @@
         <div>
             <ol class="breadcrumb page-breadcrumb">
                 <li class="breadcrumb-item"><a href="/Home/Index">หน้าหลัก</a></li>
-                <li class="breadcrumb-item"><a href="/EAccount/StructureIndex">ผังบัญชีงบประมาณโครงการ</a></li>
+                <li class="breadcrumb-item"><a href="/admin/accountBudget">ผังบัญชีงบประมาณโครงการ</a></li>
                 <li class="breadcrumb-item active">สร้างใหม่</li>
             </ol>
         </div>
@@ -164,7 +164,7 @@
                             <div class="input-wrapper">
                                 <label class="label" for="IDCard">ปีงบระมาณ</label> <br>
                                 <select id="BudgetYear" class="select2 select2-container2"
-                                    style="width: 40% !important; height: 50px !important;">
+                                    style="height: 50px !important;">
                                     <option value="2572">2572</option>
                                     <option value="2571">2571</option>
                                     <option value="2570">2570</option>
@@ -192,7 +192,7 @@
                         <div class="form-group basic">
                             <div class="input-wrapper">
                                 <label class="label" for="Firstname">จำนวนเงิน<strong style="color:red">*</strong></label>
-                                <input type="number" class="form-control checkNumber" placeholder="จำนวนเงิน" id="Amount">
+                                <input type="text" class="form-control checkNumber" placeholder="จำนวนเงิน" id="Amount" oninput="formatAmount(this)">
                                 <i class="clear-input"><ion-icon name="close-circle"></ion-icon></i>
                             </div>
                         </div>
@@ -228,6 +228,19 @@
                 }
             }
         }
+        function formatAmount(input) {
+            let value = input.value.replace(/[^\d.]/g, '');
+
+            let parts = value.split('.');
+            let integerPart = parts[0];
+            let decimalPart = parts.length > 1 ? '.' + parts[1] : '';
+
+            integerPart = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+
+            value = integerPart + decimalPart;
+
+            input.value = value;
+        }
         $(".checkNumber").keypress(function() {
             var dInput = $(this).val();
             return bannedKey(dInput, 1);
@@ -245,6 +258,8 @@
                 var AccName = $('#AccName').val();
                 var BudgetYear = $('#BudgetYear').val();
                 var Amount = $('#Amount').val();
+                // Remove commas from the value
+                Amount = Amount.replace(/,/g, '');
 
                 var formData = new FormData();
                 formData.append('AccName', AccName);
@@ -280,12 +295,6 @@
                 }
 
 
-                // เก็บภาพที่ tb_temp_files
-                for (var pair of formData.entries()) {
-                    console.log(pair[0] + ', ' + pair[1]);
-                }
-
-
                 Swal.fire({
                     title: "ยืนยัน",
                     text: "คุณต้องการเพิ่มโครงการใช่หรือไม่?",
@@ -311,7 +320,7 @@
                                 }).then((result) => {
                                     if (result.isConfirmed) {
                                         window.location.href =
-                                            "/project/index";
+                                            "/admin/accountBudget";
                                     }
                                 });
                             },

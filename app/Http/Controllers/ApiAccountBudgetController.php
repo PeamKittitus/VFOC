@@ -37,20 +37,16 @@ class ApiAccountBudgetController extends Controller
         $data['api_message'] = 'Success';
         $data['getAccountBudget'] = $dataAccBudget;
         $data['getAccountBudgetSub'] = $dataAccBudgetSub;
-        // dd($data);
-        // return $data;
         return response()->json($data, 200)
         ->header("Access-Control-Allow-Origin", config('cors.allowed_origins'))
         ->header("Access-Control-Allow-Methods", config('cors.allowed_methods'));
     }
     function getAccountBudget()
     {
-        // dd(date('Y')+543);
         $dataAccBudget = DB::table('accountBudget')
         ->select('accountBudget.id','accountBudget.AccName','accountBudget.AccCode','accountBudget.Amount','accountBudget.is_active','accountBudget.BudgetYear')
-        // ->where('BudgetYear', date('Y')+543)
+        ->where('is_delete', 0)
         ->get();
-        // dd($dataAccBudget);
         return $dataAccBudget;
     }
     function getAccountBudgetSub()
@@ -66,56 +62,9 @@ class ApiAccountBudgetController extends Controller
             'accountBudgetSub.AccEndDate',
             'accountBudgetSub.is_active',
         )
-        // ->where('is_active', 1)
+        ->where('is_delete', 0)
         ->get();
         return $dataAccBudgetSub;
-    }
-    function saveAccountBudget(Request $request)
-    {
-        $AccName = $request['AccName'];
-        $BudgetYear = $request['BudgetYear'];
-        $Amount = $request['Amount'];
-
-        $countData = DB::table('accountBudget')->count();
-        $AccCode = $BudgetYear . '-' . sprintf('%03d', $countData+1);
-
-        DB::beginTransaction();
-        try {
-            $dataInsert = [];
-            $dataInsert['AccName'] = $AccName;
-            $dataInsert['BudgetYear'] = $BudgetYear;
-            $dataInsert['Amount'] = $Amount;
-            $dataInsert['AccCode'] = $AccCode;
-            $dataInsert['is_active'] = 1;
-            $dataInsert['created_at'] = date('Y-m-d H:i:s');
-            $dataInsert['created_by'] = CRUDBooster::myId();
-            $dataInsert['IsApproveProvince'] = 0;
-            $dataInsert['IsApproveBranch'] = 0;
-            $dataInsert['IsApproveCenter'] = 0;
-            $AccountBudgetId = DB::table('accountBudget')->insertGetId($dataInsert);
-            if ($AccountBudgetId) {
-
-                DB::commit();
-                $data['api_status'] = 1;
-                $data['api_message'] = 'Success';
-                $data['id'] = $AccountBudgetId;
-                return response()->json($data, 200)
-                    ->header("Access-Control-Allow-Origin", config('cors.allowed_origins'))
-                    ->header("Access-Control-Allow-Methods", config('cors.allowed_methods'));
-            } else {
-                DB::rollback();
-                $data['api_status'] = 0;
-                $data['api_message'] = 'กรุณาทำรายการใหม่อีกครั้ง';
-                return response()->json($data, 200);
-            }
-        } catch (\Exception $e) {
-            DB::rollback();
-            $data['api_status'] = 0;
-            $data['api_message'] = 'กรุณาทำรายการใหม่อีกครั้ง';
-            $data['api_data'] = $e;
-        }
-        response()->json($data, 200)->header("Access-Control-Allow-Origin", config('cors.allowed_origins'))
-            ->header("Access-Control-Allow-Methods", config('cors.allowed_methods'))->send();
     }
     function subStatusAccountBudget(Request $request)
     {
@@ -234,6 +183,142 @@ class ApiAccountBudgetController extends Controller
         response()->json($data, 200)->header("Access-Control-Allow-Origin", config('cors.allowed_origins'))
             ->header("Access-Control-Allow-Methods", config('cors.allowed_methods'))->send();
     }
+    function delAccountBudget(Request $request)
+    {  
+        $AccId = $request['AccId'];
+
+        DB::beginTransaction();
+        try {
+            $dataAccBudget = DB::table('accountBudgetSub')
+                ->select(
+                    'accountBudgetSub.id',
+                    'accountBudgetSub.is_delete',
+                )
+                ->where('accountBudgetSub.account_id', $AccId)
+                ->get();
+
+            foreach ($dataAccBudget as $val) {
+                if ($val->is_delete != 1) {
+                    DB::rollback();
+                    $data['api_status'] = 0;
+                    $data['api_message'] = 'คุณจะต้องลบโครงการย่อยก่อน';
+                    return response()->json($data, 200);
+                }
+            }
+
+            $dataUpdate['is_delete'] = 1;
+            $dataUpdate['updated_at'] = now();
+            $dataUpdate['updated_by'] = CRUDBooster::myId();
+
+            $UpdateIsActive = DB::table('accountBudget')->where('id', $AccId)->update($dataUpdate);
+
+            if ($UpdateIsActive) {
+                DB::commit();
+                $data['api_status'] = 1;
+                $data['api_message'] = 'Success';
+                $data['id'] = $UpdateIsActive;
+                return response()->json($data, 200)
+                    ->header("Access-Control-Allow-Origin", config('cors.allowed_origins'))
+                    ->header("Access-Control-Allow-Methods", config('cors.allowed_methods'));
+            } else {
+                DB::rollback();
+                $data['api_status'] = 0;
+                $data['api_message'] = 'กรุณาทำรายการใหม่อีกครั้ง';
+                return response()->json($data, 200);
+            }
+        } catch (\Exception $e) {
+            DB::rollback();
+            $data['api_status'] = 0;
+            $data['api_message'] = 'กรุณาทำรายการใหม่อีกครั้ง';
+            $data['api_data'] = $e;
+            return response()->json($data, 200)
+                ->header("Access-Control-Allow-Origin", config('cors.allowed_origins'))
+                ->header("Access-Control-Allow-Methods", config('cors.allowed_methods'));
+        }
+    }
+
+    function delSubAccountBudget(Request $request)
+    {  
+        $AccId = $request['AccSubId'];
+        DB::beginTransaction();
+        try {
+            $existingDelete = DB::table('accountBudgetSub')->where('id', $AccId)->first();
+            if ($existingDelete->is_delete == 0) {
+                $dataUpdate['is_delete'] = 1;
+                $dataUpdate['updated_at'] = date('Y-m-d H:i:s');
+                $dataUpdate['updated_by'] = CRUDBooster::myId();
+                $UpdateIsActive = DB::table('accountBudgetSub')->where('id', $AccId)->update($dataUpdate);
+                if ($UpdateIsActive) {
+                    DB::commit();
+                    $data['api_status'] = 1;
+                    $data['api_message'] = 'Success';
+                    $data['id'] = $UpdateIsActive;
+                    return response()->json($data, 200)
+                        ->header("Access-Control-Allow-Origin", config('cors.allowed_origins'))
+                        ->header("Access-Control-Allow-Methods", config('cors.allowed_methods'));
+                } else {
+                    DB::rollback();
+                    $data['api_status'] = 0;
+                    $data['api_message'] = 'กรุณาทำรายการใหม่อีกครั้ง';
+                    return response()->json($data, 200);
+                }
+            }
+        } catch (\Exception $e) {
+            DB::rollback();
+            $data['api_status'] = 0;
+            $data['api_message'] = 'กรุณาทำรายการใหม่อีกครั้ง';
+            $data['api_data'] = $e;
+        }
+        response()->json($data, 200)->header("Access-Control-Allow-Origin", config('cors.allowed_origins'))
+            ->header("Access-Control-Allow-Methods", config('cors.allowed_methods'))->send();
+    }
+    function saveAccountBudget(Request $request)
+    {
+        $AccName = $request['AccName'];
+        $BudgetYear = $request['BudgetYear'];
+        $Amount = $request['Amount'];
+        $countData = DB::table('accountBudget')->count();
+        $AccCode = $BudgetYear . '-' . sprintf('%03d', $countData+1);
+
+        DB::beginTransaction();
+        try {
+            $dataInsert = [];
+            $dataInsert['AccName'] = $AccName;
+            $dataInsert['BudgetYear'] = $BudgetYear;
+            $dataInsert['Amount'] = $Amount;
+            $dataInsert['AccCode'] = $AccCode;
+            $dataInsert['is_active'] = 1;
+            $dataInsert['is_delete'] = 0;
+            $dataInsert['created_at'] = date('Y-m-d H:i:s');
+            $dataInsert['created_by'] = CRUDBooster::myId();
+            $dataInsert['IsApproveProvince'] = 0;
+            $dataInsert['IsApproveBranch'] = 0;
+            $dataInsert['IsApproveCenter'] = 0;
+            $AccountBudgetId = DB::table('accountBudget')->insertGetId($dataInsert);
+            if ($AccountBudgetId) {
+
+                DB::commit();
+                $data['api_status'] = 1;
+                $data['api_message'] = 'Success';
+                $data['id'] = $AccountBudgetId;
+                return response()->json($data, 200)
+                    ->header("Access-Control-Allow-Origin", config('cors.allowed_origins'))
+                    ->header("Access-Control-Allow-Methods", config('cors.allowed_methods'));
+            } else {
+                DB::rollback();
+                $data['api_status'] = 0;
+                $data['api_message'] = 'กรุณาทำรายการใหม่อีกครั้ง';
+                return response()->json($data, 200);
+            }
+        } catch (\Exception $e) {
+            DB::rollback();
+            $data['api_status'] = 0;
+            $data['api_message'] = 'กรุณาทำรายการใหม่อีกครั้ง';
+            $data['api_data'] = $e;
+        }
+        response()->json($data, 200)->header("Access-Control-Allow-Origin", config('cors.allowed_origins'))
+            ->header("Access-Control-Allow-Methods", config('cors.allowed_methods'))->send();
+    }
     function saveAccountBudgetSub(Request $request)
     {
         //===========================================AccountBudgetSub
@@ -271,7 +356,7 @@ class ApiAccountBudgetController extends Controller
         $AccBudgetAmount = $dataAccBudget->Amount;
 
 
-        $dataAccBudgetSubSumAmount = DB::table('accountBudgetSub')->where('account_id', $AccId)->get();
+        $dataAccBudgetSubSumAmount = DB::table('accountBudgetSub')->where('account_id', $AccId)->where('is_delete', 0)->get();
         $sumAmount = $dataAccBudgetSubSumAmount->sum('Amount')+$Amount;
         if($sumAmount > $AccBudgetAmount){
             DB::rollback();
@@ -301,6 +386,7 @@ class ApiAccountBudgetController extends Controller
             $dataInsertSub['OpenDate'] = $OpenDate;
             $dataInsertSub['CloseDate'] = $CloseDate;
             $dataInsertSub['is_active'] = 1;
+            $dataInsertSub['is_delete'] = 0;
             $dataInsertSub['created_at'] = date('Y-m-d H:i:s');
             $dataInsertSub['created_by'] = CRUDBooster::myId();
             $dataInsertSub['IsApproveProvince'] = 0;
