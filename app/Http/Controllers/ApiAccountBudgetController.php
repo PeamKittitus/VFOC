@@ -83,7 +83,7 @@ class ApiAccountBudgetController extends Controller
         response()->json($data, 200)->header("Access-Control-Allow-Origin", config('cors.allowed_origins'))
             ->header("Access-Control-Allow-Methods", config('cors.allowed_methods'))->send();
     }
-    function delAccountBudget(Request $request)
+    function subStatusAccountBudget(Request $request)
     {
         $AccId = $request['AccId'];
 
@@ -146,7 +146,7 @@ class ApiAccountBudgetController extends Controller
             ->header("Access-Control-Allow-Methods", config('cors.allowed_methods'))->send();
     }
 
-    function delsubAccountBudget(Request $request)
+    function subStatusSubAccountBudget(Request $request)
     {   
         $AccId = $request['AccSubId'];
         DB::beginTransaction();

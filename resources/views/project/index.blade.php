@@ -476,7 +476,7 @@ use Carbon\Carbon;
         }).then((result) => {
             if (result.isConfirmed) {
                 $.ajax({
-                    url: '/delAccountBudget',
+                    url: '/subStatusAccountBudget',
                     method: 'POST',
                     data: formData,
                     contentType: false,
@@ -530,7 +530,7 @@ use Carbon\Carbon;
         }).then((result) => {
             if (result.isConfirmed) {
                 $.ajax({
-                    url: '/delsubAccountBudget',
+                    url: '/subStatusSubAccountBudget',
                     method: 'POST',
                     data: formData,
                     contentType: false,
