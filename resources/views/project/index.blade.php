@@ -317,7 +317,7 @@ use Carbon\Carbon;
     </div>
 
     <select id="CurrentBudgetYear" class="select2 select2-container2">
-        <option selected></option>
+        <option selected disabled>All</option>
         <option value="2572">2572</option>
         <option value="2571">2571</option>
         <option value="2570">2570</option>
