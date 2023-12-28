@@ -161,8 +161,8 @@
         $(".checkNumber").keypress(function() {
             var dInput = $(this).val();
             return bannedKey(dInput, 1);
-
         });
+
         $("form[name=addBookBank]").submit(function(event) {
             event.preventDefault();
             var BankMasterId = $('#BankMasterId').val();

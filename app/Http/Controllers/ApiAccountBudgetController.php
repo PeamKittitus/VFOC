@@ -11,12 +11,46 @@ use PDO;
 
 class ApiAccountBudgetController extends Controller
 {
+    function getAccountBudgetandSubAPI(Request $request)
+    {
+        $BudgetYear = $request->BudgetYear;
+        $dataAccBudget = DB::table('accountBudget')
+            ->select('accountBudget.id', 'accountBudget.AccName', 'accountBudget.AccCode', 'accountBudget.Amount', 'accountBudget.is_active', 'accountBudget.BudgetYear')
+            ->where('BudgetYear', $BudgetYear)
+            ->get();
+
+        $dataAccBudgetSub = DB::table('accountBudgetSub')
+        ->select('accountBudgetSub.id',
+            'accountBudgetSub.account_id',
+            'accountBudgetSub.AccName',
+            'accountBudgetSub.AccCode',
+            'accountBudgetSub.Amount',
+            'accountBudgetSub.SubAmount',
+            'accountBudgetSub.AccStartDate',
+            'accountBudgetSub.AccEndDate',
+            'accountBudgetSub.is_active',
+        )
+         ->get();
+
+        $data = [];
+        $data['api_status'] = 1;
+        $data['api_message'] = 'Success';
+        $data['getAccountBudget'] = $dataAccBudget;
+        $data['getAccountBudgetSub'] = $dataAccBudgetSub;
+        // dd($data);
+        // return $data;
+        return response()->json($data, 200)
+        ->header("Access-Control-Allow-Origin", config('cors.allowed_origins'))
+        ->header("Access-Control-Allow-Methods", config('cors.allowed_methods'));
+    }
     function getAccountBudget()
     {
+        // dd(date('Y')+543);
         $dataAccBudget = DB::table('accountBudget')
-        ->select('accountBudget.id','accountBudget.AccName','accountBudget.AccCode','accountBudget.Amount','accountBudget.is_active')
-        // ->where('is_active', 1)
+        ->select('accountBudget.id','accountBudget.AccName','accountBudget.AccCode','accountBudget.Amount','accountBudget.is_active','accountBudget.BudgetYear')
+        // ->where('BudgetYear', date('Y')+543)
         ->get();
+        // dd($dataAccBudget);
         return $dataAccBudget;
     }
     function getAccountBudgetSub()

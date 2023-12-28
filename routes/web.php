@@ -51,4 +51,5 @@ Route::post('/saveBookbank', '\App\Http\Controllers\ApiBookbankController@saveBo
 Route::post('/editBookbank', '\App\Http\Controllers\ApiBookbankController@editBookbank');
 Route::post('/delBookBank', '\App\Http\Controllers\ApiBookbankController@delBookBank');
 Route::post('/editProfile', '\App\Http\Controllers\ApiUserController@editProfile');
+Route::post('/getAccountBudgetandSubAPI', '\App\Http\Controllers\ApiAccountBudgetController@getAccountBudgetandSubAPI');
 //========================================================================================== API

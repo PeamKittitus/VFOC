@@ -47,7 +47,7 @@
                 margin: 0;
                 position: relative;
                 vertical-align: middle;
-                width: 200px !important;
+                width: 100% !important;
             }
 
             img {
@@ -135,6 +135,7 @@
                 font-size: 14px;
                 color: #333;
             }
+
         </style>
     </head>
 
@@ -163,7 +164,7 @@
                             <div class="input-wrapper">
                                 <label class="label" for="IDCard">ปีงบระมาณ</label> <br>
                                 <select id="BudgetYear" class="select2 select2-container2"
-                                    style="width: 100% ; height: 50px !important;">
+                                    style="width: 40% !important; height: 50px !important;">
                                     <option value="2572">2572</option>
                                     <option value="2571">2571</option>
                                     <option value="2570">2570</option>
@@ -191,7 +192,7 @@
                         <div class="form-group basic">
                             <div class="input-wrapper">
                                 <label class="label" for="Firstname">จำนวนเงิน<strong style="color:red">*</strong></label>
-                                <input type="number" class="form-control" placeholder="จำนวนเงิน" id="Amount">
+                                <input type="number" class="form-control checkNumber" placeholder="จำนวนเงิน" id="Amount">
                                 <i class="clear-input"><ion-icon name="close-circle"></ion-icon></i>
                             </div>
                         </div>
@@ -216,6 +217,25 @@
         jQuery(document).ready(function($) {
             $('.select2').select2();
         });
+
+        function bannedKey(evt, lang) {
+            var k = event.keyCode;
+            if (lang == 1) {
+                if ((k >= 48 && k <= 57) || k == 46) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        }
+        $(".checkNumber").keypress(function() {
+            var dInput = $(this).val();
+            return bannedKey(dInput, 1);
+
+        });
+
+        
+
         $(document).ready(function() {
 
 
@@ -230,6 +250,35 @@
                 formData.append('AccName', AccName);
                 formData.append('BudgetYear', BudgetYear);
                 formData.append('Amount', Amount);
+
+
+                if (AccName == '') {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Project Name field is missing',
+                        text: 'Please enter Project Name.'
+                    });
+                    return;
+                }
+
+                if (BudgetYear == '') {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'BudgetYear field is missing',
+                        text: 'Please enter BudgetYear.'
+                    });
+                    return;
+                }
+
+                if (Amount == '') {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Budget field is missing',
+                        text: 'Please enter Budget.'
+                    });
+                    return;
+                }
+
 
                 // เก็บภาพที่ tb_temp_files
                 for (var pair of formData.entries()) {
@@ -262,7 +311,7 @@
                                 }).then((result) => {
                                     if (result.isConfirmed) {
                                         window.location.href =
-                                            "/project";
+                                            "/project/index";
                                     }
                                 });
                             },
