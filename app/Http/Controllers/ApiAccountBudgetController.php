@@ -468,4 +468,43 @@ class ApiAccountBudgetController extends Controller
         response()->json($data, 200)->header("Access-Control-Allow-Origin", config('cors.allowed_origins'))
             ->header("Access-Control-Allow-Methods", config('cors.allowed_methods'))->send();
     }
+    function editAccountBudget(Request $request)
+    {
+        $AccId = $request['AccId'];
+        $AccName = $request['AccName'];
+        $BudgetYear = $request['BudgetYear'];
+        $Amount = $request['Amount'];
+        DB::beginTransaction();
+        try {
+            $dataUpdate = [];
+            $dataUpdate['AccName'] = $AccName;
+            $dataUpdate['BudgetYear'] = $BudgetYear;
+            $dataUpdate['Amount'] = $Amount;
+            $dataUpdate['updated_at'] = date('Y-m-d H:i:s');
+            $dataUpdate['updated_by'] = CRUDBooster::myId();
+            $AccountBudgetId = DB::table('accountBudget')->where('id', $AccId)->update($dataUpdate);
+            if ($AccountBudgetId) {
+        
+                DB::commit();
+                $data['api_status'] = 1;
+                $data['api_message'] = 'Success';
+                $data['id'] = $AccountBudgetId;
+                return response()->json($data, 200)
+                ->header("Access-Control-Allow-Origin", config('cors.allowed_origins'))
+                ->header("Access-Control-Allow-Methods", config('cors.allowed_methods'));
+            } else {
+                DB::rollback();
+                $data['api_status'] = 0;
+                $data['api_message'] = 'กรุณาทำรายการใหม่อีกครั้ง';
+                return response()->json($data, 200);
+            }
+        } catch (\Exception $e) {
+            DB::rollback();
+            $data['api_status'] = 0;
+            $data['api_message'] = 'กรุณาทำรายการใหม่อีกครั้ง';
+            $data['api_data'] = $e;
+        }
+        response()->json($data, 200)->header("Access-Control-Allow-Origin", config('cors.allowed_origins'))
+            ->header("Access-Control-Allow-Methods", config('cors.allowed_methods'))->send();
+    }
 }
