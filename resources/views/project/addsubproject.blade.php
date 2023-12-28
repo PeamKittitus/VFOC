@@ -525,8 +525,7 @@ use Carbon\Carbon;
         $("form[name=saveAccountBudget]").submit(function(event) {
             event.preventDefault();
             // Get values from form fields
-            // var AccId = $('#AccId').val();
-            var AccId = 19;
+            var AccId = localStorage.getItem('AccId');
             var AccName = $('#AccName').val();
             var Amount = $('#Amount').val();
             var SubAmount = $('#SubAmount').val();
@@ -598,10 +597,10 @@ use Carbon\Carbon;
                         }).then(function() {
                             window.location.href = '/admin/login';
                         });
-                    } else if (data.api_status == 2) {
-                        swal("ยกเลิก!", data.api_message, "error");
+                    } else if (response.api_status == 2) {
+                        swal("ยกเลิก!", response.api_message, "error");
                     } else {
-                        swal("ยกเลิก!", data.api_message, "error");
+                        swal("ยกเลิก!", response.api_message, "error");
                     }
                 },
                 error: function(xhr, status, error) {

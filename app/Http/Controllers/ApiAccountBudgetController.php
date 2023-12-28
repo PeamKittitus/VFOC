@@ -91,7 +91,6 @@ class ApiAccountBudgetController extends Controller
         try {
             $existingActive = DB::table('accountBudget')->where('id', $AccId)->first();
             $allsub = DB::table('accountBudgetSub')->where('account_id', $AccId)->get();
-            // dd($allsub);
             if ($existingActive->is_active == 0) {
                 $dataUpdate['is_active'] = 1;
                 $dataUpdate['updated_at'] = date('Y-m-d H:i:s');
@@ -240,17 +239,16 @@ class ApiAccountBudgetController extends Controller
 
         $dataAccBudgetSubSumAmount = DB::table('accountBudgetSub')->where('account_id', $AccId)->get();
         $sumAmount = $dataAccBudgetSubSumAmount->sum('Amount')+$Amount;
-
         if($sumAmount > $AccBudgetAmount){
             DB::rollback();
             $data['api_status'] = 0;
-            $data['api_message'] = 'กรุณาทำรายการใหม่อีกครั้ง';
+            $data['api_message'] = 'กรุณาตรวจสอบข้อมูลวงเงินในโครงการ';
             return response()->json($data, 200);
         }
-        if($Amount < $SubAmount){
+        else if($SubAmount > $Amount){
             DB::rollback();
             $data['api_status'] = 0;
-            $data['api_message'] = 'กรุณาทำรายการใหม่อีกครั้ง';
+            $data['api_message'] = 'กรุณาตรวจสอบงบประมาณต่อกองทุน';
             return response()->json($data, 200);
         }
         $AccCodeSub = $AccCode . '-' . sprintf('%03d', $dataAccBudgetSub+1);
