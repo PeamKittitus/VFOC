@@ -80,6 +80,45 @@ class ApiAccountBudgetController extends Controller
         ->get();
         return $dataAccBudgetSub;
     }
+    function getAccountBudgetSubDetail($id)
+    {
+        $dataAccBudgetSub = DB::table('accountBudgetSub')
+            ->leftjoin('projectSubRisk', 'projectSubRisk.account_sub_id', 'accountBudgetSub.id')
+            ->leftjoin('projectSubPeriod', 'projectSubPeriod.account_sub_id', 'accountBudgetSub.id')
+            ->leftjoin('projectBudgetDocument', 'projectBudgetDocument.account_sub_id', 'accountBudgetSub.id')
+            ->select('accountBudgetSub.id',
+                'accountBudgetSub.account_id',
+                'accountBudgetSub.AccName',
+                'accountBudgetSub.Amount',
+                'accountBudgetSub.SubAmount',
+                'accountBudgetSub.AccStartDate',
+                'accountBudgetSub.AccEndDate',
+                'accountBudgetSub.OpenDate',
+                'accountBudgetSub.CloseDate',
+                'projectSubRisk.LowActivity',
+                'projectSubRisk.MidActivity',
+                'projectSubRisk.HighActivity',
+                'projectSubRisk.LowTiming',
+                'projectSubRisk.MidTiming',
+                'projectSubRisk.HighTiming',
+                'projectSubPeriod.PeriodNo',
+                'projectSubPeriod.PeriodPercent',
+                'projectBudgetDocument.FileName',
+                'projectBudgetDocument.FilePath',
+            )
+            ->where('accountBudgetSub.id', $id)
+            ->where('accountBudgetSub.is_delete', 0)
+            ->first();
+
+        // Convert and split dates
+        $dateFields = ['AccStartDate', 'AccEndDate', 'OpenDate', 'CloseDate'];
+        foreach ($dateFields as $field) {
+            $result = (new FunctionController)->convertAndSplitDate($dataAccBudgetSub->$field);
+            $dataAccBudgetSub->$field = $result['formatted'];
+            $dataAccBudgetSub->{$field . 'Array'} = $result['array'];
+        }
+        return $dataAccBudgetSub;
+    }
     function subStatusAccountBudget(Request $request)
     {
         $AccId = $request['AccId'];

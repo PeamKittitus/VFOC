@@ -26,5 +26,15 @@ class FunctionController extends Controller
     
         return $budgetYear;
     }
-    
+    function convertAndSplitDate($date)
+    {
+        $timestamp = strtotime($date);
+        $formattedDate = date('Y-m-d', $timestamp);
+        $dateArray = explode('-', $formattedDate);
+
+        return [
+            'formatted' => $formattedDate,
+            'array' => $dateArray,
+        ];
+    }
 }
