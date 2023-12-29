@@ -200,7 +200,7 @@ use Carbon\Carbon;
                     <div class="form-group basic">
                         <div class="input-wrapper">
                             <label class="label">ชื่อโครงการ<strong style="color:red">*</strong></label>
-                            <input type="text" class="form-control" placeholder="ชื่อโครงการ" id="AccName">
+                            <input type="text" class="form-control" placeholder="ชื่อโครงการ" id="AccName" value="{{$getAccountSubBudget->AccName}}">
                             <i class="clear-input"><ion-icon name="close-circle"></ion-icon></i>
                         </div>
                     </div>
@@ -208,7 +208,7 @@ use Carbon\Carbon;
                         <div class="input-wrapper">
                             <label class="label">วงเงินงบประมาณ<strong style="color:red">*</strong></label>
                             <input type="text" class="form-control checkNumber" placeholder="วงเงินงบประมาณ" 
-                            id="Amount" oninput="formatAmount(this)">
+                            id="Amount" oninput="formatAmount(this)" value="{{$getAccountSubBudget->Amount}}">
                             <i class="clear-input"><ion-icon name="close-circle"></ion-icon></i>
                         </div>
                     </div>
@@ -216,7 +216,7 @@ use Carbon\Carbon;
                         <div class="input-wrapper">
                             <label class="label">งบประมาณต่อกองทุน<strong style="color:red">*</strong></label>
                             <input type="text" class="form-control checkNumber" placeholder="งบประมาณต่อกองทุน" 
-                            id="SubAmount" oninput="formatAmount(this)">
+                            id="SubAmount" oninput="formatAmount(this)" value="{{$getAccountSubBudget->SubAmount}}">
                             <i class="clear-input"><ion-icon name="close-circle"></ion-icon></i>
                         </div>
                     </div>
@@ -236,11 +236,13 @@ use Carbon\Carbon;
                         <div class="d-flex" style="margin-bottom: 10px">
                             <div style="width: 20%; margin-right: 10px; display: inline-block;">
                                 งวดที่
-                                <input type="text" class="form-control checkNumber" placeholder="งบประมาณต่อกองทุน" id="PeriodNo" style="width: 100%">
+                                <input type="text" class="form-control checkNumber" placeholder="งบประมาณต่อกองทุน" 
+                                id="PeriodNo" style="width: 100%" value="{{$getAccountSubBudget->PeriodNo}}">
                             </div>
                             <div style="width: 20%; display: inline-block;">
                                 อัตราจ่ายร้อยละ
-                                <input type="text" class="form-control checkNumber" placeholder="อัตราจ่ายร้อยละ" id="PeriodPercent" style="width: 100%">
+                                <input type="text" class="form-control checkNumber" placeholder="อัตราจ่ายร้อยละ" 
+                                id="PeriodPercent" style="width: 100%" value="{{$getAccountSubBudget->PeriodPercent}}">
                             </div>
                         </div>
                     </div>
@@ -256,15 +258,18 @@ use Carbon\Carbon;
                             <div class="flex-wrap " style="display: flex;margin-top: 10px ;justify-content: space-between;">
                                 <div>
                                     <div>ระดับต่ำ<strong style="color: red">*</strong></div>
-                                    <input type="text" class="custom-input checkNumber" id="LowActivity">
+                                    <input type="text" class="custom-input checkNumber" id="LowActivity"
+                                    value="{{$getAccountSubBudget->LowActivity}}">
                                 </div>
                                 <div>
                                     <div>ระดับกลาง<strong style="color: red">*</strong></div>
-                                    <input type="text" class="custom-input checkNumber" id="MidActivity">
+                                    <input type="text" class="custom-input checkNumber" id="MidActivity"
+                                    value="{{$getAccountSubBudget->MidActivity}}">
                                 </div>
                                 <div>
                                     <div>ระดับสูง<strong style="color: red">*</strong></div>
-                                    <input type="text" class="custom-input checkNumber" id="HighActivity">
+                                    <input type="text" class="custom-input checkNumber" id="HighActivity"
+                                    value="{{$getAccountSubBudget->HighActivity}}">
                                 </div>
                             </div>
                         </div>
@@ -279,15 +284,18 @@ use Carbon\Carbon;
                             <div class="flex-wrap " style="display: flex;margin-top: 10px ;justify-content: space-between;">
                                 <div>
                                     <div>ระดับต่ำ<strong style="color: red">*</strong></div>
-                                    <input type="text" class="custom-input checkNumber" id="LowTiming">
+                                    <input type="text" class="custom-input checkNumber" id="LowTiming"
+                                    value="{{$getAccountSubBudget->LowTiming}}">
                                 </div>
                                 <div>
                                     <div>ระดับกลาง<strong style="color: red">*</strong></div>
-                                    <input type="text" class="custom-input checkNumber" id="MidTiming">
+                                    <input type="text" class="custom-input checkNumber" id="MidTiming"
+                                    value="{{$getAccountSubBudget->MidTiming}}">
                                 </div>
                                 <div>
                                     <div>ระดับสูง<strong style="color: red">*</strong></div>
-                                    <input type="text" class="custom-input checkNumber" id="HighTiming">
+                                    <input type="text" class="custom-input checkNumber" id="HighTiming"
+                                    value="{{$getAccountSubBudget->HighTiming}}">
                                 </div>
                             </div>
                         </div>
@@ -304,7 +312,11 @@ use Carbon\Carbon;
                                     <select class="select2" style="width: 60px;" id="AccStartDate">
                                         <?php
                                         for ($day = 1; $day <= 31; $day++) {
-                                            echo "<option value='$day'>$day</option>";
+                                        if ($day == $getAccountSubBudget->AccStartDateArray[2]) {
+                                                echo "<option value='$day' selected>$day</option>";
+                                            } else {
+                                                echo "<option value='$day'>$day</option>";
+                                            }
                                         }
                                         ?>
                                     </select>
@@ -315,12 +327,14 @@ use Carbon\Carbon;
 
                                         for ($monthNumber = 1; $monthNumber <= 12; $monthNumber++) {
                                             $monthName = Carbon::create()->month($monthNumber)->locale('th')->monthName;
-                                            echo "<option value='$monthNumber'>$monthName</option>";
+                                            if ($monthNumber == $getAccountSubBudget->AccStartDateArray[1]) {
+                                                echo "<option value='$monthNumber' selected>$monthName</option>";
+                                            } else {
+                                                echo "<option value='$monthNumber'>$monthName</option>";
+                                            }     
                                         }
                                         ?>
                                     </select>
-
-
                                 </div>
                                 <div>
                                     <select class="select2" style="width: 100px;" id="AccStartYear">
@@ -328,13 +342,18 @@ use Carbon\Carbon;
                                         $currentYear = date('Y');
                                         for ($year = $currentYear - 1; $year <= $currentYear + 1; $year++) {
                                             $buddhistYear = $year + 543;
-                                            echo "<option value='$year'>$buddhistYear </option>";
+                                            if ($year == $getAccountSubBudget->AccStartDateArray[0]+543) {
+                                                echo "<option value='$year' selected>$buddhistYear </option>";
+                                            } else {
+                                                echo "<option value='$year'>$buddhistYear </option>";
+                                            }                   
                                         }
                                         ?>
                                     </select>
                                 </div>
                             </div>
                         </div>
+                        
                         <div style="width: 45%;">
                             <div>
                                 วันที่สิ้นสุดโครงการ <strong style="color: red">*</strong>
@@ -344,7 +363,11 @@ use Carbon\Carbon;
                                     <select class="select2" style="width: 60px;" id="AccEndDate">
                                         <?php
                                         for ($day = 1; $day <= 31; $day++) {
-                                            echo "<option value='$day'>$day</option>";
+                                            if ($day == $getAccountSubBudget->AccEndDateArray[2]) {
+                                                echo "<option value='$day' selected>$day</option>";
+                                            } else {
+                                                echo "<option value='$day'>$day</option>";
+                                            }                                                                  
                                         }
                                         ?>
                                     </select>
@@ -352,11 +375,13 @@ use Carbon\Carbon;
                                 <div style="margin-right: 10px;">
                                     <select class="select2" style="width: 100px;" id="AccEndMonth">
                                         <?php
-
-
-                                        for ($monthNumber = 1; $monthNumber <= 12; $monthNumber++) {
+                                         for ($monthNumber = 1; $monthNumber <= 12; $monthNumber++) {
                                             $monthName = Carbon::create()->month($monthNumber)->locale('th')->monthName;
-                                            echo "<option value='$monthNumber'>$monthName</option>";
+                                            if ($monthNumber == $getAccountSubBudget->AccEndDateArray[1]) {
+                                                echo "<option value='$monthNumber' selected>$monthName</option>";
+                                            } else {
+                                                echo "<option value='$monthNumber'>$monthName</option>";
+                                            }     
                                         }
                                         ?>
                                     </select>
@@ -367,7 +392,11 @@ use Carbon\Carbon;
                                         $currentYear = date('Y');
                                         for ($year = $currentYear - 1; $year <= $currentYear + 1; $year++) {
                                             $buddhistYear = $year + 543;
-                                            echo "<option value='$year'>$buddhistYear </option>";
+                                            if ($year == $getAccountSubBudget->AccEndDateArray[0]+543) {
+                                                echo "<option value='$year' selected>$buddhistYear </option>";
+                                            } else {
+                                                echo "<option value='$year'>$buddhistYear </option>";
+                                            }                   
                                         }
                                         ?>
                                     </select>
@@ -385,8 +414,12 @@ use Carbon\Carbon;
                                 <div>
                                     <select class="select2" style="width: 60px;" id="OpenStartDate">
                                         <?php
-                                        for ($day = 1; $day <= 31; $day++) {
-                                            echo "<option value='$day'>$day</option>";
+                                         for ($day = 1; $day <= 31; $day++) {
+                                            if ($day == $getAccountSubBudget->OpenDateArray[2]) {
+                                                echo "<option value='$day' selected>$day</option>";
+                                            } else {
+                                                echo "<option value='$day'>$day</option>";
+                                            }                                                                  
                                         }
                                         ?>
                                     </select>
@@ -396,7 +429,11 @@ use Carbon\Carbon;
                                         <?php
                                         for ($monthNumber = 1; $monthNumber <= 12; $monthNumber++) {
                                             $monthName = Carbon::create()->month($monthNumber)->locale('th')->monthName;
-                                            echo "<option value='$monthNumber'>$monthName</option>";
+                                            if ($monthNumber == $getAccountSubBudget->OpenDateArray[1]) {
+                                                echo "<option value='$monthNumber' selected>$monthName</option>";
+                                            } else {
+                                                echo "<option value='$monthNumber'>$monthName</option>";
+                                            }     
                                         }
                                         ?>
                                     </select>
@@ -407,7 +444,11 @@ use Carbon\Carbon;
                                         $currentYear = date('Y');
                                         for ($year = $currentYear - 1; $year <= $currentYear + 1; $year++) {
                                             $buddhistYear = $year + 543;
-                                            echo "<option value='$year'>$buddhistYear </option>";
+                                            if ($year == $getAccountSubBudget->OpenDateArray[0]+543) {
+                                                echo "<option value='$year' selected>$buddhistYear </option>";
+                                            } else {
+                                                echo "<option value='$year'>$buddhistYear </option>";
+                                            }                   
                                         }
                                         ?>
                                     </select>
@@ -423,7 +464,11 @@ use Carbon\Carbon;
                                     <select class="select2" style="width: 60px;" id="EndStartDate">
                                         <?php
                                         for ($day = 1; $day <= 31; $day++) {
-                                            echo "<option value='$day'>$day</option>";
+                                            if ($day == $getAccountSubBudget->CloseDateArray[2]) {
+                                                echo "<option value='$day' selected>$day</option>";
+                                            } else {
+                                                echo "<option value='$day'>$day</option>";
+                                            }                                                                  
                                         }
                                         ?>
                                     </select>
@@ -431,11 +476,13 @@ use Carbon\Carbon;
                                 <div style="margin-right: 10px;">
                                     <select class="select2" style="width: 100px;" id="EndStartMonth">
                                         <?php
-
-
                                         for ($monthNumber = 1; $monthNumber <= 12; $monthNumber++) {
                                             $monthName = Carbon::create()->month($monthNumber)->locale('th')->monthName;
-                                            echo "<option value='$monthNumber'>$monthName</option>";
+                                            if ($monthNumber == $getAccountSubBudget->CloseDateArray[1]) {
+                                                echo "<option value='$monthNumber' selected>$monthName</option>";
+                                            } else {
+                                                echo "<option value='$monthNumber'>$monthName</option>";
+                                            }     
                                         }
                                         ?>
                                     </select>
@@ -446,7 +493,11 @@ use Carbon\Carbon;
                                         $currentYear = date('Y');
                                         for ($year = $currentYear - 1; $year <= $currentYear + 1; $year++) {
                                             $buddhistYear = $year + 543;
-                                            echo "<option value='$year'>$buddhistYear </option>";
+                                            if ($year == $getAccountSubBudget->CloseDateArray[0]+543) {
+                                                echo "<option value='$year' selected>$buddhistYear </option>";
+                                            } else {
+                                                echo "<option value='$year'>$buddhistYear </option>";
+                                            }                   
                                         }
                                         ?>
                                     </select>
@@ -468,9 +519,9 @@ use Carbon\Carbon;
                         <button type="submit" class="btn btn-success btn-block" style='background-color: #1ab3a3;width: 150px ; float: right;'>
                             <i class="fa fa-save" style='padding-right:10px'></i>บันทึก</button>
                     </div>
-
+                   
                 </div>
-
+                <input type="hidden" name="" id="AccSubId" value="{{$getAccountSubBudget->id}}">
             </form>
         </div>
     </div>
@@ -480,8 +531,17 @@ use Carbon\Carbon;
 </body>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
+    var getAccountSubBudget = @json($getAccountSubBudget);
+    console.log(getAccountSubBudget);
+    // Set values for the select elements
+    
+
     jQuery(document).ready(function($) {
         $('.select2').select2();
+
+        // $("#AccStartDate").val(getAccountSubBudget.accStartDateArray[2]+543);
+        // $("#AccStartMonth").val(getAccountSubBudget.accStartDateArray[1]);
+        // $("#AccStartYear").val(getAccountSubBudget.accStartDateArray[0]);
     });
     $(document).ready(function() {
         let inputIndex = 2;
@@ -568,6 +628,7 @@ use Carbon\Carbon;
             // Get values from form fields
             var AccId = localStorage.getItem('AccId');
             var AccName = $('#AccName').val();
+            var AccSubId = $('#AccSubId').val();
             var Amount = $('#Amount').val();
             Amount = Amount.replace(/,/g, '');
             var SubAmount = $('#SubAmount').val();
@@ -641,6 +702,7 @@ use Carbon\Carbon;
             // check EndStartCombine !< OpenStartCombine
             var formData = new FormData();
             formData.append('AccId', AccId);
+            formData.append('AccSubId', AccSubId);
             formData.append('AccName', AccName);
             formData.append('Amount', Amount);
             formData.append('SubAmount', SubAmount);
@@ -658,7 +720,6 @@ use Carbon\Carbon;
             formData.append('EndStartCombine', EndStartCombine);
             formData.append('totalfiles', totalfiles);
             formData.append('Detail', Detail);
-
             // for (var pair of formData.entries()) {
             //     console.log(pair[0]+ ', ' + pair[1]); 
             // }
@@ -672,7 +733,7 @@ use Carbon\Carbon;
             }
 
             $.ajax({
-                url: '/saveAccountBudgetSub',
+                url: '/editAccountBudgetSub',
                 type: 'POST',
                 data: formData,
                 processData: false,
