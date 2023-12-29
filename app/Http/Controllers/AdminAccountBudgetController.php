@@ -230,7 +230,6 @@ class AdminAccountBudgetController extends \crocodicstudio\crudbooster\controlle
 	{
 		$getAccountSubBudget = (new ApiAccountBudgetController)->getAccountBudgetSubDetail($id);
 		$data['getAccountSubBudget'] = $getAccountSubBudget;
-		// dd($data);
 		return view('project/editsubproject',$data);
 	}
 	public function editproject($id)
