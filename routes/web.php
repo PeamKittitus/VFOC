@@ -58,4 +58,5 @@ Route::post('/delSubAccountBudget', '\App\Http\Controllers\ApiAccountBudgetContr
 Route::post('/delAccountBudget', '\App\Http\Controllers\ApiAccountBudgetController@delAccountBudget');
 Route::post('/editAccountBudget', '\App\Http\Controllers\ApiAccountBudgetController@editAccountBudget');
 Route::post('/editAccountBudgetSub', '\App\Http\Controllers\ApiAccountBudgetController@editAccountBudgetSub');
+Route::post('/saveNews', '\App\Http\Controllers\ApiNewsController@saveNews');
 //========================================================================================== API

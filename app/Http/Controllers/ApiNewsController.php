@@ -23,8 +23,9 @@ class ApiNewsController extends Controller
     }
     function saveNews(Request $request)
     {
-        $BankMasterId = $request['BankMasterId'];
-        $BookBankName = $request['BookBankName'];
+        $TransactionType = $request['TransactionType'];  //0=สมาชิก,1=สาธารณะ
+        $TransactionYear = date("Y") + 543;
+        $TransactionYear = $TransactionYear;
         $BookBankNumber = $request['BookBankNumber'];
         $WithdrawName = $request['WithdrawName'];
         $WithdrawName2 = $request['WithdrawName2'];
