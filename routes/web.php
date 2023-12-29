@@ -31,6 +31,12 @@ Route::get('/addproject', function () {
 Route::get('/addsubproject', function () {
     return view('project/addsubproject');
 });
+Route::get('/addNews', function () {
+    return view('news/addNews');
+});
+Route::get('/editNews', function () {
+    return view('news/editNews');
+});
 Route::get('/addBookBank', '\App\Http\Controllers\AdminAccountBookbankController@addBookBank');
 Route::get('/editbookbank/{id}', '\App\Http\Controllers\AdminAccountBookbankController@editBookBank');
 Route::get('/editsubproject/{id}', '\App\Http\Controllers\AdminAccountBudgetController@editsubproject');
@@ -59,4 +65,5 @@ Route::post('/delAccountBudget', '\App\Http\Controllers\ApiAccountBudgetControll
 Route::post('/editAccountBudget', '\App\Http\Controllers\ApiAccountBudgetController@editAccountBudget');
 Route::post('/editAccountBudgetSub', '\App\Http\Controllers\ApiAccountBudgetController@editAccountBudgetSub');
 Route::post('/saveNews', '\App\Http\Controllers\ApiNewsController@saveNews');
+Route::get('/getTypeNews', '\App\Http\Controllers\ApiNewsController@getTypeNews');
 //========================================================================================== API
