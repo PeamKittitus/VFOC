@@ -182,7 +182,7 @@ use Carbon\Carbon;
     <div>
         <ol class="breadcrumb page-breadcrumb">
             <li class="breadcrumb-item"><a href="/Home/Index">หน้าหลัก</a></li>
-            <li class="breadcrumb-item"><a href="/EAccount/StructureIndex">ผังบัญชีงบประมาณโครงการ</a></li>
+            <li class="breadcrumb-item"><a href="/EAccount/StructureIndex">จัดการข่าวสาร</a></li>
             <li class="breadcrumb-item active">สร้างใหม่</li>
         </ol>
     </div>
@@ -199,44 +199,43 @@ use Carbon\Carbon;
                     <hr />
                     <div class="form-group basic">
                         <div class="input-wrapper">
-                            <label >เลือกประเภทผู้รับข่าวสาร</label>
-                            <select class="select2" id='newstype' style="width: 100%">
-                                <option value="1">สมาชิก</option>
-                                <option value="2">สาธารณะ</option>
+                            <label>เลือกประเภทผู้รับข่าวสาร</label>
+                            <select class="select2" id='TransactionType' style="width: 100%">
+                                <option value="0">สมาชิก</option>
+                                <option value="1">สาธารณะ</option>
                             </select>
                         </div>
                     </div>
                     <div class="form-group basic">
                         <div class="input-wrapper">
                             <label>ประเภทข่าวสาร</label>
-                            <select class="select2" id='subnewstype' style="width: 100%" >
-                               
+                            <select class="select2" id='NewType' style="width: 100%">
+
                             </select>
                         </div>
                     </div>
-                               
+
                     <hr>
                     <div class="form-group basic">
                         <div class="input-wrapper">
                             <div class="flex-wrap " style="display: flex;margin-top: 10px ;justify-content: center;">
                                 <div style="margin-right: 30px">
                                     <div>วันที่เริ่มต้นข่าวสาร<strong style="color: red">*</strong></div>
-                                    <input type="text" name="date" id="startdate">
-                                </div>  
+                                    <input type="text" name="date" id="NewStartDate">
+                                </div>
                                 <div>
                                     <div>วันที่สิ้นสุดข่าวสาร<strong style="color: red">*</strong></div>
-                                    <input type="text" name="date" id="enddate">
-                                </div>                        
+                                    <input type="text" name="date" id="NewEndDate">
+                                </div>
                             </div>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-lg-2">
                             <label class="form-label">สถานะใช้งาน </label>
-                            <input type="checkbox" id="Active">
-                            <input type="hidden" data-val="true" data-val-required="The IsActive field is required." id="IsActive" name="IsActive" value="">
+                            <input type="checkbox" id="IsActive">
                             <span style="color:red">ใช้งาน</span>
-                        </div>                    
+                        </div>
                     </div>
                     <hr>
 
@@ -246,14 +245,13 @@ use Carbon\Carbon;
                     <hr>
                     <div class="form-group basic">
                         <div class="input-wrapper">
-                            <label >หัวข้อข่าวสาร<strong style="color:red">*</strong></label>
-                            <textarea type="text" class="form-control col-12" data-bv-notempty="true" data-bv-notempty-message="กรุณากรอกข้อมูล" rows="2" 
-                            id="TransactionTitle" name="TransactionTitle" data-bv-field="TransactionTitle" ></textarea>
+                            <label>หัวข้อข่าวสาร<strong style="color:red">*</strong></label>
+                            <textarea type="text" class="form-control col-12" data-bv-notempty="true" data-bv-notempty-message="กรุณากรอกข้อมูล" rows="2" id="TransactionTitle" name="TransactionTitle" data-bv-field="TransactionTitle"></textarea>
                         </div>
                     </div>
                     <hr>
                     <label style="font-size: 14px">รายละเอียดข่าวสาร</span></label>
-                    <textarea id="Detail"></textarea>
+                    <textarea id="TransactionDetail"></textarea>
 
 
                     <br>
@@ -275,65 +273,111 @@ use Carbon\Carbon;
 <script>
     jQuery(document).ready(function($) {
         $('.select2').select2();
-        
     });
-
-    $(document).ready(function() {
-        $("#PeriodPercent").on("input", function() {
-            var inputValue = $(this).val();
-            inputValue = inputValue.replace(/[^0-9]/g, '');
-            if (parseInt(inputValue) > 100) {
-                $(this).val("100");
-            } else {
-                $(this).val(inputValue);
-            }
-        });
-        $( "#startdate" ).datepicker();
-        $( "#enddate" ).datepicker();
-
-        let editor;
-        ClassicEditor
-            .create(document.querySelector('#Detail'))
-            .then(newEditor => {
-                editor = newEditor;
-            })
-            .catch(error => {
-                console.error(error);
-        });
-
-        
-    });
-    
 </script>
-
+<script>
+    let editor;
+    ClassicEditor
+        .create(document.querySelector('#TransactionDetail'))
+        .then(newEditor => {
+            editor = newEditor;
+        })
+        .catch(error => {
+            console.error(error);
+        });
+</script>
 <script type="text/javascript">
-     // เรียก function fecth subtypenew
-    function fetchDataAndPopulateSelect() {
+    function fetchTypeNews() {
         $.ajax({
-        url: '/getTypeNews',
-        method: 'GET',
-        dataType: 'json',
-        success: function(data) {
-            $('#subnewstype').empty();
-            $.each(data, function(index, item) {
-            $('#subnewstype').append('<option value="' + item.LookupValue + '">' + item.LookupText + '</option>');
-            });
-            console.log(data);
-        },
-        error: function(error) {
-            console.error('Error fetching data:', error);
-        }
+            url: '/getTypeNews',
+            method: 'GET',
+            dataType: 'json',
+            success: function(data) {
+                $('#NewType').empty();
+                $.each(data, function(index, item) {
+                    $('#NewType').append('<option value="' + item.LookupValue + '">' + item.LookupText + '</option>');
+                });
+            },
+            error: function(error) {
+                console.error('Error fetching data:', error);
+            }
         });
     }
 
     $(document).ready(function() {
-        // เรียก function subtypenew
-        fetchDataAndPopulateSelect();
+        $("#NewStartDate").datepicker();
+        $("#NewEndDate").datepicker();
+        fetchTypeNews();
         //=============Submit
         $("form[name=saveNews]").submit(function(event) {
             event.preventDefault();
             // Get values from form fields
-            alert('submit');
+            var TransactionType = $('#TransactionType').val();
+            var NewType = $('#NewType').val();
+            var NewStartDate = $('#NewStartDate').val();
+            var NewEndDate = $('#NewEndDate').val();
+            var totalfiles = $('#file')[0].files.length;
+            var TransactionTitle = $('#TransactionTitle').val();
+            var IsActive = $('#IsActive').is(':checked') ? 1 : 0;
+            var editorData = editor.getData();
+            var TransactionDetail = editorData;
+            var totalfiles = document.getElementById("file").files.length;
+
+            var formData = new FormData();
+            formData.append('TransactionType', TransactionType);
+            formData.append('NewType', NewType);
+            formData.append('NewStartDate', NewStartDate);
+            formData.append('NewEndDate', NewEndDate);
+            formData.append('IsActive', IsActive);
+            formData.append('TransactionTitle', TransactionTitle);
+            formData.append('TransactionDetail', TransactionDetail);
+            for (var index = 0; index < totalfiles; ++index) {
+                formData.append(
+                    "file[]",
+                    document.getElementById("file").files[index]
+                );
+            }
+            Swal.fire({
+                title: "ยืนยัน",
+                text: "คุณต้องการเพิ่มข่าวสารใช่หรือไม่?",
+                icon: "question",
+                showCancelButton: true,
+                confirmButtonText: "Yes",
+                cancelButtonText: "No",
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: '/saveNews',
+                        method: 'POST',
+                        data: formData,
+                        contentType: false,
+                        processData: false,
+                        success: function(response) {
+                            Swal.fire({
+                                title: "Success",
+                                text: "Form data saved successfully!",
+                                icon: "success",
+                                showCancelButton: false,
+                                confirmButtonText: "OK",
+                            }).then((result) => {
+                                if (result.isConfirmed) {
+                                    window.location.href =
+                                        "/admin/transactionNews";
+                                }
+                            });
+                        },
+                        error: function(xhr, status, error) {
+                            Swal.fire({
+                                title: "Error",
+                                text: "An error occurred while saving the form data.",
+                                icon: "error",
+                                showCancelButton: false,
+                                confirmButtonText: "OK",
+                            });
+                        }
+                    });
+                }
+            });
         });
     });
 </script>

@@ -37,4 +37,10 @@ class FunctionController extends Controller
             'array' => $dateArray,
         ];
     }
+    function formatDateString($date)
+    {
+        $dateTime = \DateTime::createFromFormat('m/d/Y', $date);
+        $newFormattedDate = $dateTime->format('Y-m-d');
+        return $newFormattedDate;
+    }
 }

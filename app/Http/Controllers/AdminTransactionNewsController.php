@@ -329,6 +329,25 @@
 
 
 	    //By the way, you can still create your own method in here... :) 
-
-
+		public function getIndex()
+		{
+			$getCmsUser = DB::table('cms_users')->where('id', CRUDBooster::myId())->first();
+			$getAccountBookBank = (new ApiBookBankController)->getAccountBookByOrgId($getCmsUser->orgId);
+			$data['getAccountBookBank'] = $getAccountBookBank;
+			return view('account/index',$data);
+		}
+		public function addNews()
+		{
+			$getAccountBankMaster = (new ApiBookBankController)->getAccountBankMaster();
+			$data['getAccountBankMaster'] = $getAccountBankMaster;
+			return view('news/addNews', $data);
+		}
+		public function editNews($id)
+		{
+			$getAccountBankMaster = (new ApiBookBankController)->getAccountBankMaster();
+			$getAccountBookById = (new ApiBookBankController)->getAccountBookById($id);
+			$data['getAccountBankMaster'] = $getAccountBankMaster;
+			$data['getAccountBookById'] = $getAccountBookById;
+			return view('news/addNews', $data);
+		}
 	}

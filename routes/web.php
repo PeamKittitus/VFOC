@@ -34,13 +34,12 @@ Route::get('/addsubproject', function () {
 Route::get('/addNews', function () {
     return view('news/addNews');
 });
-Route::get('/editNews', function () {
-    return view('news/editNews');
-});
 Route::get('/addBookBank', '\App\Http\Controllers\AdminAccountBookbankController@addBookBank');
 Route::get('/editbookbank/{id}', '\App\Http\Controllers\AdminAccountBookbankController@editBookBank');
 Route::get('/editsubproject/{id}', '\App\Http\Controllers\AdminAccountBudgetController@editsubproject');
 Route::get('/editproject/{id}', '\App\Http\Controllers\AdminAccountBudgetController@editproject');
+Route::get('/editNews/{id}', '\App\Http\Controllers\AdminTransactionNewsController@editNews');
+Route::get('/addNews', '\App\Http\Controllers\AdminAccountBookbankController@addNews');
 //==========================================================================================Route
 
 
@@ -66,4 +65,7 @@ Route::post('/editAccountBudget', '\App\Http\Controllers\ApiAccountBudgetControl
 Route::post('/editAccountBudgetSub', '\App\Http\Controllers\ApiAccountBudgetController@editAccountBudgetSub');
 Route::post('/saveNews', '\App\Http\Controllers\ApiNewsController@saveNews');
 Route::get('/getTypeNews', '\App\Http\Controllers\ApiNewsController@getTypeNews');
+Route::post('/editNews', '\App\Http\Controllers\ApiNewsController@editNews');
+Route::post('/delNews', '\App\Http\Controllers\ApiNewsController@delNews');
+Route::post('/approveNews', '\App\Http\Controllers\ApiNewsController@approveNews');
 //========================================================================================== API
