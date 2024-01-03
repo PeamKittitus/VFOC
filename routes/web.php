@@ -34,6 +34,12 @@ Route::get('/addsubproject', function () {
 Route::get('/addNews', function () {
     return view('news/addNews');
 });
+Route::get('/editNews', function () {
+    return view('news/editNews');
+});
+Route::get('/News', function () {
+    return view('news/index');
+});
 Route::get('/addBookBank', '\App\Http\Controllers\AdminAccountBookbankController@addBookBank');
 Route::get('/editbookbank/{id}', '\App\Http\Controllers\AdminAccountBookbankController@editBookBank');
 Route::get('/editsubproject/{id}', '\App\Http\Controllers\AdminAccountBudgetController@editsubproject');
