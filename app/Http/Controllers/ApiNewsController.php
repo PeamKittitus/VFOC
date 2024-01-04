@@ -631,4 +631,63 @@ class ApiNewsController extends Controller
         }
         return $Models;
     }
+    function ReportCreatorMostNews()
+    {
+        $newsData = DB::table('transactionNews')
+            ->select(
+                'transactionNews.id',
+                'transactionNews.TransactionType',
+                'transactionNews.TransactionYear',
+                'transactionNews.Created_at',
+                'transactionNews.Created_by',
+                'transactionNews.IsActive',
+                'transactionNews.IsApprove',
+            )
+            ->groupBy('transactionNews.TransactionYear')
+            ->get();
+        $Models = [];
+        foreach ($newsData as $index => $val) {
+            $Y = $val->TransactionYear;
+            $Tran = DB::table('transactionNews')
+                ->where('TransactionYear', $Y)
+                ->where('IsActive', 1)
+                ->groupBy('Created_by')
+                ->selectRaw('COUNT(*) as Count, MAX(Created_by) as Created_by')
+                ->get();
+
+            $TranMax = $Tran->sortByDesc('Count')->pluck('Created_by')->first();
+
+            $model = new stdClass();
+            $model->TransactionYear = $val->TransactionYear;
+
+            $model->fullName = DB::table('user')
+                ->where('cmsUserId', $TranMax)
+                ->select(DB::raw('CONCAT(FirstName, " ", LastName) as fullName'))
+                ->first()->fullName;
+
+            $model->AmountMember = DB::table('transactionNews')
+                ->where('TransactionYear', $val->TransactionYear)
+                ->where('TransactionType', 0)
+                ->where('IsActive', 1)
+                ->where('Created_by', $TranMax)
+                ->count();
+
+            $model->AmountPublic = DB::table('transactionNews')
+                ->where('TransactionYear', $val->TransactionYear)
+                ->where('TransactionType', 1)
+                ->where('IsActive', 1)
+                ->where('Created_by', $TranMax)
+                ->count();
+
+            $model->AmountNews = DB::table('transactionNews')
+                ->where('TransactionYear', $val->TransactionYear)
+                ->where('IsActive', 1)
+                ->where('Created_by', $TranMax)
+                ->count();
+
+            $Models[] = $model;
+        }
+        return $Models;
+    }
+    
 }
