@@ -331,6 +331,11 @@
 
 
 	    //By the way, you can still create your own method in here... :) 
-
+		public function getIndex()
+		{
+			$GetReportType = (new ApiNewsController)->GetReportType();
+			$data['GetReportType'] = $GetReportType;
+			return view('news/report/approveNews',$data);
+		}
 
 	}
