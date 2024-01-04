@@ -1,8 +1,5 @@
 @extends('crudbooster::admin_template')
 @section('content')
-@php
-use Carbon\Carbon;
-@endphp
 
 <head>
     <!-- Include DataTables CSS -->
@@ -16,15 +13,7 @@ use Carbon\Carbon;
     <!-- Include DataTables JS -->
 
     <!-- DataTable -->
-    <script src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
-    <script src="https://cdn.datatables.net/1.10.22/js/dataTables.bootstrap4.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/1.6.5/js/dataTables.buttons.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/1.6.5/js/buttons.flash.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
-    <script src="https://cdn.datatables.net/buttons/1.6.5/js/buttons.html5.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/1.6.5/js/buttons.print.min.js"></script>
+
 
     <!-- Include Kanit font from Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -34,7 +23,7 @@ use Carbon\Carbon;
     <!-- Select2 -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
-
+    <script src="//cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.32/vfs_fonts.js"></script>
 </head>
 <style>
     body {
@@ -315,7 +304,11 @@ use Carbon\Carbon;
     }
 
     div.dataTables_filter label {
-        /* display: none; */
+        display: none;
+    }
+    .dt-buttons{
+        position: fixed;
+        left: 90%;
     }
 </style>
 
@@ -393,17 +386,38 @@ use Carbon\Carbon;
     </div>
 
 </body>
-
+<script src="//cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.32/vfs_fonts.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    pdfMake.fonts = {
+        THSarabun: {
+            normal: 'THSarabun.ttf',
+            bold: 'THSarabun-Bold.ttf',
+            italics: 'THSarabun-Italic.ttf',
+            bolditalics: 'THSarabun-BoldItalic.ttf'
+        }
+    }
+</script>
 <script>
     $(document).ready(function() {
         $('#example').DataTable({
             responsive: true,
             dom: 'Bfrtip',
-            buttons: [
-                'copyHtml5',
-                'excelHtml5',
-                'pdfHtml5'
+            buttons: [{
+                    extend: 'excelHtml5',
+                    text: '<i class="fal fa-file-excel"></i>&nbsp;&nbsp;EXCEL',
+                    titleAttr: 'Excel',
+                    autoFilter: true,
+                    footer: false,
+                    className: 'btn-success btn-sm mr-1'
+                },
+                {
+                    extend: 'pdfHtml5',
+                    text: '<i class="fal fa-file-pdf"></i>&nbsp;&nbsp;PDF',
+                    pageSize: 'A4',
+                    footer: true,
+                    className: 'btn-danger btn-sm mr-1',
+                }
             ]
         });
     });
