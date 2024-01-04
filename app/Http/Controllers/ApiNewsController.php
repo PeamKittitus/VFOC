@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use DB;
 use CRUDBooster;
 use Illuminate\Support\Facades\Storage;
-
+use stdClass;
 class ApiNewsController extends Controller
 {
     function getNewsNotApprove()
@@ -381,5 +381,48 @@ class ApiNewsController extends Controller
         }
         response()->json($data, 200)->header("Access-Control-Allow-Origin", config('cors.allowed_origins'))
             ->header("Access-Control-Allow-Methods", config('cors.allowed_methods'))->send();
+    }
+    
+    function ReportApproveNews()
+    {
+        $newsData = DB::table('transactionNews')
+            ->select(
+                'transactionNews.id',
+                'transactionNews.TransactionType',
+                'transactionNews.TransactionYear',
+                'transactionNews.Created_at',
+                'transactionNews.IsActive',
+                'transactionNews.IsApprove',
+            )
+            ->groupBy('transactionNews.TransactionYear')
+            ->get();
+
+            $Models = [];
+            foreach ($newsData as $index => $val) {
+                $model = new stdClass();
+                $model->TransactionYear = $val->TransactionYear;
+                $model->AmountWait = DB::table('transactionNews')
+                    ->where('TransactionYear', $val->TransactionYear)
+                    // ->where('TransactionType', 0)
+                    ->where('IsApprove', 0)
+                    ->where('IsActive', 1)
+                    ->count();
+        
+                $model->AmountApprove = DB::table('transactionNews')
+                    ->where('TransactionYear', $val->TransactionYear)
+                    // ->where('TransactionType', 0)
+                    ->where('IsApprove', 1)
+                    ->where('IsActive', 1)
+                    ->count();
+        
+                $model->AmountNews = DB::table('transactionNews')
+                    ->where('TransactionYear', $val->TransactionYear)
+                    // ->where('TransactionType', 0)
+                    ->where('IsActive', 1)
+                    ->count();
+        
+                $Models[] = $model;
+            }
+            return $Models;
     }
 }
