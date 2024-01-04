@@ -335,7 +335,7 @@
 		{
 			$GetReportCreator = (new ApiNewsController)->GetReportCreator();
 			$data['GetReportCreator'] = $GetReportCreator;
-			return view('news/report/approveNews',$data);
+			return view('news/report/ReportCreatorNews',$data);
 		}
 
 	}

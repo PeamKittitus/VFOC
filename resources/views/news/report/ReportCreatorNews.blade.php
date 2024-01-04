@@ -46,6 +46,7 @@
 
     .btn-danger {
         background-color: red;
+        color: white;
     }
 
     table.dataTable.dtr-inline.collapsed>tbody>tr>td.dtr-control:before {
@@ -310,20 +311,24 @@
         position: fixed;
         left: 90%;
     }
+
+    #example td,
+    #example th {
+        text-align: center;
+    }
 </style>
 
 <body>
 
     <ol class="breadcrumb page-breadcrumb">
         <li class="breadcrumb-item"><a href="/home">หน้าหลัก</a></li>
-        <li class="breadcrumb-item active"> รายงานสรุปจำนวนข่าวสารรออนุมัติ/อนุมัติ</li>
+        <li class="breadcrumb-item active">รายงานสรุปผู้ที่สร้างรายการข่าวสาร</li>
     </ol>
     <div class="row">
         <div class="col-lg-12 sortable-grid ui-sortable" style="padding: 10px;">
             <div class="panel panel-sortable" role="widget">
                 <div class="panel-hdr" role="heading">
-                    <h2 class="ui-sortable-handle"><i class="fa fa-users" aria-hidden="true" style="margin-right: 15px"></i> รายงานสรุปจำนวนข่าวสารรออนุมัติ/อนุมัติ
-                    </h2>
+                    <h2 class="ui-sortable-handle"><i class="fa fa-users" aria-hidden="true" style="margin-right: 15px"></i>รายงานสรุปผู้ที่สร้างรายการข่าวสาร</h2>http://127.0.0.1:8000/admin/transactionNewsReportCreatorMostNewsByMonth
                 </div>
                 <div class="panel-container show" role="content">
                     <div class="panel-content">
@@ -336,10 +341,9 @@
                                                 <tr>
                                                     <th class="text-center">ลำดับ</th>
                                                     <th class="text-center">ปี</th>
-                                                    <th class="text-center">รออนุมัติ</th>
-                                                    <th class="text-center">ร้อยละ</th>
-                                                    <th class="text-center">อนุมัติ</th>
-                                                    <th class="text-center">ร้อยละ</th>
+                                                    <th class="text-center">ผู้สร้างข่าว</th>
+                                                    <th class="text-center">ประเภทสมาชิก</th>
+                                                    <th class="text-center">ประเภทสาธารณะ</th>
                                                     <th class="text-center">ข่าวสารทั้งหมด</th>
                                                 </tr>
                                             </thead>
@@ -347,29 +351,18 @@
                                                 @php
                                                 $No = 1;
                                                 @endphp
-                                                @foreach ($ReportApproveNews as $index => $rp)
-                                                <tr>
-                                                    <td class="text-center">{{ $No++ }}.</td>
-                                                    <td class="text-center">{{ $rp->TransactionYear }}</td>
-                                                    <td class="text-center">{{ $rp->AmountWait }}</td>
-                                                    <td class="text-center">
-                                                        @if ($rp->AmountNews > 0)
-                                                        {{ number_format(($rp->AmountWait * 100 / $rp->AmountNews), 2) }}
-                                                        @else
-                                                        0%
-                                                        @endif
-                                                    </td>
-                                                    <td class="text-center">{{ $rp->AmountApprove }}</td>
-                                                    <td class="text-center">
-                                                        @if ($rp->AmountNews > 0)
-                                                        {{ number_format(($rp->AmountApprove * 100 / $rp->AmountNews), 2) }}
-                                                        @else
-                                                        0%
-                                                        @endif
-                                                    </td>
-                                                    <td class="text-center">{{ $rp->AmountNews }}</td>
-                                                </tr>
+                                                @foreach ($GetReportCreator as $index => $rp)
+                                                    <tr>
+                                                        <td class="text-center">{{ $No++ }}.</td>
+                                                        <td class="text-center">{{ $rp->TransactionYear }}</td>
+                                                        <td class="text-center">{{ $rp->fullName }}</td>                                                      
+                                                        <td class="text-center">{{ $rp->AmountMember }}</td>
+                                                        <td class="text-center">{{ $rp->AmountPublic }}</td>
+                                                        <td class="text-center">{{ $rp->AmountNews }}</td>                                                      
+
+                                                    </tr>
                                                 @endforeach
+                                           
                                             </tbody>
 
 
@@ -389,17 +382,9 @@
 <script src="//cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.32/vfs_fonts.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
-    pdfMake.fonts = {
-        THSarabun: {
-            normal: 'THSarabun.ttf',
-            bold: 'THSarabun-Bold.ttf',
-            italics: 'THSarabun-Italic.ttf',
-            bolditalics: 'THSarabun-BoldItalic.ttf'
-        }
-    }
-</script>
-<script>
     $(document).ready(function() {
+        
+
         $('#example').DataTable({
             responsive: true,
             dom: 'Bfrtip',
@@ -423,9 +408,10 @@
                         class: 'btn btn-danger btn-sm mr-1'
                     }
                 }
-            ]       
+            ],
         });
         $('.dt-buttons').css('margin-bottom', '20px');
     });
+
 </script>
 @endsection

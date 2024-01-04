@@ -335,7 +335,8 @@
 		{
 			$GetReportCreatorMost = (new ApiNewsController)->GetReportCreatorMost();
 			$data['GetReportCreatorMost'] = $GetReportCreatorMost;
-			return view('news/report/approveNews',$data);
+			// dd($data);
+			return view('news/report/ReportCreatorMostNewsByMonth',$data);
 		}
 
 	}

@@ -335,7 +335,8 @@
 		{
 			$ReportLateNews = (new ApiNewsController)->ReportLateNews();
 			$data['ReportLateNews'] = $ReportLateNews;
-			return view('news/report/approveNews',$data);
+			// dd($data);
+			return view('news/report/ReportLateNews',$data);
 		}
 
 	}

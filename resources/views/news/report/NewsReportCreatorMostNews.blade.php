@@ -311,18 +311,51 @@
         left: 90%;
     }
 </style>
-
+{{-- <?php
+    $jsonData = [
+        [   
+            "id" => 1,
+            "year" => 2566,
+            "month" => "มกราคม",
+            "Waitapprove" => 20,
+            "Approve" => 1,
+            "AmountNews" => 25,
+        ],
+        [   
+            "id" => 1,
+            "year" => 2566,
+            "month" => "กุมภา",
+            "Waitapprove" => 20,
+            "Approve" => 1,
+            "AmountNews" => 25,
+        ],[   
+            "id" => 1,
+            "year" => 2566,
+            "month" => "มีนา",
+            "Waitapprove" => 20,
+            "Approve" => 1,
+            "AmountNews" => 25,
+        ],[   
+            "id" => 1,
+            "year" => 2566,
+            "month" => "เมษา",
+            "Waitapprove" => 20,
+            "Approve" => 1,
+            "AmountNews" => 25,
+        ],
+    ];
+?> --}}
 <body>
 
     <ol class="breadcrumb page-breadcrumb">
         <li class="breadcrumb-item"><a href="/home">หน้าหลัก</a></li>
-        <li class="breadcrumb-item active"> รายงานสรุปจำนวนข่าวสารรออนุมัติ/อนุมัติ</li>
+        <li class="breadcrumb-item active">รายงานสรุปเดือนที่มีการสร้างรายการข่าวสารมากสุด</li>
     </ol>
     <div class="row">
         <div class="col-lg-12 sortable-grid ui-sortable" style="padding: 10px;">
             <div class="panel panel-sortable" role="widget">
                 <div class="panel-hdr" role="heading">
-                    <h2 class="ui-sortable-handle"><i class="fa fa-users" aria-hidden="true" style="margin-right: 15px"></i> รายงานสรุปจำนวนข่าวสารรออนุมัติ/อนุมัติ
+                    <h2 class="ui-sortable-handle"><i class="fa fa-users" aria-hidden="true" style="margin-right: 15px"></i>รายงานสรุปเดือนที่มีการสร้างรายการข่าวสารมากสุด
                     </h2>
                 </div>
                 <div class="panel-container show" role="content">
@@ -336,9 +369,11 @@
                                                 <tr>
                                                     <th class="text-center">ลำดับ</th>
                                                     <th class="text-center">ปี</th>
-                                                    <th class="text-center">รออนุมัติ</th>
-                                                    <th class="text-center">ร้อยละ</th>
-                                                    <th class="text-center">อนุมัติ</th>
+                                                    <th class="text-center">เดือน</th>
+                                                    <th class="text-center">ผู้สร้างข่าว</th>
+                                                    <th class="text-center">ประเภทสมาชิก</th>
+                                                    <th class="text-center">ประเภทสาธารณะ</th>
+                                                    <th class="text-center">ข่าวสารที่สร้าง</th>
                                                     <th class="text-center">ร้อยละ</th>
                                                     <th class="text-center">ข่าวสารทั้งหมด</th>
                                                 </tr>
@@ -347,28 +382,30 @@
                                                 @php
                                                 $No = 1;
                                                 @endphp
-                                                @foreach ($ReportApproveNews as $index => $rp)
-                                                <tr>
-                                                    <td class="text-center">{{ $No++ }}.</td>
-                                                    <td class="text-center">{{ $rp->TransactionYear }}</td>
-                                                    <td class="text-center">{{ $rp->AmountWait }}</td>
-                                                    <td class="text-center">
-                                                        @if ($rp->AmountNews > 0)
-                                                        {{ number_format(($rp->AmountWait * 100 / $rp->AmountNews), 2) }}
-                                                        @else
-                                                        0%
-                                                        @endif
-                                                    </td>
-                                                    <td class="text-center">{{ $rp->AmountApprove }}</td>
-                                                    <td class="text-center">
-                                                        @if ($rp->AmountNews > 0)
-                                                        {{ number_format(($rp->AmountApprove * 100 / $rp->AmountNews), 2) }}
-                                                        @else
-                                                        0%
-                                                        @endif
-                                                    </td>
-                                                    <td class="text-center">{{ $rp->AmountNews }}</td>
-                                                </tr>
+                                                @foreach ($GetReportCreatorMost as $index => $rp)
+                                                    <tr>
+                                                        <td class="text-center">{{ $No++ }}.</td>
+                                                        <td class="text-center">{{ $rp->TransactionYear }}</td>
+                                                        <td class="text-center">{{ $rp->Month }}</td>
+                                                        <td class="text-center">
+                                                            @if ($rp->AmountMember == 0 && $rp->AmountPublic == 0 && $rp->AmountCreate == 0)
+                                                                -
+                                                            @else
+                                                                {{ $rp->fullName }}
+                                                            @endif
+                                                        </td>                                                        
+                                                        <td class="text-center">{{ $rp->AmountMember }}</td>
+                                                        <td class="text-center">{{ $rp->AmountPublic }}</td>
+                                                        <td class="text-center">{{ $rp->AmountCreate }}</td>                                                      
+                                                        <td class="text-center">
+                                                            @if ($rp->AmountNews > 0)
+                                                                {{ number_format(($rp->AmountCreate *100 / 5), 2) }}
+                                                            @else
+                                                                0%
+                                                            @endif
+                                                        </td>
+                                                        <td class="text-center">{{ $rp->AmountNews }}</td>
+                                                    </tr>
                                                 @endforeach
                                             </tbody>
 
@@ -423,7 +460,7 @@
                         class: 'btn btn-danger btn-sm mr-1'
                     }
                 }
-            ]       
+            ]            
         });
         $('.dt-buttons').css('margin-bottom', '20px');
     });

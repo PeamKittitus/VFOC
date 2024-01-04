@@ -335,7 +335,8 @@
 		{
 			$ReportCreatorMostNews = (new ApiNewsController)->ReportCreatorMostNews();
 			$data['ReportCreatorMostNews'] = $ReportCreatorMostNews;
-			return view('news/report/approveNews',$data);
+			// dd($data);
+			return view('news/report/ReportCreatorMostNewsByYear',$data);
 		}
 
 	}

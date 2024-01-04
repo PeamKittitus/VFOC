@@ -335,7 +335,8 @@
 		{
 			$ReportApproveNewsByMonth = (new ApiNewsController)->ReportApproveNewsByMonth();
 			$data['ReportApproveNewsByMonth'] = $ReportApproveNewsByMonth;
-			return view('news/report/approveNews',$data);
+			// dd($data);
+			return view('news/report/ReportApproveNewsByMonth',$data);
 		}
 
 	}

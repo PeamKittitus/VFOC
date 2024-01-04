@@ -335,7 +335,8 @@
 		{
 			$GetReportType = (new ApiNewsController)->GetReportType();
 			$data['GetReportType'] = $GetReportType;
-			return view('news/report/approveNews',$data);
+			// dd($data);
+			return view('news/report/ReportTypeNewsByMonth',$data);
 		}
 
 	}

@@ -311,18 +311,51 @@
         left: 90%;
     }
 </style>
-
+{{-- <?php
+    $jsonData = [
+        [   
+            "id" => 1,
+            "year" => 2566,
+            "month" => "มกราคม",
+            "Waitapprove" => 20,
+            "Approve" => 1,
+            "AmountNews" => 25,
+        ],
+        [   
+            "id" => 1,
+            "year" => 2566,
+            "month" => "กุมภา",
+            "Waitapprove" => 20,
+            "Approve" => 1,
+            "AmountNews" => 25,
+        ],[   
+            "id" => 1,
+            "year" => 2566,
+            "month" => "มีนา",
+            "Waitapprove" => 20,
+            "Approve" => 1,
+            "AmountNews" => 25,
+        ],[   
+            "id" => 1,
+            "year" => 2566,
+            "month" => "เมษา",
+            "Waitapprove" => 20,
+            "Approve" => 1,
+            "AmountNews" => 25,
+        ],
+    ];
+?> --}}
 <body>
 
     <ol class="breadcrumb page-breadcrumb">
         <li class="breadcrumb-item"><a href="/home">หน้าหลัก</a></li>
-        <li class="breadcrumb-item active"> รายงานสรุปจำนวนข่าวสารรออนุมัติ/อนุมัติ</li>
+        <li class="breadcrumb-item active">รายงานสรุปจำนวนข่าวสารรออนุมัติ/อนุมัติ แยกรายเดือน</li>
     </ol>
     <div class="row">
         <div class="col-lg-12 sortable-grid ui-sortable" style="padding: 10px;">
             <div class="panel panel-sortable" role="widget">
                 <div class="panel-hdr" role="heading">
-                    <h2 class="ui-sortable-handle"><i class="fa fa-users" aria-hidden="true" style="margin-right: 15px"></i> รายงานสรุปจำนวนข่าวสารรออนุมัติ/อนุมัติ
+                    <h2 class="ui-sortable-handle"><i class="fa fa-users" aria-hidden="true" style="margin-right: 15px"></i>รายงานสรุปจำนวนข่าวสารรออนุมัติ/อนุมัติ แยกรายเดือน
                     </h2>
                 </div>
                 <div class="panel-container show" role="content">
@@ -336,6 +369,7 @@
                                                 <tr>
                                                     <th class="text-center">ลำดับ</th>
                                                     <th class="text-center">ปี</th>
+                                                    <th class="text-center">เดือน</th>
                                                     <th class="text-center">รออนุมัติ</th>
                                                     <th class="text-center">ร้อยละ</th>
                                                     <th class="text-center">อนุมัติ</th>
@@ -347,10 +381,11 @@
                                                 @php
                                                 $No = 1;
                                                 @endphp
-                                                @foreach ($ReportApproveNews as $index => $rp)
+                                                @foreach ($ReportApproveNewsByMonth as $index => $rp)
                                                 <tr>
                                                     <td class="text-center">{{ $No++ }}.</td>
                                                     <td class="text-center">{{ $rp->TransactionYear }}</td>
+                                                    <td class="text-center">{{ $rp->Month }}</td>
                                                     <td class="text-center">{{ $rp->AmountWait }}</td>
                                                     <td class="text-center">
                                                         @if ($rp->AmountNews > 0)
@@ -423,7 +458,7 @@
                         class: 'btn btn-danger btn-sm mr-1'
                     }
                 }
-            ]       
+            ]            
         });
         $('.dt-buttons').css('margin-bottom', '20px');
     });

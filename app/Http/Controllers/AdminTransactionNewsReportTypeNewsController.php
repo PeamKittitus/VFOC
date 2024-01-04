@@ -335,6 +335,9 @@
 		{
 			$ReportApproveNews = (new ApiNewsController)->ReportApproveNews();
 			$data['ReportApproveNews'] = $ReportApproveNews;
+			// dd($data);
+			return view('news/report/ReportApproveNews',$data);
+
 		}
 
 	}
