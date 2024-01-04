@@ -689,5 +689,53 @@ class ApiNewsController extends Controller
         }
         return $Models;
     }
+    function ReportLateNews()
+    {
+        $newsData = DB::table('transactionNews')
+            ->select(
+                'transactionNews.id',
+                'transactionNews.TransactionType',
+                'transactionNews.TransactionYear',
+                'transactionNews.Created_at',
+                'transactionNews.Created_by',
+                'transactionNews.IsActive',
+                'transactionNews.IsApprove',
+            )
+            ->groupBy('transactionNews.TransactionYear')
+            ->get();
+        $Models = [];
+        foreach ($newsData as $index => $val) {
+           
+            $today = date('Y-m-d');
+            $date = (date('Y') < 2500) ? $today : date('Y-m-d', strtotime('-543 years', strtotime($today)));
+
+            $model = new stdClass();
+            $model->TransactionYear = $val->TransactionYear;
+
+            $model->AmountMember = DB::table('transactionNews')
+                ->where('TransactionYear', $val->TransactionYear)
+                ->where('TransactionType', 0)
+                ->where('IsActive', 1)
+                ->where('NewEndDate', '<', $date)
+                ->count();
+
+            $model->AmountPublic = DB::table('transactionNews')
+                ->where('TransactionYear', $val->TransactionYear)
+                ->where('TransactionType', 1)
+                ->where('IsActive', 1)
+                ->where('NewEndDate', '<', $date)
+                ->count();
+
+            $model->AmountNews = DB::table('transactionNews')
+                ->where('TransactionYear', $val->TransactionYear)
+                ->where('IsActive', 1)
+                ->where('NewEndDate', '<', $date)
+                ->count();
+            if($model->AmountNews > 0){
+                $Models[] = $model;
+            }
+        }
+        return $Models;
+    }
     
 }
