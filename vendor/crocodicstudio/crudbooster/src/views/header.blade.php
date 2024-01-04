@@ -1,11 +1,15 @@
 <!-- Main Header -->
+<style>
+    .skin-red .main-header .navbar .sidebar-toggle:hover{
+        background-color:#886ab5 !important;
+    }
+</style>
 <header class="main-header">
-
     <!-- Logo -->
-    <a href="{{url(config('crudbooster.ADMIN_PATH'))}}" title='{{Session::get('appname')}}' class="logo">{{CRUDBooster::getSetting('appname')}}</a>
-
+    <!-- <a href="{{url(config('crudbooster.ADMIN_PATH'))}}" title='{{Session::get('appname')}}' class="logo">{{CRUDBooster::getSetting('appname')}}</a> -->
+    <img class="logo" style="padding: 10px;background-color:#049DAB;" src="https://office.vfoconline.com/img/villagefund_1.png" alt="">
     <!-- Header Navbar -->
-    <nav class="navbar navbar-static-top" role="navigation">
+    <nav class="navbar navbar-static-top" role="navigation" style="background-color:#049DAB;">
         <!-- Sidebar toggle button-->
         <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
             <span class="sr-only">Toggle navigation</span>
@@ -53,7 +57,7 @@
                     </a>
                     <ul class="dropdown-menu">
                         <!-- The user image in the menu -->
-                        <li class="user-header">
+                        <li class="user-header" style="background-color:#049DAB;">
                             <img src="{{ CRUDBooster::myPhoto() }}" class="img-circle" alt="User Image"/>
                             <p>
                                 {{ CRUDBooster::myName() }}

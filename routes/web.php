@@ -45,7 +45,8 @@ Route::get('/editbookbank/{id}', '\App\Http\Controllers\AdminAccountBookbankCont
 Route::get('/editsubproject/{id}', '\App\Http\Controllers\AdminAccountBudgetController@editsubproject');
 Route::get('/editproject/{id}', '\App\Http\Controllers\AdminAccountBudgetController@editproject');
 Route::get('/editNews/{id}', '\App\Http\Controllers\AdminTransactionNewsController@editNews');
-Route::get('/addNews', '\App\Http\Controllers\AdminAccountBookbankController@addNews');
+Route::get('/addNews', '\App\Http\Controllers\AdminTransactionNewsController@addNews');
+Route::get('/viewNews/{id}', '\App\Http\Controllers\AdminTransactionNewsController@viewNews');
 //==========================================================================================Route
 
 

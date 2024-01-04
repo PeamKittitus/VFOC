@@ -182,61 +182,65 @@ use Carbon\Carbon;
     <div>
         <ol class="breadcrumb page-breadcrumb">
             <li class="breadcrumb-item"><a href="/Home/Index">หน้าหลัก</a></li>
-            <li class="breadcrumb-item"><a href="/EAccount/StructureIndex">ผังบัญชีงบประมาณโครงการ</a></li>
-            <li class="breadcrumb-item active">สร้างใหม่</li>
+            <li class="breadcrumb-item"><a href="/EAccount/StructureIndex">จัดการข่าวสาร</a></li>
+            <li class="breadcrumb-item active">แก้ไข</li>
         </ol>
     </div>
 
 
     <div class="flex-1 bg-pattern" style="background: #8dcde1">
         <div class="card p-4 rounded-plus bg-faded">
-            <form id="saveAccountBudget" name="editNews" method="post" enctype="multipart/form-data">
+            <form name="editNews" method="post" enctype="multipart/form-data">
 
                 <div class="card-body pb-1">
                     <div class="section-title">
-                        <h4 class='font'><strong style="font-weight: 400;"><i class="fa fa-file-text-o" aria-hidden="true" style='margin-right: 10px'></i>สร้างใหม่</strong></h4>
+                        <h4 class='font'><strong style="font-weight: 400;"><i class="fa fa-file-text-o" aria-hidden="true" style='margin-right: 10px'></i>แก้ไข</strong></h4>
                     </div>
                     <hr />
                     <div class="form-group basic">
                         <div class="input-wrapper">
-                            <label >เลือกประเภทผู้รับข่าวสาร</label>
+                            <label>เลือกประเภทผู้รับข่าวสาร</label>
                             <select class="select2" id='TransactionType' style="width: 100%">
-                                <option value="0">สมาชิก</option>
-                                <option value="1">สาธารณะ</option>
+                                <option value="0" <?php echo ($getNewsById->TransactionType == 0) ? 'selected' : ''; ?>>สมาชิก</option>
+                                <option value="1" <?php echo ($getNewsById->TransactionType == 1) ? 'selected' : ''; ?>>สาธารณะ</option>
                             </select>
                         </div>
                     </div>
                     <div class="form-group basic">
                         <div class="input-wrapper">
                             <label>ประเภทข่าวสาร</label>
-                            <select class="select2" id='subnewstype' style="width: 100%" >
-                               
+                            <select class="select2" id='NewType' style="width: 100%">
+                                <?php foreach ($getTypeNews as $news) : ?>
+                                    <option value="<?= $news->LookupValue ?>" <?= ($getNewsById->NewType == $news->LookupValue) ? 'selected' : ''; ?>>
+                                        <?= $news->LookupText ?>
+                                    </option>
+                                <?php endforeach; ?>
                             </select>
                         </div>
                     </div>
-                               
+
                     <hr>
                     <div class="form-group basic">
                         <div class="input-wrapper">
                             <div class="flex-wrap " style="display: flex;margin-top: 10px ;justify-content: center;">
                                 <div style="margin-right: 30px">
                                     <div>วันที่เริ่มต้นข่าวสาร<strong style="color: red">*</strong></div>
-                                    <input type="text" name="date" id="startdate">
-                                </div>  
+                                    <input type="text" name="date" id="NewStartDate" value="<?= date('m/d/Y', strtotime($getNewsById->NewStartDate)) ?>">
+                                </div>
                                 <div>
                                     <div>วันที่สิ้นสุดข่าวสาร<strong style="color: red">*</strong></div>
-                                    <input type="text" name="date" id="enddate">
-                                </div>                        
+                                    <input type="text" name="date" id="NewEndDate" value="<?= date('m/d/Y', strtotime($getNewsById->NewEndDate)) ?>">
+                                </div>
                             </div>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-lg-2">
                             <label class="form-label">สถานะใช้งาน </label>
-                            <input type="checkbox" id="Active">
-                            <input type="hidden" data-val="true" data-val-required="The IsActive field is required." id="IsActive" name="IsActive" value="">
+                            <input type="checkbox" id="IsActive" <?= ($getNewsById->IsActive == 1) ? 'checked' : '' ?>>
                             <span style="color:red">ใช้งาน</span>
-                        </div>                    
+                        </div>
+
                     </div>
                     <hr>
 
@@ -246,14 +250,14 @@ use Carbon\Carbon;
                     <hr>
                     <div class="form-group basic">
                         <div class="input-wrapper">
-                            <label >หัวข้อข่าวสาร<strong style="color:red">*</strong></label>
-                            <textarea type="text" class="form-control col-12" data-bv-notempty="true" data-bv-notempty-message="กรุณากรอกข้อมูล" rows="2" 
-                            id="TransactionTitle" name="TransactionTitle" data-bv-field="TransactionTitle" ></textarea>
+                            <label>หัวข้อข่าวสาร<strong style="color:red">*</strong></label>
+                            <textarea type="text" class="form-control col-12" data-bv-notempty="true" data-bv-notempty-message="กรุณากรอกข้อมูล" rows="2" id="TransactionTitle" name="TransactionTitle" data-bv-field="TransactionTitle"><?= htmlspecialchars($getNewsById->TransactionTitle) ?></textarea>
+
                         </div>
                     </div>
                     <hr>
                     <label style="font-size: 14px">รายละเอียดข่าวสาร</span></label>
-                    <textarea id="Detail"></textarea>
+                    <textarea id="TransactionDetail"><?= htmlspecialchars($getNewsById->TransactionDetail) ?></textarea>
 
 
                     <br>
@@ -261,7 +265,7 @@ use Carbon\Carbon;
                         <button type="submit" class="btn btn-success btn-block" style='background-color: #1ab3a3;width: 150px ; float: right;'>
                             <i class="fa fa-save" style='padding-right:10px'></i>บันทึก</button>
                     </div>
-
+                    <input type="hidden" id="NewsId" value="{{$getNewsById->id}}">
                 </div>
 
             </form>
@@ -275,65 +279,107 @@ use Carbon\Carbon;
 <script>
     jQuery(document).ready(function($) {
         $('.select2').select2();
-        
     });
-
-    $(document).ready(function() {
-        $("#PeriodPercent").on("input", function() {
-            var inputValue = $(this).val();
-            inputValue = inputValue.replace(/[^0-9]/g, '');
-            if (parseInt(inputValue) > 100) {
-                $(this).val("100");
-            } else {
-                $(this).val(inputValue);
-            }
-        });
-        $( "#startdate" ).datepicker();
-        $( "#enddate" ).datepicker();
-
-        let editor;
-        ClassicEditor
-            .create(document.querySelector('#Detail'))
-            .then(newEditor => {
-                editor = newEditor;
-            })
-            .catch(error => {
-                console.error(error);
-        });
-
-        
-    });
-    
 </script>
-
-<script type="text/javascript">
-     // เรียก function fecth subtypenew
-    function fetchDataAndPopulateSelect() {
-        $.ajax({
-        url: '/getTypeNews',
-        method: 'GET',
-        dataType: 'json',
-        success: function(data) {
-            $('#subnewstype').empty();
-            $.each(data, function(index, item) {
-            $('#subnewstype').append('<option value="' + item.LookupValue + '">' + item.LookupText + '</option>');
+<script>
+    let editor;
+    ClassicEditor
+        .create(document.querySelector('#TransactionDetail'), {
+            // Config
+        })
+        .then(newEditor => {
+            editor = newEditor;
+            editor.model.document.on('change:data', () => {
+                console.log(editor.getData());
             });
-            console.log(data);
-        },
-        error: function(error) {
-            console.error('Error fetching data:', error);
-        }
+        })
+        .catch(error => {
+            console.error(error);
         });
-    }
-
+</script>
+<script type="text/javascript">
     $(document).ready(function() {
-        // เรียก function subtypenew
-        fetchDataAndPopulateSelect();
+        $("#NewStartDate").datepicker();
+        $("#NewEndDate").datepicker();
         //=============Submit
         $("form[name=editNews]").submit(function(event) {
             event.preventDefault();
             // Get values from form fields
-            alert('submit edit');
+
+            var NewsId = $('#NewsId').val();
+            var TransactionType = $('#TransactionType').val();
+            var NewType = $('#NewType').val();
+            var NewStartDate = $('#NewStartDate').val();
+            var NewEndDate = $('#NewEndDate').val();
+            var totalfiles = $('#file')[0].files.length;
+            var TransactionTitle = $('#TransactionTitle').val();
+            var IsActive = $('#IsActive').is(':checked') ? 1 : 0;
+            var editorData = editor.getData();
+            var TransactionDetail = editorData;
+            var totalfiles = document.getElementById("file").files.length;
+
+            var formData = new FormData();
+            formData.append('NewsId', NewsId);
+            formData.append('TransactionType', TransactionType);
+            formData.append('NewType', NewType);
+            formData.append('NewStartDate', NewStartDate);
+            formData.append('NewEndDate', NewEndDate);
+            formData.append('IsActive', IsActive);
+            formData.append('TransactionTitle', TransactionTitle);
+            formData.append('TransactionDetail', TransactionDetail);
+            formData.append('totalfiles', totalfiles);
+            for (var index = 0; index < totalfiles; ++index) {
+                formData.append(
+                    "file[]",
+                    document.getElementById("file").files[index]
+                );
+            }
+            // Log file information
+            // for (var pair of formData.entries()) {
+            //     console.log(pair[0] + ', ' + pair[1]);
+            // }
+            Swal.fire({
+                title: "ยืนยัน",
+                text: "คุณต้องการแก้ไขข่าวสารใช่หรือไม่?",
+                icon: "question",
+                showCancelButton: true,
+                confirmButtonText: "Yes",
+                cancelButtonText: "No",
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: '/editNews',
+                        method: 'POST',
+                        data: formData,
+                        contentType: false,
+                        processData: false,
+                        success: function(response) {
+                            if (response.api_status == 1) {
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'สำเร็จ!',
+                                    text: 'บันทึกข้อมูลเรียบร้อย'
+                                }).then(function() {
+                                    window.location.href = '/admin/transactionNews';
+                                });
+                            } else if (response.api_status == 2) {
+                                swal("ยกเลิก!", response.api_message, "error");
+                            } else {
+                                swal("ยกเลิก!", response.api_message, "error");
+                            }
+                        },
+                        error: function(xhr, status, error) {
+                            Swal.fire({
+                                title: "Error",
+                                text: "An error occurred while saving the form data.",
+                                icon: "error",
+                                showCancelButton: false,
+                                confirmButtonText: "OK",
+                            });
+                        }
+                    });
+                }
+            });
         });
     });
 </script>

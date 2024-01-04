@@ -5,7 +5,7 @@
 	use DB;
 	use CRUDBooster;
 
-	class AdminTransactionNewsController extends \crocodicstudio\crudbooster\controllers\CBController {
+	class AdminTransactionNewsReportController extends \crocodicstudio\crudbooster\controllers\CBController {
 
 	    public function cbInit() {
 
@@ -47,8 +47,10 @@
 			//$this->form[] = ["label"=>"TransactionDetail","name"=>"TransactionDetail","type"=>"text","required"=>TRUE,"validation"=>"required|min:1|max:255"];
 			//$this->form[] = ["label"=>"NewStartDate","name"=>"NewStartDate","type"=>"date","required"=>TRUE,"validation"=>"required|date"];
 			//$this->form[] = ["label"=>"NewEndDate","name"=>"NewEndDate","type"=>"date","required"=>TRUE,"validation"=>"required|date"];
+			//$this->form[] = ["label"=>"NewType","name"=>"NewType","type"=>"number","required"=>TRUE,"validation"=>"required|integer|min:0"];
 			//$this->form[] = ["label"=>"IsActive","name"=>"IsActive","type"=>"number","required"=>TRUE,"validation"=>"required|integer|min:0"];
 			//$this->form[] = ["label"=>"IsApprove","name"=>"IsApprove","type"=>"number","required"=>TRUE,"validation"=>"required|integer|min:0"];
+			//$this->form[] = ["label"=>"IsDelete","name"=>"IsDelete","type"=>"number","required"=>TRUE,"validation"=>"required|integer|min:0"];
 			//$this->form[] = ["label"=>"Created At","name"=>"Created_at","type"=>"datetime","required"=>TRUE,"validation"=>"required|date_format:Y-m-d H:i:s"];
 			//$this->form[] = ["label"=>"Created By","name"=>"Created_by","type"=>"number","required"=>TRUE,"validation"=>"required|integer|min:0"];
 			//$this->form[] = ["label"=>"Updated At","name"=>"Updated_at","type"=>"datetime","required"=>TRUE,"validation"=>"required|date_format:Y-m-d H:i:s"];
@@ -331,30 +333,9 @@
 	    //By the way, you can still create your own method in here... :) 
 		public function getIndex()
 		{
-			$getNewsAll = (new ApiNewsController)->getNewsAllById();
-			$getTypeNews = (new ApiNewsController)->getTypeNews();
-			$data['getTypeNews'] = $getTypeNews;
-			$data['getNewsAll'] = $getNewsAll;
-			return view('news/index',$data);
+			$getNewsApprove = (new ApiNewsController)->getNewsApprove();
+			$data['getNewsApprove'] = $getNewsApprove;
+			return view('news/indexReport',$data);
 		}
-		public function addNews()
-		{
-			$getTypeNews = (new ApiNewsController)->getTypeNews();
-			$data['getTypeNews'] = $getTypeNews;
-			return view('news/addNews', $data);
-		}
-		public function editNews($id)
-		{
-			$getTypeNews = (new ApiNewsController)->getTypeNews();
-			$getNewsById = (new ApiNewsController)->getNewsById($id);
-			$data['getTypeNews'] = $getTypeNews;
-			$data['getNewsById'] = $getNewsById;
-			return view('news/editNews', $data);
-		}
-		public function viewNews($id)
-		{
-			$getNewsById = (new ApiNewsController)->getNewsById($id);
-			$data['getNewsById'] = $getNewsById;
-			return view('news/viewNews', $data);
-		}
+
 	}

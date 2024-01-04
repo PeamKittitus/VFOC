@@ -391,7 +391,7 @@ use Carbon\Carbon;
                                                 @foreach ($getAccountBudgetSub as $get2)
                                                 @if ($get2->account_id == $get->id)
                                                 <tr>
-                                                    <td class="text-center" style="text-align: center"> 
+                                                    <td class="text-center" style="text-align: center">
                                                         {{ $mainProjectNumber }}.{{ $subProjectNumber }}
                                                     </td>
                                                     <td style="text-align: center"> {{ $get2->AccCode }}
@@ -399,9 +399,9 @@ use Carbon\Carbon;
                                                     <td style="text-align: center"> {{ $get2->AccName }}
                                                     </td>
                                                     <td style="text-align: center">
-                                                        {{ \Carbon\Carbon::parse($get2->AccStartDate)->locale('th')->isoFormat('LL') }}
+                                                        {{ \Carbon\Carbon::parse($get2->AccStartDate)->locale('th')->addYears(543)->isoFormat('DD MMMM YYYY') }}
                                                         ถึง <br>
-                                                        {{ \Carbon\Carbon::parse($get2->AccEndDate)->locale('th')->isoFormat('LL') }}
+                                                        {{ \Carbon\Carbon::parse($get2->AccEndDate)->locale('th')->addYears(543)->isoFormat('DD MMMM YYYY') }}
                                                     </td>
                                                     <td class="text-right" style="text-align: center">
                                                         {{ number_format($get2->Amount, 2) }}
@@ -415,7 +415,7 @@ use Carbon\Carbon;
                                                             <label class="tgl-btn" for="cb2-7-{{ $mainProjectNumber }}-{{ $subProjectNumber }}"></label>
                                                         </div>
                                                     </td>
-                                                    <td class="text-center" style="">
+                                                    <td class="text-center">
 
                                                         <a href="/editsubproject/{{$get2->id}}" data-parent="PARENT" data-val="10242" class="btn btn-xs btn-warning edit" title="Edit"><i class="fa fa-edit" aria-hidden="true"></i> แก้ไข </a>
                                                         <button class="btn btn-xs btn-danger  delete del_iconSub" data-id="{{$get2->id}}" title="Delete"><i class="fa fa-times" aria-hidden="true"></i> ลบ </button>
@@ -450,7 +450,7 @@ use Carbon\Carbon;
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
-   function addToLocalStorage(event, value) {
+    function addToLocalStorage(event, value) {
         // Prevent the default link behavior (navigation)
         event.preventDefault();
 
@@ -459,14 +459,14 @@ use Carbon\Carbon;
 
         // Navigate to the specified page
         window.location.href = event.target.getAttribute('href');
-        }
+    }
     // jQuery(document).ready(function($) {
     //     $('select').select2(); 
     // });
     // $('.select2').select2();
     $(document).ready(function() {
         // Select2 initializationa
-        
+
 
         // DataTable initialization
         $('#example').DataTable({
@@ -481,8 +481,8 @@ use Carbon\Carbon;
             }
         });
 
-     
-        
+
+
         // $('.select2').on('change', function() {
         $('#CurrentBudgetYear').on('change', function() {
             var BudgetYear = $(this).val();
@@ -527,10 +527,10 @@ use Carbon\Carbon;
             // var dataTable = $('#example').DataTable();
             // dataTable.clear().destroy();
             var tableBody = $('#example tbody');
-            tableBody.empty(); 
-            if(getAccountBudget != ""){
+            tableBody.empty();
+            if (getAccountBudget != "") {
                 var mainProjectNumber = 1;
-                getAccountBudget.forEach(function (get) {
+                getAccountBudget.forEach(function(get) {
                     tableBody.append(`
                         <tr>
                             <td class="text-left">${mainProjectNumber}.</td>
@@ -555,8 +555,8 @@ use Carbon\Carbon;
                         </tr>
                     `);
                     var subProjectNumber = 1;
-                    getAccountBudgetSub.forEach(function (get2) {
-                    if (get2.account_id == get.id) {
+                    getAccountBudgetSub.forEach(function(get2) {
+                        if (get2.account_id == get.id) {
                             var startDate = new Date(get2.AccStartDate);
                             var endDate = new Date(get2.AccEndDate);
                             var formattedStartDate = startDate.toLocaleDateString();
@@ -580,13 +580,13 @@ use Carbon\Carbon;
                                         <a href="javascript:void(0);" data-val="10242" class="btn btn-xs btn-danger  delete" title="Delete"><i class="fa fa-times" aria-hidden="true"></i> ลบ </a>
                                     </td>
                                 </tr>
-                            `);                     
+                            `);
                             subProjectNumber++;
                         }
                     });
                     mainProjectNumber++;
                 });
-            }else{}
+            } else {}
         }
     });
 
@@ -691,7 +691,6 @@ use Carbon\Carbon;
         });
 
     });
-
 </script>
 <script>
     $(document).ready(function() {
@@ -728,7 +727,7 @@ use Carbon\Carbon;
                                             "/admin/accountBudget";
                                     }
                                 });
-                            }else {
+                            } else {
                                 swal("ยกเลิก!", response.api_message, "error");
                             }
 
@@ -779,7 +778,7 @@ use Carbon\Carbon;
                                             "/admin/accountBudget";
                                     }
                                 });
-                            }else {
+                            } else {
                                 swal("ยกเลิก!", response.api_message, "error");
                             }
 

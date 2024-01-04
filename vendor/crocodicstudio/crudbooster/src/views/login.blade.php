@@ -110,7 +110,7 @@
             <div class="col-lg-6">
                 <img src="/img/logo-login.png" class="img-responsive" width="480" style="position: relative;" />
             </div>
-            <div class="col-sm-12 col-md-6 col-lg-5 col-xl-4 ml-auto login-box" style="position: right;">
+            <div class="col-sm-12 col-md-6 col-lg-5 col-xl-4 ml-auto login-box" style="margin-left:70px">
                 <!-- <div class="login-logo">
         <a href="{{ url('/') }}">
             <img title='{!! Session::get('appname') == 'CRUDBooster' ? '<b>CRUD</b>Booster' : CRUDBooster::getSetting('appname') !!}'

@@ -336,11 +336,10 @@ use Carbon\Carbon;
                                                 <tr>
                                                     <th class="text-center">ลำดับ</th>
                                                     <th class="text-center">ชื่อเรื่อง</th>
-                                                    <th class="text-center">ผู้รับข่าวสาร</th>
+                                                    <th class="text-center">ผู้สร้างข่าวสาร</th>
                                                     <th class="text-center">วันที่สร้างรายการ</th>
                                                     <th class="text-center">ประเภทข่าวสาร</th>
                                                     <th class="text-center">สถานะข่าวสาร</th>
-                                                    <th class="text-center">ดำเนินการ</th>
                                                     <th class="text-center">จัดการข้อมูล</th>
                                                 </tr>
                                             </thead>
@@ -349,18 +348,12 @@ use Carbon\Carbon;
                                                 @php
                                                 $mainProjectNumber = 1;
                                                 @endphp
-                                                @foreach ($getNewsAll as $result)
+                                                @foreach ($getNewsNotApprove as $result)
                                                 <tr class="text-center" style="vertical-align: middle;">
                                                     <td class="text-center">{{ $mainProjectNumber }}</td>
                                                     <td class="text-center">{{ $result->TransactionTitle}}</td>
                                                     <td class="text-center">
-                                                        @if($result->TransactionType == 1)
-                                                        สาธารณะ
-                                                        @else
-                                                        <button class="btn custom-btn" title="View" data-id="{{ $result->id }}" style="width: 70% ; color: white">
-                                                            <i class="fa fa-eye" aria-hidden="true"></i> ดูสมาชิก
-                                                        </button>
-                                                        @endif
+                                                        {{ $result->firstName}} {{ $result->lastName}}
                                                     </td>
                                                     <td class="text-center">{{ \Carbon\Carbon::parse($result->TransactionDate)->locale('th')->addYears(543)->isoFormat('DD MMMM YYYY') }}</td>
                                                     <td class="text-center">
@@ -371,23 +364,18 @@ use Carbon\Carbon;
                                                         @endforeach
                                                     </td>
                                                     <td class="text-center" style="width: 80px;">
-                                                        @if($result->IsActive === 0)
-                                                            <i class="fa fa-times-circle-o" style="color: red; font-size: 1.5rem;"></i> <span style="color: red;">ไม่ใช้งาน</span>
-                                                        @elseif($result->IsActive === 1)
-                                                            <i class="fa fa-check-circle-o" style="color: green; font-size: 1.5rem;"></i> <span style="color: green;">ใช้งาน</span>
-                                                        @endif
-                                                    </td>
-                                                    <td class="text-center" style="width: 80px;">
                                                         @if($result->IsApprove === 0)
                                                             <i class="fa fa-clock-o" style="color: orange; font-size: 1.5rem;"></i> <span style="color: orange;">รออนุมัติ</span>
                                                         @elseif($result->IsApprove === 1)
                                                             <i class="fa fa-check-circle-o" style="color: green; font-size: 1.5rem;"></i> <span style="color: green;">อนุมัติแล้ว</span>
                                                         @endif
                                                     </td>
+
                                                     <td class="text-center" style="display: flex;gap:1%;justify-content:center;">
                                                         <a href="/viewNews/{{$result->id}}" class="btn" title="View" data-id="{{ $result->id }}" style="color: white ; background-color: #09d7f7"><i class="fa fa-eye" aria-hidden="true"></i> ดู </a>
-                                                        <a href="/editNews/{{$result->id}}" class="btn" title="Edit" data-id="{{ $result->id }}" style="color: white ; background-color: orange"><i class="fa fa-edit" aria-hidden="true"></i> แก้ไข </a>
-                                                        <button class="btn del_icon" title="Delete" data-id="{{ $result->id }}" style="color: white ; background-color: red"><i class="fa fa-times" aria-hidden="true"></i> ลบ </button>
+                                                        @if($result->IsApprove === 0)
+                                                        <a class="btn approve" title="Approve" data-id="{{ $result->id }}" style="color: white ; background-color: #1dc9b7"><i class="fa fa-check" aria-hidden="true"></i> อนุมัติ </a>
+                                                        @endif
                                                     </td>
                                                 </tr>
                                                 @php
@@ -418,13 +406,13 @@ use Carbon\Carbon;
 </script>
 <script>
     $(document).ready(function() {
-        $('.del_icon').on('click', function() {
+        $('.approve').on('click', function() {
             var NewsId = $(this).data('id');
             var formData = new FormData();
             formData.append('NewsId', NewsId);
             Swal.fire({
                 title: "ยืนยัน",
-                text: "คุณต้องการลบข้อมูลใช่หรือไม่?",
+                text: "คุณต้องอนุมัติข่าวสารใช่หรือไม่?",
                 icon: "question",
                 showCancelButton: true,
                 confirmButtonText: "ใช่",
@@ -432,7 +420,7 @@ use Carbon\Carbon;
             }).then((result) => {
                 if (result.isConfirmed) {
                     $.ajax({
-                        url: '/delNews',
+                        url: '/approveNews',
                         method: 'POST',
                         data: formData,
                         contentType: false,
@@ -441,14 +429,14 @@ use Carbon\Carbon;
                             if (response.api_status == 1) {
                                 Swal.fire({
                                     title: "สำเร็จ",
-                                    text: "ลบข้อมูลสำเร็จ!",
+                                    text: "อนุมัติข้อมูลสำเร็จ!",
                                     icon: "success",
                                     showCancelButton: false,
                                     confirmButtonText: "OK",
                                 }).then((result) => {
                                     if (result.isConfirmed) {
                                         window.location.href =
-                                            "/admin/transactionNews";
+                                            "/admin/transactionNewsApprove";
                                     }
                                 });
                             } else {

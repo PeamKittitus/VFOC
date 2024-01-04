@@ -1,8 +1,8 @@
-<footer class="main-footer">
+<footer class="main-footer" style="border-radius: 0px 0px 10px 10px !important;">
     <!-- To the right -->
     <div class="pull-{{ cbLang('right') }} hidden-xs">
-        {{ cbLang('powered_by') }} {{Session::get('appname')}}
+        
     </div>
     <!-- Default to the left -->
-    <strong>{{ cbLang('copyright') }} &copy; <?php echo date('Y') ?>. {{ cbLang('all_rights_reserved') }} .</strong>
+    <strong> &copy; <?php echo date('Y')+543 ?>. สำนักงานกองทุนหมู่บ้านและชุมชนเมืองแห่งชาติ (สทบ.)</strong>
 </footer>

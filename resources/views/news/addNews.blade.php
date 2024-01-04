@@ -190,7 +190,7 @@ use Carbon\Carbon;
 
     <div class="flex-1 bg-pattern" style="background: #8dcde1">
         <div class="card p-4 rounded-plus bg-faded">
-            <form id="saveAccountBudget" name="saveNews" method="post" enctype="multipart/form-data">
+            <form name="saveNews" method="post" enctype="multipart/form-data">
 
                 <div class="card-body pb-1">
                     <div class="section-title">
@@ -210,7 +210,9 @@ use Carbon\Carbon;
                         <div class="input-wrapper">
                             <label>ประเภทข่าวสาร</label>
                             <select class="select2" id='NewType' style="width: 100%">
-
+                                @foreach($getTypeNews as $item)
+                                    <option value="{{ $item->LookupValue }}"> {{ $item->LookupText }} </option>
+                                @endforeach
                             </select>
                         </div>
                     </div>
@@ -287,27 +289,9 @@ use Carbon\Carbon;
         });
 </script>
 <script type="text/javascript">
-    function fetchTypeNews() {
-        $.ajax({
-            url: '/getTypeNews',
-            method: 'GET',
-            dataType: 'json',
-            success: function(data) {
-                $('#NewType').empty();
-                $.each(data, function(index, item) {
-                    $('#NewType').append('<option value="' + item.LookupValue + '">' + item.LookupText + '</option>');
-                });
-            },
-            error: function(error) {
-                console.error('Error fetching data:', error);
-            }
-        });
-    }
-
     $(document).ready(function() {
         $("#NewStartDate").datepicker();
         $("#NewEndDate").datepicker();
-        fetchTypeNews();
         //=============Submit
         $("form[name=saveNews]").submit(function(event) {
             event.preventDefault();
@@ -353,18 +337,19 @@ use Carbon\Carbon;
                         contentType: false,
                         processData: false,
                         success: function(response) {
-                            Swal.fire({
-                                title: "Success",
-                                text: "Form data saved successfully!",
-                                icon: "success",
-                                showCancelButton: false,
-                                confirmButtonText: "OK",
-                            }).then((result) => {
-                                if (result.isConfirmed) {
-                                    window.location.href =
-                                        "/admin/transactionNews";
-                                }
-                            });
+                            if (response.api_status == 1) {
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'สำเร็จ!',
+                                    text: 'บันทึกข้อมูลเรียบร้อย'
+                                }).then(function() {
+                                    window.location.href = '/admin/transactionNews';
+                                });
+                            } else if (response.api_status == 2) {
+                                swal("ยกเลิก!", response.api_message, "error");
+                            } else {
+                                swal("ยกเลิก!", response.api_message, "error");
+                            }
                         },
                         error: function(xhr, status, error) {
                             Swal.fire({

@@ -9,7 +9,65 @@ use Illuminate\Support\Facades\Storage;
 
 class ApiNewsController extends Controller
 {
-    function getTypeNewsNotApprove()
+    function getNewsNotApprove()
+    {
+        $newsData = DB::table('transactionNews')
+            ->leftjoin('transactionFileNews', 'transactionFileNews.TransactionNewsId', 'transactionNews.id')
+            ->leftjoin('user', 'user.cmsUserId', 'transactionNews.Created_by')
+            ->select(
+                'transactionNews.id',
+                'transactionNews.TransactionType',
+                'transactionNews.TransactionYear',
+                'transactionNews.TransactionTitle',
+                'transactionNews.TransactionDetail',
+                'transactionNews.NewStartDate',
+                'transactionNews.NewEndDate',
+                'transactionNews.NewType',
+                'transactionNews.IsActive',
+                'transactionNews.IsApprove',
+                'transactionNews.Created_at',
+                'transactionNews.Created_by',
+                'transactionFileNews.FileName',
+                'transactionFileNews.FilePath',
+                'user.firstName',
+                'user.lastName',
+            )
+            ->orderBy('Created_at', 'desc')
+            ->get();
+        return $newsData;
+    }
+    function getNewsApprove()
+    {
+        $newsData = DB::table('transactionNews')
+            ->leftjoin('transactionFileNews', 'transactionFileNews.TransactionNewsId', 'transactionNews.id')
+            ->leftjoin('user', 'user.cmsUserId', 'transactionNews.Created_by')
+            ->select(
+                'transactionNews.id',
+                'transactionNews.TransactionType',
+                'transactionNews.TransactionYear',
+                'transactionNews.TransactionTitle',
+                'transactionNews.TransactionDetail',
+                'transactionNews.NewStartDate',
+                'transactionNews.NewEndDate',
+                'transactionNews.NewType',
+                'transactionNews.IsActive',
+                'transactionNews.IsApprove',
+                'transactionNews.Created_at',
+                'transactionNews.Created_by',
+                'transactionFileNews.FileName',
+                'transactionFileNews.FilePath',
+                'user.firstName',
+                'user.lastName',
+            )
+            ->where('IsApprove', 1)
+            ->where('IsActive', 1)
+            ->where('IsDelete', 0)
+            ->orderBy('Created_at', 'desc')
+            ->take(5)
+            ->get();
+        return $newsData;
+    }
+    function getNewsAllById()
     {
         $newsData = DB::table('transactionNews')
             ->leftjoin('transactionFileNews', 'transactionFileNews.TransactionNewsId', 'transactionNews.id')
@@ -22,15 +80,71 @@ class ApiNewsController extends Controller
                 'transactionNews.NewStartDate',
                 'transactionNews.NewEndDate',
                 'transactionNews.NewType',
+                'transactionNews.IsActive',
                 'transactionNews.IsApprove',
                 'transactionNews.Created_at',
                 'transactionNews.Created_by',
                 'transactionFileNews.FileName',
                 'transactionFileNews.FilePath',
             )
+            ->where('Created_by', CRUDBooster::myId())
+            ->where('IsDelete', 0)
+            ->orderBy('Created_at', 'desc')
             ->get();
         return $newsData;
     }
+    function getNewsAll()
+    {
+        $newsData = DB::table('transactionNews')
+            ->leftjoin('transactionFileNews', 'transactionFileNews.TransactionNewsId', 'transactionNews.id')
+            ->select(
+                'transactionNews.id',
+                'transactionNews.TransactionType',
+                'transactionNews.TransactionYear',
+                'transactionNews.TransactionTitle',
+                'transactionNews.TransactionDetail',
+                'transactionNews.NewStartDate',
+                'transactionNews.NewEndDate',
+                'transactionNews.NewType',
+                'transactionNews.IsActive',
+                'transactionNews.IsApprove',
+                'transactionNews.Created_at',
+                'transactionNews.Created_by',
+                'transactionFileNews.FileName',
+                'transactionFileNews.FilePath',
+            )
+            ->orderBy('Created_at', 'desc')
+            ->get();
+        return $newsData;
+    }
+    function getNewsById($id)
+    {
+        $newsData = DB::table('transactionNews')
+            ->leftjoin('transactionFileNews', 'transactionFileNews.TransactionNewsId', 'transactionNews.id')
+            ->leftjoin('user', 'user.cmsUserId', 'transactionNews.Created_by')
+            ->select(
+                'transactionNews.id',
+                'transactionNews.TransactionType',
+                'transactionNews.TransactionYear',
+                'transactionNews.TransactionTitle',
+                'transactionNews.TransactionDetail',
+                'transactionNews.NewStartDate',
+                'transactionNews.NewEndDate',
+                'transactionNews.NewType',
+                'transactionNews.IsActive',
+                'transactionNews.IsApprove',
+                'transactionNews.Created_at',
+                'transactionNews.Created_by',
+                'transactionFileNews.FileName',
+                'transactionFileNews.FilePath',
+                'user.firstName',
+                'user.lastName',
+            )
+            ->where('transactionNews.id', $id)
+            ->first();
+        return $newsData;
+    }
+    
     function getTypeNews()
     {
         $newsData = DB::table('systemLookupMaster')
@@ -70,6 +184,7 @@ class ApiNewsController extends Controller
             $dataInsert['NewType'] = $NewType;
             $dataInsert['IsActive'] = $IsActive;
             $dataInsert['IsApprove'] = 0;
+            $dataInsert['IsDelete'] = 0;
             $dataInsert['Created_at'] = date('Y-m-d H:i:s');
             $dataInsert['Created_by'] = CRUDBooster::myId();
 
@@ -117,17 +232,17 @@ class ApiNewsController extends Controller
     function editNews(Request $request)
     {
         $NewsId = $request['NewsId'];
-        $TransactionYear = date("Y") + 543;
-        $TransactionYear = $TransactionYear;
+        $getYear = date("Y") + 543;
+        $TransactionYear = $getYear;
         $TransactionType = $request['TransactionType'];  //0=สมาชิก,1=สาธารณะ
-        $TransactionYear = $request['TransactionYear'];
         $TransactionTitle = $request['TransactionTitle'];
         $TransactionDetail = $request['TransactionDetail'];
         $IsActive = $request['IsActive'];
-        $NewStartDate = $request['NewStartDate'];
-        $NewEndDate = $request['NewEndDate'];
+        $NewStartDate =  (new FunctionController)->formatDateString($request['NewStartDate']);
+        $NewEndDate = (new FunctionController)->formatDateString($request['NewEndDate']);
         $NewType = $request['NewType'];
         $file = $request['file'];
+        $totalfiles = $request['totalfiles'];
         $array_file = [];
         DB::beginTransaction();
         try {
@@ -141,23 +256,23 @@ class ApiNewsController extends Controller
             $dataUpdate['NewEndDate'] = $NewEndDate;
             $dataUpdate['NewType'] = $NewType;
             $dataUpdate['IsActive'] = $IsActive;
-            $dataUpdate['IsApprove'] = 0;
             $dataUpdate['Updated_at'] = date('Y-m-d H:i:s');
             $dataUpdate['Updated_by'] = CRUDBooster::myId();
 
             $newsId = DB::table('transactionNews')->where('id', $NewsId)->update($dataUpdate);
             if ($newsId) {
-                if ($file) {
+                if ($totalfiles != 0) {
                     $dataUpdateFile = [];
-                    $dataUpdateFile['TransactionNewsId'] = $newsId;
                     $dataUpdateFile['TransactionYear'] = $TransactionYear;
                     $dataUpdateFile['Updated_at'] = date('Y-m-d H:i:s');
                     $dataUpdateFile['Updated_by'] = CRUDBooster::myId();
-                    foreach ($file as $index => $val) {
-                        $dataUpdateFile['FileName'] = $val->getClientOriginalName();
-                        $dataUpdateFile['FilePath'] = "uploads/" . $val->getClientOriginalName();
+                    if($file){
+                        foreach ($file as $index => $val) {
+                            $dataUpdateFile['FileName'] = $val->getClientOriginalName();
+                            $dataUpdateFile['FilePath'] = "uploads/" . $val->getClientOriginalName();
+                        }
                     }
-                    $transactionFileId = DB::table('transactionFileNews')->where('TransactionNewsId', $NewsId)->update($dataUpdateFile);
+                    $transactionFileId = DB::table('transactionFileNews')->where('transactionFileNews.TransactionNewsId', $NewsId)->update($dataUpdateFile);
                     if ($transactionFileId) {
                         DB::commit();
                         $data['api_status'] = 1;
@@ -204,7 +319,7 @@ class ApiNewsController extends Controller
         try {
 
             $dataUpdate = [];
-            $dataUpdate['IsActive'] = 0;
+            $dataUpdate['IsDelete'] = 1;
             $dataUpdate['Updated_at'] = date('Y-m-d H:i:s');
             $dataUpdate['Updated_by'] = CRUDBooster::myId();
 

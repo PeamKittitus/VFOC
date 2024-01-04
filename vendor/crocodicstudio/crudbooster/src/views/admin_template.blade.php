@@ -96,7 +96,7 @@
 @include('crudbooster::sidebar')
 
 <!-- Content Wrapper. Contains page content -->
-    <div class="content-wrapper">
+    <div class="content-wrapper" style="border-radius: 10px 10px 0px 0px !important;">
 
         <section class="content-header">
             <?php

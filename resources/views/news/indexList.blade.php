@@ -308,21 +308,13 @@ use Carbon\Carbon;
 
     <ol class="breadcrumb page-breadcrumb">
         <li class="breadcrumb-item"><a href="/home">หน้าหลัก</a></li>
-        <li class="breadcrumb-item active">จัดการข่าวสาร</li>
+        <li class="breadcrumb-item active">รายการข่าวสาร</li>
     </ol>
-    <div class="d-flex justify-content-start flex-wrap demo" style="margin-bottom: 25px">
-        <div class="btn-group" style="border: 1px solid grey; border-radius: 10px">
-            <a href="/addNews" class="btn btn-light waves-effect waves-themed" id="AddForm">
-                <i class="fa fa-plus-circle" aria-hidden="true" style="font-size: 20px"></i><br>
-                <span class="fs-nano color-primary-600">สร้างใหม่</span>
-            </a>
-        </div>
-    </div>
     <div class="row">
         <div class="col-lg-12 sortable-grid ui-sortable" style="padding: 10px;">
             <div class="panel panel-sortable" role="widget">
                 <div class="panel-hdr" role="heading">
-                    <h2 class="ui-sortable-handle"><i class="fa fa-users" aria-hidden="true" style="margin-right: 15px"></i>จัดการข่าวสาร
+                    <h2 class="ui-sortable-handle"><i class="fa fa-users" aria-hidden="true" style="margin-right: 15px"></i>รายการข่าวสาร
                     </h2>
                 </div>
                 <div class="panel-container show" role="content">
@@ -340,7 +332,6 @@ use Carbon\Carbon;
                                                     <th class="text-center">วันที่สร้างรายการ</th>
                                                     <th class="text-center">ประเภทข่าวสาร</th>
                                                     <th class="text-center">สถานะข่าวสาร</th>
-                                                    <th class="text-center">ดำเนินการ</th>
                                                     <th class="text-center">จัดการข้อมูล</th>
                                                 </tr>
                                             </thead>
@@ -377,17 +368,9 @@ use Carbon\Carbon;
                                                             <i class="fa fa-check-circle-o" style="color: green; font-size: 1.5rem;"></i> <span style="color: green;">ใช้งาน</span>
                                                         @endif
                                                     </td>
-                                                    <td class="text-center" style="width: 80px;">
-                                                        @if($result->IsApprove === 0)
-                                                            <i class="fa fa-clock-o" style="color: orange; font-size: 1.5rem;"></i> <span style="color: orange;">รออนุมัติ</span>
-                                                        @elseif($result->IsApprove === 1)
-                                                            <i class="fa fa-check-circle-o" style="color: green; font-size: 1.5rem;"></i> <span style="color: green;">อนุมัติแล้ว</span>
-                                                        @endif
-                                                    </td>
+
                                                     <td class="text-center" style="display: flex;gap:1%;justify-content:center;">
                                                         <a href="/viewNews/{{$result->id}}" class="btn" title="View" data-id="{{ $result->id }}" style="color: white ; background-color: #09d7f7"><i class="fa fa-eye" aria-hidden="true"></i> ดู </a>
-                                                        <a href="/editNews/{{$result->id}}" class="btn" title="Edit" data-id="{{ $result->id }}" style="color: white ; background-color: orange"><i class="fa fa-edit" aria-hidden="true"></i> แก้ไข </a>
-                                                        <button class="btn del_icon" title="Delete" data-id="{{ $result->id }}" style="color: white ; background-color: red"><i class="fa fa-times" aria-hidden="true"></i> ลบ </button>
                                                     </td>
                                                 </tr>
                                                 @php
@@ -418,13 +401,13 @@ use Carbon\Carbon;
 </script>
 <script>
     $(document).ready(function() {
-        $('.del_icon').on('click', function() {
+        $('.approve').on('click', function() {
             var NewsId = $(this).data('id');
             var formData = new FormData();
             formData.append('NewsId', NewsId);
             Swal.fire({
                 title: "ยืนยัน",
-                text: "คุณต้องการลบข้อมูลใช่หรือไม่?",
+                text: "คุณต้องอนุมัติข่าวสารใช่หรือไม่?",
                 icon: "question",
                 showCancelButton: true,
                 confirmButtonText: "ใช่",
@@ -432,7 +415,7 @@ use Carbon\Carbon;
             }).then((result) => {
                 if (result.isConfirmed) {
                     $.ajax({
-                        url: '/delNews',
+                        url: '/approveNews',
                         method: 'POST',
                         data: formData,
                         contentType: false,
@@ -441,14 +424,14 @@ use Carbon\Carbon;
                             if (response.api_status == 1) {
                                 Swal.fire({
                                     title: "สำเร็จ",
-                                    text: "ลบข้อมูลสำเร็จ!",
+                                    text: "อนุมัติข้อมูลสำเร็จ!",
                                     icon: "success",
                                     showCancelButton: false,
                                     confirmButtonText: "OK",
                                 }).then((result) => {
                                     if (result.isConfirmed) {
                                         window.location.href =
-                                            "/admin/transactionNews";
+                                            "/admin/transactionNewsApprove";
                                     }
                                 });
                             } else {

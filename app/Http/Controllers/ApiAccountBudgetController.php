@@ -675,7 +675,6 @@ class ApiAccountBudgetController extends Controller
                     $dataUpdateSubPeriod['updated_by'] = CRUDBooster::myId();
                     $ProjectSubPeriodId = DB::table('projectSubPeriod')->where('account_sub_id', $AccSubId)->update($dataUpdateSubPeriod);
                     if($ProjectSubPeriodId){
-                        //
                         $dataUpdateSubDocument = [];
                         if($file){
                             foreach ($file as $index => $val) {
