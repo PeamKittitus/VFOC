@@ -397,32 +397,98 @@ class ApiNewsController extends Controller
             ->groupBy('transactionNews.TransactionYear')
             ->get();
 
-            $Models = [];
-            foreach ($newsData as $index => $val) {
-                $model = new stdClass();
-                $model->TransactionYear = $val->TransactionYear;
-                $model->AmountWait = DB::table('transactionNews')
-                    ->where('TransactionYear', $val->TransactionYear)
-                    // ->where('TransactionType', 0)
-                    ->where('IsApprove', 0)
-                    ->where('IsActive', 1)
-                    ->count();
-        
-                $model->AmountApprove = DB::table('transactionNews')
-                    ->where('TransactionYear', $val->TransactionYear)
-                    // ->where('TransactionType', 0)
-                    ->where('IsApprove', 1)
-                    ->where('IsActive', 1)
-                    ->count();
-        
-                $model->AmountNews = DB::table('transactionNews')
-                    ->where('TransactionYear', $val->TransactionYear)
-                    // ->where('TransactionType', 0)
-                    ->where('IsActive', 1)
-                    ->count();
-        
-                $Models[] = $model;
-            }
-            return $Models;
+        $Models = [];
+        foreach ($newsData as $index => $val) {
+            $model = new stdClass();
+            $model->TransactionYear = $val->TransactionYear;
+            $model->AmountWait = DB::table('transactionNews')
+                ->where('TransactionYear', $val->TransactionYear)
+                // ->where('TransactionType', 0)
+                ->where('IsApprove', 0)
+                ->where('IsActive', 1)
+                ->count();
+
+            $model->AmountApprove = DB::table('transactionNews')
+                ->where('TransactionYear', $val->TransactionYear)
+                // ->where('TransactionType', 0)
+                ->where('IsApprove', 1)
+                ->where('IsActive', 1)
+                ->count();
+
+            $model->AmountNews = DB::table('transactionNews')
+                ->where('TransactionYear', $val->TransactionYear)
+                // ->where('TransactionType', 0)
+                ->where('IsActive', 1)
+                ->count();
+
+            $Models[] = $model;
+        }
+        return $Models;
+    }
+    function GetReportCreatorMost()
+    {
+        $years = date('Y') + 543;
+        $months = [
+            "มกราคม", "กุมภาพันธ์", "มีนาคม",
+            "เมษายน", "พฤษภาคม", "มิถุนายน",
+            "กรกฎาคม", "สิงหาคม", "กันยายน",
+            "ตุลาคม", "พฤศจิกายน", "ธันวาคม"
+        ];
+        $Models = [];
+
+        for ($i = 1; $i <= 12; $i++) {
+            $Y = $years;
+            $Model = new stdClass();
+            $Model->TransactionYear = $years;
+            $Tran = DB::table('transactionNews')
+                ->where('TransactionYear', $Y)
+                ->where('IsActive', 1)
+                ->groupBy('Created_by')
+                ->selectRaw('COUNT(*) as Count, MAX(Created_by) as Created_by')
+                ->get();
+
+            $TranMax = $Tran->sortByDesc('Count')->pluck('Created_by')->first();
+
+            $Model->TransactionYear = $years;
+
+            $Model->fullName = DB::table('user')
+                ->where('cmsUserId', $TranMax)
+                ->select(DB::raw('CONCAT(FirstName, " ", LastName) as fullName'))
+                ->first()->fullName;
+            
+            $Model->Month = $months[$i - 1];
+
+            $Model->AmountMember = DB::table('transactionNews')
+                ->where('TransactionYear', $Y)
+                ->where('TransactionType', 0)
+                ->where('IsActive', 1)
+                ->where('Created_by', $TranMax)
+                ->whereMonth('Created_at', $i)
+                ->count();
+
+            $Model->AmountPublic = DB::table('transactionNews')
+                ->where('TransactionYear', $Y)
+                ->where('TransactionType', 1)
+                ->where('IsActive', 1)
+                ->where('Created_by', $TranMax)
+                ->whereMonth('Created_at', $i)
+                ->count();
+
+            $Model->AmountCreate = DB::table('transactionNews')
+                ->where('TransactionYear', $Y)
+                ->where('IsActive', 1)
+                ->where('Created_by', $TranMax)
+                ->whereMonth('Created_at', $i)
+                ->count();
+
+            $Model->AmountNews = DB::table('transactionNews')
+                ->where('TransactionYear', $Y)
+                ->where('IsActive', 1)
+                ->whereMonth('Created_by', $i)
+                ->count();
+
+            $Models[] = $Model;
+        }
+        return $Models;
     }
 }
