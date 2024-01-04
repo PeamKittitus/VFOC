@@ -331,6 +331,11 @@
 
 
 	    //By the way, you can still create your own method in here... :) 
-
+		public function getIndex()
+		{
+			$ReportApproveNewsByMonth = (new ApiNewsController)->ReportApproveNewsByMonth();
+			$data['ReportApproveNewsByMonth'] = $ReportApproveNewsByMonth;
+			return view('news/report/approveNews',$data);
+		}
 
 	}
