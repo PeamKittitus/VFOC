@@ -7,6 +7,7 @@ use DB;
 use CRUDBooster;
 use Illuminate\Support\Facades\Storage;
 use stdClass;
+
 class ApiNewsController extends Controller
 {
     function getNewsNotApprove()
@@ -144,7 +145,7 @@ class ApiNewsController extends Controller
             ->first();
         return $newsData;
     }
-    
+
     function getTypeNews()
     {
         $newsData = DB::table('systemLookupMaster')
@@ -266,7 +267,7 @@ class ApiNewsController extends Controller
                     $dataUpdateFile['TransactionYear'] = $TransactionYear;
                     $dataUpdateFile['Updated_at'] = date('Y-m-d H:i:s');
                     $dataUpdateFile['Updated_by'] = CRUDBooster::myId();
-                    if($file){
+                    if ($file) {
                         foreach ($file as $index => $val) {
                             $dataUpdateFile['FileName'] = $val->getClientOriginalName();
                             $dataUpdateFile['FilePath'] = "uploads/" . $val->getClientOriginalName();
@@ -382,7 +383,7 @@ class ApiNewsController extends Controller
         response()->json($data, 200)->header("Access-Control-Allow-Origin", config('cors.allowed_origins'))
             ->header("Access-Control-Allow-Methods", config('cors.allowed_methods'))->send();
     }
-    
+
     function ReportApproveNews()
     {
         $newsData = DB::table('transactionNews')
@@ -455,7 +456,7 @@ class ApiNewsController extends Controller
                 ->where('cmsUserId', $TranMax)
                 ->select(DB::raw('CONCAT(FirstName, " ", LastName) as fullName'))
                 ->first()->fullName;
-            
+
             $Model->Month = $months[$i - 1];
 
             $Model->AmountMember = DB::table('transactionNews')
@@ -579,5 +580,55 @@ class ApiNewsController extends Controller
         }
         return $Models;
     }
-    
+    function GetReportCreator()
+    {
+        $years = date('Y') + 543;
+        $newsData = DB::table('transactionNews')
+            ->select(
+                'transactionNews.id',
+                'transactionNews.TransactionType',
+                'transactionNews.TransactionYear',
+                'transactionNews.Created_at',
+                'transactionNews.Created_by',
+                'transactionNews.IsActive',
+                'transactionNews.IsApprove',
+            )
+            ->where('TransactionYear', $years)
+            ->where('IsActive', 1)
+            ->groupBy('transactionNews.Created_by')
+            ->get();
+        $Models = [];
+        foreach ($newsData as $index => $val) {
+            $model = new stdClass();
+            $model->TransactionYear = $val->TransactionYear;
+
+            $model->fullName = DB::table('user')
+                ->where('cmsUserId', $val->Created_by)
+                ->select(DB::raw('CONCAT(FirstName, " ", LastName) as fullName'))
+                ->first()->fullName;
+
+            $model->AmountMember = DB::table('transactionNews')
+                ->where('TransactionYear', $val->TransactionYear)
+                ->where('TransactionType', 0)
+                ->where('IsActive', 1)
+                ->where('Created_by', $val->Created_by)
+                ->count();
+
+            $model->AmountPublic = DB::table('transactionNews')
+                ->where('TransactionYear', $val->TransactionYear)
+                ->where('TransactionType', 1)
+                ->where('IsActive', 1)
+                ->where('Created_by', $val->Created_by)
+                ->count();
+
+            $model->AmountNews = DB::table('transactionNews')
+                ->where('TransactionYear', $val->TransactionYear)
+                ->where('IsActive', 1)
+                ->where('Created_by', $val->Created_by)
+                ->count();
+
+            $Models[] = $model;
+        }
+        return $Models;
+    }
 }

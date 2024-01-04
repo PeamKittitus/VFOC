@@ -331,6 +331,11 @@
 
 
 	    //By the way, you can still create your own method in here... :) 
-
+		public function getIndex()
+		{
+			$GetReportCreator = (new ApiNewsController)->GetReportCreator();
+			$data['GetReportCreator'] = $GetReportCreator;
+			return view('news/report/approveNews',$data);
+		}
 
 	}
