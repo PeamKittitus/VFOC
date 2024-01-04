@@ -74,9 +74,9 @@
                     @if(!empty($menu->children))
                     <ul class="treeview-menu">
                         @foreach($menu->children as $child)
-                        <li data-id='{{$child->id}}' class='{{(Request::is($child->url_path .= !Str::endsWith(Request::decodedPath(), $child->url_path) ? "/*" : ""))?"active":""}}'>
+                        <li  data-id='{{$child->id}}' class='{{(Request::is($child->url_path .= !Str::endsWith(Request::decodedPath(), $child->url_path) ? "/*" : ""))?"active":""}}'>
                             <a href='{{ ($child->is_broken)?"javascript:alert('".cbLang('controller_route_404')."')":$child->url}}' class='{{($child->color)?"text-".$child->color:""}}'>
-                                <i class='{{$child->icon}}'></i> <span>{{$child->name}}</span>
+                                <i class='{{$child->icon}}'></i> <span style="white-space:normal">{{$child->name}}</span>
                             </a>
                         </li>
                         @endforeach
