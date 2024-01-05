@@ -23,7 +23,6 @@ class FunctionController extends Controller
         } elseif ($thisMonth >= 1) {
             $budgetYear = $thisYear;
         }
-    
         return $budgetYear;
     }
     function convertAndSplitDate($date)
@@ -42,5 +41,24 @@ class FunctionController extends Controller
         $dateTime = \DateTime::createFromFormat('m/d/Y', $date);
         $newFormattedDate = $dateTime->format('Y-m-d');
         return $newFormattedDate;
+    }
+    function generateYearOptions($selectedOffset = 0, $yearsBefore = 3, $yearsAfter = 2) {
+        $currentYear = (int)date('Y');
+        $startYear = $currentYear - $yearsBefore;
+        $endYear = $currentYear + $yearsAfter;
+    
+        $options = '';
+    
+        for ($i = ($yearsBefore + $yearsAfter); $i >= 0; $i--) {
+            $year = ($startYear + $i) + 543;
+    
+            if ($year == ($currentYear + 543)) {
+                $options .= '<option selected value="' . $year . '">' . $year . '</option>';
+            } else {
+                $options .= '<option value="' . $year . '">' . $year . '</option>';
+            }
+        }
+
+        return $options;
     }
 }

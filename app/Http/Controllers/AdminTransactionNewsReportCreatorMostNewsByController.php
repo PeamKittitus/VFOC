@@ -334,8 +334,9 @@
 		public function getIndex()
 		{
 			$GetReportCreatorMost = (new ApiNewsController)->GetReportCreatorMost();
+			$generateYearOptions = (new FunctionController)->generateYearOptions();
 			$data['GetReportCreatorMost'] = $GetReportCreatorMost;
-			// dd($data);
+			$data['generateYearOptions'] = $generateYearOptions;
 			return view('news/report/NewsReportCreatorMostNews',$data);
 		}
 

@@ -76,3 +76,7 @@ Route::post('/editNews', '\App\Http\Controllers\ApiNewsController@editNews');
 Route::post('/delNews', '\App\Http\Controllers\ApiNewsController@delNews');
 Route::post('/approveNews', '\App\Http\Controllers\ApiNewsController@approveNews');
 //========================================================================================== API
+
+//========================================================================================== Report
+Route::post('/getTransactionNewsReportCreatorMostNewsBy', '\App\Http\Controllers\ApiNewsController@getTransactionNewsReportCreatorMostNewsBy');
+//========================================================================================== Report
