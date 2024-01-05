@@ -306,45 +306,12 @@
     div.dataTables_filter label {
         display: none;
     }
-    .dt-buttons{
+
+    .dt-buttons {
         position: fixed;
         left: 90%;
     }
 </style>
-{{-- <?php
-    $jsonData = [
-        [   
-            "id" => 1,
-            "year" => 2566,
-            "month" => "มกราคม",
-            "Waitapprove" => 20,
-            "Approve" => 1,
-            "AmountNews" => 25,
-        ],
-        [   
-            "id" => 1,
-            "year" => 2566,
-            "month" => "กุมภา",
-            "Waitapprove" => 20,
-            "Approve" => 1,
-            "AmountNews" => 25,
-        ],[   
-            "id" => 1,
-            "year" => 2566,
-            "month" => "มีนา",
-            "Waitapprove" => 20,
-            "Approve" => 1,
-            "AmountNews" => 25,
-        ],[   
-            "id" => 1,
-            "year" => 2566,
-            "month" => "เมษา",
-            "Waitapprove" => 20,
-            "Approve" => 1,
-            "AmountNews" => 25,
-        ],
-    ];
-?> --}}
 <body>
 
     <ol class="breadcrumb page-breadcrumb">
@@ -436,8 +403,7 @@
         $('#example').DataTable({
             responsive: true,
             dom: 'Bfrtip',
-            buttons: [
-                {
+            buttons: [{
                     extend: 'excelHtml5',
                     text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>&nbsp;&nbsp;EXCEL',
                     titleAttr: 'Excel',
@@ -456,7 +422,7 @@
                         class: 'btn btn-danger btn-sm mr-1'
                     }
                 }
-            ]            
+            ]
         });
         $('.dt-buttons').css('margin-bottom', '20px');
     });
