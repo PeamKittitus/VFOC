@@ -334,8 +334,9 @@
 		public function getIndex()
 		{
 			$GetReportType = (new ApiNewsController)->GetReportType();
+			$generateYearOptions = (new FunctionController)->generateYearOptions();
 			$data['GetReportType'] = $GetReportType;
-			// dd($data);
+			$data['generateYearOptions'] = $generateYearOptions;
 			return view('news/report/ReportTypeNewsByMonth',$data);
 		}
 

@@ -302,7 +302,8 @@
     div.dataTables_filter label {
         display: none;
     }
-    .dt-buttons{
+
+    .dt-buttons {
         position: fixed;
         left: 90%;
     }
@@ -312,42 +313,6 @@
         text-align: center;
     }
 </style>
-{{-- <?php
-    $jsonData = [
-        [   
-            "id" => 1,
-            "TransactionYear" => 2566,
-            "TransactionMonth" => 10,
-            "MemberType" => 20,
-            "Public" => 1,
-            "AmountAllNews" => 25,
-        ],
-        [   
-            "id" => 2,
-            "TransactionYear" => 2566,
-            "TransactionMonth" => 10,
-            "MemberType" => 0,
-            "Public" => 10,
-            "AmountAllNews" => 25,
-        ], 
-        [   
-            "id" => 3,
-            "TransactionYear" => 2567,
-            "TransactionMonth" => 10,
-            "MemberType" => 0,
-            "Public" => 10,
-            "AmountAllNews" => 25,
-        ],  
-        [   
-            "id" => 4,
-            "TransactionYear" => 2567,
-            "TransactionMonth" => 10,
-            "MemberType" => 20,
-            "Public" => 1,
-            "AmountAllNews" => 25,
-        ],
-    ];
-?> --}}
 
 <body>
 
@@ -367,6 +332,11 @@
                             <div id="JsonTable_wrapper" class="dataTables_wrapper dt-bootstrap4 no-footer">
                                 <div class="row">
                                     <div class="col-sm-12">
+                                        <select id="CurrentBudgetYear" class="select2 select2-container2">
+                                            {!! $generateYearOptions !!}
+                                        </select>
+                                    </div>
+                                    <div class="col-sm-12">
                                         <table id="example" class="table table-striped table-bordered" cellspacing="0" width="100%">
                                             <thead>
                                                 <tr>
@@ -383,16 +353,16 @@
                                                 $No = 1;
                                                 @endphp
                                                 @foreach ($GetReportType as $index => $rp)
-                                                    <tr>
-                                                        <td class="text-center">{{ $No++ }}.</td>
-                                                        <td class="text-center">{{ $rp->TransactionYear }}</td>
-                                                        <td class="text-center">{{ $rp->Month }}</td>
-                                                        <td class="text-center">{{ $rp->AmountMember }}</td>
-                                                        <td class="text-center">{{ $rp->AmountPublic }}</td>
-                                                        <td class="text-center">{{ $rp->AmountNews }}</td>
-                                                    </tr>
+                                                <tr>
+                                                    <td class="text-center">{{ $No++ }}.</td>
+                                                    <td class="text-center">{{ $rp->TransactionYear }}</td>
+                                                    <td class="text-center">{{ $rp->Month }}</td>
+                                                    <td class="text-center">{{ $rp->AmountMember }}</td>
+                                                    <td class="text-center">{{ $rp->AmountPublic }}</td>
+                                                    <td class="text-center">{{ $rp->AmountNews }}</td>
+                                                </tr>
                                                 @endforeach
-                                           
+
                                             </tbody>
 
 
@@ -413,13 +383,13 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
     $(document).ready(function() {
-        
 
+        //==================DataTable
         $('#example').DataTable({
             responsive: true,
+            pageLength: 12,
             dom: 'Bfrtip',
-            buttons: [
-                {
+            buttons: [{
                     extend: 'excelHtml5',
                     text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>&nbsp;&nbsp;EXCEL',
                     titleAttr: 'Excel',
@@ -439,20 +409,51 @@
                     }
                 }
             ],
-            // data: jsonData,
-            // columns: [
-            //     { data: "TransactionYear" },
-            //     { data: "AmountWait" },
-            //     { data: "AmountNews" },
-            //     { data: "AmountApprove" },
-            //     { data: "AmountNews2" },
-            //     { data: "AmountApprove2" },
-            //     { data: "AmountAllNews" }
-            // ]
         });
 
         $('.dt-buttons').css('margin-bottom', '20px');
-    });
 
+        //==================CurrentBudgetYear Add onchange event
+        $('#CurrentBudgetYear').on('change', function() {
+            var TransactionYear = $(this).val();
+            var formData = new FormData();
+            formData.append('TransactionYear', TransactionYear);
+
+            $.ajax({
+                url: '/getTransactionNewsReportTypeNewsByMonth',
+                method: 'POST',
+                data: formData,
+                contentType: false,
+                processData: false,
+                success: function(response) {
+                    var tableBody = $('#example tbody');
+                    tableBody.empty(); // Clear
+
+                    // Loop 
+                    $.each(response, function(index, rp) {
+                        var newRow = '<tr>' +
+                            '<td class="text-center">' + (index + 1) + '.</td>' +
+                            '<td class="text-center">' + rp.TransactionYear + '</td>' +
+                            '<td class="text-center">' + rp.Month + '</td>' +
+                            '<td class="text-center">' + rp.AmountMember + '</td>' +
+                            '<td class="text-center">' + rp.AmountPublic + '</td>' +
+                            '<td class="text-center">' + rp.AmountNews + '</td>' +
+                            '</tr>';
+
+                        tableBody.append(newRow);
+                    });
+                },
+                error: function(xhr, status, error) {
+                    Swal.fire({
+                        title: "Error",
+                        text: "An error occurred while saving the form data.",
+                        icon: "error",
+                        showCancelButton: false,
+                        confirmButtonText: "OK",
+                    });
+                }
+            });
+        });
+    });
 </script>
 @endsection

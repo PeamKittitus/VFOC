@@ -528,7 +528,7 @@ class ApiNewsController extends Controller
             $Model->AmountNews = DB::table('transactionNews')
                 ->where('TransactionYear', $Y)
                 ->where('IsActive', 1)
-                ->whereMonth('Created_by', $i)
+                ->whereMonth('Created_at', $i)
                 ->count();
 
             $Models[] = $Model;
@@ -847,6 +847,48 @@ class ApiNewsController extends Controller
                 ->where('Created_by', $TranMax)
                 ->whereMonth('Created_at', $i)
                 ->count();
+            $Models[] = $Model;
+        }
+        return $Models;
+    }
+    function getTransactionNewsReportTypeNewsByMonth(Request $request){
+        $TransactionYear = $request['TransactionYear']; 
+        $months = [
+            "มกราคม", "กุมภาพันธ์", "มีนาคม",
+            "เมษายน", "พฤษภาคม", "มิถุนายน",
+            "กรกฎาคม", "สิงหาคม", "กันยายน",
+            "ตุลาคม", "พฤศจิกายน", "ธันวาคม"
+        ];
+        $Models = [];
+
+        for ($i = 1; $i <= 12; $i++) {
+            $Y = $TransactionYear;
+            $Model = new stdClass();
+
+            $Model->TransactionYear = $TransactionYear;
+
+            $Model->Month = $months[$i - 1];
+
+            $Model->AmountMember = DB::table('transactionNews')
+                ->where('TransactionYear', $Y)
+                ->where('TransactionType', 0)
+                ->where('IsActive', 1)
+                ->whereMonth('Created_at', $i)
+                ->count();
+
+            $Model->AmountPublic = DB::table('transactionNews')
+                ->where('TransactionYear', $Y)
+                ->where('TransactionType', 1)
+                ->where('IsActive', 1)
+                ->whereMonth('Created_at', $i)
+                ->count();
+            
+            $Model->AmountNews = DB::table('transactionNews')
+                ->where('TransactionYear', $Y)
+                ->where('IsActive', 1)
+                ->whereMonth('Created_at', $i)
+                ->count();
+
             $Models[] = $Model;
         }
         return $Models;

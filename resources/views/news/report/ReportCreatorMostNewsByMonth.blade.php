@@ -307,7 +307,8 @@
     div.dataTables_filter label {
         display: none;
     }
-    .dt-buttons{
+
+    .dt-buttons {
         position: fixed;
         left: 90%;
     }
@@ -317,9 +318,6 @@
         text-align: center;
     }
 </style>
-{{-- <?php
-    dd($GetReportCreatorMost);
-?> --}}
 
 <body>
 
@@ -338,6 +336,12 @@
                         <div id="JsonData">
                             <div id="JsonTable_wrapper" class="dataTables_wrapper dt-bootstrap4 no-footer">
                                 <div class="row">
+
+                                    <div class="col-sm-12">
+                                        <select id="CurrentBudgetYear" class="select2 select2-container2">
+                                            {!! $generateYearOptions !!}
+                                        </select>
+                                    </div>
                                     <div class="col-sm-12">
                                         <table id="example" class="table table-striped table-bordered" cellspacing="0" width="100%">
                                             <thead>
@@ -358,31 +362,31 @@
                                                 $No = 1;
                                                 @endphp
                                                 @foreach ($GetReportCreatorMost as $index => $rp)
-                                                    <tr>
-                                                        <td class="text-center">{{ $No++ }}.</td>
-                                                        <td class="text-center">{{ $rp->TransactionYear }}</td>
-                                                        <td class="text-center">{{ $rp->Month }}</td>
-                                                        <td class="text-center">
-                                                            @if ($rp->AmountMember == 0 && $rp->AmountPublic == 0 && $rp->AmountCreate == 0)
-                                                                -
-                                                            @else
-                                                                {{ $rp->fullName }}
-                                                            @endif
-                                                        </td>                                                        
-                                                        <td class="text-center">{{ $rp->AmountMember }}</td>
-                                                        <td class="text-center">{{ $rp->AmountPublic }}</td>
-                                                        <td class="text-center">{{ $rp->AmountCreate }}</td>                                                      
-                                                        <td class="text-center">
-                                                            @if ($rp->AmountNews > 0)
-                                                                {{ number_format(($rp->AmountCreate *100 / 5), 2) }}
-                                                            @else
-                                                                0%
-                                                            @endif
-                                                        </td>
-                                                        <td class="text-center">{{ $rp->AmountNews }}</td>
-                                                    </tr>
+                                                <tr>
+                                                    <td class="text-center">{{ $No++ }}.</td>
+                                                    <td class="text-center">{{ $rp->TransactionYear }}</td>
+                                                    <td class="text-center">{{ $rp->Month }}</td>
+                                                    <td class="text-center">
+                                                        @if ($rp->AmountMember == 0 && $rp->AmountPublic == 0 && $rp->AmountCreate == 0)
+                                                        -
+                                                        @else
+                                                        {{ $rp->fullName }}
+                                                        @endif
+                                                    </td>
+                                                    <td class="text-center">{{ $rp->AmountMember }}</td>
+                                                    <td class="text-center">{{ $rp->AmountPublic }}</td>
+                                                    <td class="text-center">{{ $rp->AmountCreate }}</td>
+                                                    <td class="text-center">
+                                                        @if ($rp->AmountNews > 0)
+                                                        {{ number_format(($rp->AmountCreate *100 / 5), 2) }}
+                                                        @else
+                                                        0%
+                                                        @endif
+                                                    </td>
+                                                    <td class="text-center">{{ $rp->AmountNews }}</td>
+                                                </tr>
                                                 @endforeach
-                                           
+
                                             </tbody>
 
 
@@ -403,13 +407,13 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
     $(document).ready(function() {
-        
+
 
         $('#example').DataTable({
             responsive: true,
             dom: 'Bfrtip',
-            buttons: [
-                {
+            pageLength: 12,
+            buttons: [{
                     extend: 'excelHtml5',
                     text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>&nbsp;&nbsp;EXCEL',
                     titleAttr: 'Excel',
@@ -432,6 +436,5 @@
         });
         $('.dt-buttons').css('margin-bottom', '20px');
     });
-
 </script>
 @endsection
