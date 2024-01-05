@@ -334,8 +334,9 @@
 		public function getIndex()
 		{
 			$ReportApproveNewsByMonth = (new ApiNewsController)->ReportApproveNewsByMonth();
+			$generateYearOptions = (new FunctionController)->generateYearOptions();
 			$data['ReportApproveNewsByMonth'] = $ReportApproveNewsByMonth;
-			// dd($data);
+			$data['generateYearOptions'] = $generateYearOptions;
 			return view('news/report/ReportApproveNewsByMonth',$data);
 		}
 

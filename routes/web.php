@@ -80,4 +80,5 @@ Route::post('/approveNews', '\App\Http\Controllers\ApiNewsController@approveNews
 //========================================================================================== Report
 Route::post('/getTransactionNewsReportCreatorMostNewsBy', '\App\Http\Controllers\ApiNewsController@getTransactionNewsReportCreatorMostNewsBy');
 Route::post('/getTransactionNewsReportTypeNewsByMonth', '\App\Http\Controllers\ApiNewsController@getTransactionNewsReportTypeNewsByMonth');
+Route::post('/getTransactionNewsReportApproveNewsByMonth', '\App\Http\Controllers\ApiNewsController@getTransactionNewsReportApproveNewsByMonth');
 //========================================================================================== Report

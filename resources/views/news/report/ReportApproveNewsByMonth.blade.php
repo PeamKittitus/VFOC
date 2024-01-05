@@ -306,45 +306,47 @@
     div.dataTables_filter label {
         display: none;
     }
-    .dt-buttons{
+
+    .dt-buttons {
         position: fixed;
         left: 90%;
     }
 </style>
 {{-- <?php
-    $jsonData = [
-        [   
-            "id" => 1,
-            "year" => 2566,
-            "month" => "มกราคม",
-            "Waitapprove" => 20,
-            "Approve" => 1,
-            "AmountNews" => 25,
-        ],
-        [   
-            "id" => 1,
-            "year" => 2566,
-            "month" => "กุมภา",
-            "Waitapprove" => 20,
-            "Approve" => 1,
-            "AmountNews" => 25,
-        ],[   
-            "id" => 1,
-            "year" => 2566,
-            "month" => "มีนา",
-            "Waitapprove" => 20,
-            "Approve" => 1,
-            "AmountNews" => 25,
-        ],[   
-            "id" => 1,
-            "year" => 2566,
-            "month" => "เมษา",
-            "Waitapprove" => 20,
-            "Approve" => 1,
-            "AmountNews" => 25,
-        ],
-    ];
-?> --}}
+        $jsonData = [
+            [
+                "id" => 1,
+                "year" => 2566,
+                "month" => "มกราคม",
+                "Waitapprove" => 20,
+                "Approve" => 1,
+                "AmountNews" => 25,
+            ],
+            [
+                "id" => 1,
+                "year" => 2566,
+                "month" => "กุมภา",
+                "Waitapprove" => 20,
+                "Approve" => 1,
+                "AmountNews" => 25,
+            ], [
+                "id" => 1,
+                "year" => 2566,
+                "month" => "มีนา",
+                "Waitapprove" => 20,
+                "Approve" => 1,
+                "AmountNews" => 25,
+            ], [
+                "id" => 1,
+                "year" => 2566,
+                "month" => "เมษา",
+                "Waitapprove" => 20,
+                "Approve" => 1,
+                "AmountNews" => 25,
+            ],
+        ];
+        ?> --}}
+
 <body>
 
     <ol class="breadcrumb page-breadcrumb">
@@ -363,6 +365,11 @@
                         <div id="JsonData">
                             <div id="JsonTable_wrapper" class="dataTables_wrapper dt-bootstrap4 no-footer">
                                 <div class="row">
+                                    <div class="col-sm-12">
+                                        <select id="CurrentBudgetYear" class="select2 select2-container2">
+                                            {!! $generateYearOptions !!}
+                                        </select>
+                                    </div>
                                     <div class="col-sm-12">
                                         <table id="example" class="table table-striped table-bordered" cellspacing="0" width="100%">
                                             <thead>
@@ -437,9 +444,9 @@
     $(document).ready(function() {
         $('#example').DataTable({
             responsive: true,
+            pageLength: 12,
             dom: 'Bfrtip',
-            buttons: [
-                {
+            buttons: [{
                     extend: 'excelHtml5',
                     text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>&nbsp;&nbsp;EXCEL',
                     titleAttr: 'Excel',
@@ -458,9 +465,76 @@
                         class: 'btn btn-danger btn-sm mr-1'
                     }
                 }
-            ]            
+            ]
         });
         $('.dt-buttons').css('margin-bottom', '20px');
+
+        //==================CurrentBudgetYear Add onchange event
+        $('#CurrentBudgetYear').on('change', function() {
+            var TransactionYear = $(this).val();
+            var formData = new FormData();
+            formData.append('TransactionYear', TransactionYear);
+
+            $.ajax({
+                url: '/getTransactionNewsReportApproveNewsByMonth',
+                method: 'POST',
+                data: formData,
+                contentType: false,
+                processData: false,
+                success: function(response) {
+                    var tableBody = $('#example tbody');
+                    tableBody.empty(); // Clear
+
+                    // Loop through the response data
+                    $.each(response, function(index, rp) {
+                        var newRow = '<tr>' +
+                            '<td class="text-center">' + (index + 1) + '.</td>' +
+                            '<td class="text-center">' + rp.TransactionYear + '</td>' +
+                            '<td class="text-center">' + rp.Month + '</td>' +
+                            '<td class="text-center">' + rp.AmountWait + '</td>' +
+                            '<td class="text-center">';
+
+                        // Add the condition for AmountNews
+                        if (rp.AmountNews > 0) {
+                            newRow += (rp.AmountWait * 100 / rp.AmountNews).toFixed(2) + '%';
+                        } else {
+                            newRow += '0%';
+                        }
+
+                        // Continue building the newRow
+                        newRow += '</td>' +
+                            '<td class="text-center">' + rp.AmountApprove + '</td>' +
+                            '<td class="text-center">';
+
+                        // Add the condition for AmountNews in the second percentage
+                        if (rp.AmountNews > 0) {
+                            newRow += (rp.AmountApprove * 100 / rp.AmountNews).toFixed(2) + '%';
+                        } else {
+                            newRow += '0%';
+                        }
+
+                        // Continue building the newRow
+                        newRow += '</td>' +
+                            '<td class="text-center">' + rp.AmountNews + '</td>' +
+                            '</tr>';
+
+                        // Append the newRow to the table
+                        tableBody.append(newRow);
+                    });
+                },
+                error: function(xhr, status, error) {
+                    Swal.fire({
+                        title: "Error",
+                        text: "An error occurred while saving the form data.",
+                        icon: "error",
+                        showCancelButton: false,
+                        confirmButtonText: "OK",
+                    });
+                }
+            });
+
+
+        });
     });
 </script>
 @endsection

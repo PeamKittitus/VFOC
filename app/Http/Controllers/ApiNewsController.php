@@ -556,7 +556,6 @@ class ApiNewsController extends Controller
 
             $Model->AmountWait = DB::table('transactionNews')
                 ->where('TransactionYear', $Y)
-                ->where('TransactionType', 0)
                 ->where('IsApprove', 0)
                 ->where('IsActive', 1)
                 ->whereMonth('Created_at', $i)
@@ -564,7 +563,6 @@ class ApiNewsController extends Controller
 
             $Model->AmountApprove = DB::table('transactionNews')
                 ->where('TransactionYear', $Y)
-                ->where('TransactionType', 1)
                 ->where('IsApprove', 1)
                 ->where('IsActive', 1)
                 ->whereMonth('Created_at', $i)
@@ -893,5 +891,47 @@ class ApiNewsController extends Controller
         }
         return $Models;
     }
-    
+    function getTransactionNewsReportApproveNewsByMonth(Request $request)
+    {
+        $TransactionYear = $request['TransactionYear']; 
+        $months = [
+            "มกราคม", "กุมภาพันธ์", "มีนาคม",
+            "เมษายน", "พฤษภาคม", "มิถุนายน",
+            "กรกฎาคม", "สิงหาคม", "กันยายน",
+            "ตุลาคม", "พฤศจิกายน", "ธันวาคม"
+        ];
+        $Models = [];
+
+        for ($i = 1; $i <= 12; $i++) {
+            $Y = $TransactionYear;
+            $Model = new stdClass();
+
+            $Model->TransactionYear = $TransactionYear;
+
+            $Model->Month = $months[$i - 1];
+
+            $Model->AmountWait = DB::table('transactionNews')
+                ->where('TransactionYear', $Y)
+                ->where('IsApprove', 0)
+                ->where('IsActive', 1)
+                ->whereMonth('Created_at', $i)
+                ->count();
+
+            $Model->AmountApprove = DB::table('transactionNews')
+                ->where('TransactionYear', $Y)
+                ->where('IsApprove', 1)
+                ->where('IsActive', 1)
+                ->whereMonth('Created_at', $i)
+                ->count();
+
+            $Model->AmountNews = DB::table('transactionNews')
+                ->where('TransactionYear', $Y)
+                ->where('IsActive', 1)
+                ->whereMonth('Created_at', $i)
+                ->count();
+
+            $Models[] = $Model;
+        }
+        return $Models;
+    }
 }
