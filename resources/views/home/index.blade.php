@@ -6,24 +6,20 @@
     <title>{{ cbLang('page_title_login') }} : {{ Session::get('appname') }}</title>
     <meta name='generator' content='CRUDBooster' />
     <meta name='robots' content='noindex,nofollow' />
-    <link rel="shortcut icon"
-        href="{{ CRUDBooster::getSetting('favicon') ? asset(CRUDBooster::getSetting('favicon')) : asset('vendor/crudbooster/assets/logo_crudbooster.png') }}">
+    <link rel="shortcut icon" href="{{ CRUDBooster::getSetting('favicon') ? asset(CRUDBooster::getSetting('favicon')) : asset('vendor/crudbooster/assets/logo_crudbooster.png') }}">
 
     <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
     <!-- Bootstrap 3.3.2 -->
-    <link href="{{ asset('vendor/crudbooster/assets/adminlte/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet"
-        type="text/css" />
+    <link href="{{ asset('vendor/crudbooster/assets/adminlte/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet" type="text/css" />
     <!-- Font Awesome Icons -->
-    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet"
-        type="text/css" />
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
     <!-- Theme style -->
-    <link href="{{ asset('vendor/crudbooster/assets/adminlte/dist/css/AdminLTE.min.css') }}" rel="stylesheet"
-        type="text/css" />
+    <link href="{{ asset('vendor/crudbooster/assets/adminlte/dist/css/AdminLTE.min.css') }}" rel="stylesheet" type="text/css" />
 
     <!-- support rtl-->
     @if (in_array(App::getLocale(), ['ar', 'fa']))
-        <link rel="stylesheet" href="//cdn.rawgit.com/morteza/bootstrap-rtl/v3.3.4/dist/css/bootstrap-rtl.min.css">
-        <link href="{{ asset('vendor/crudbooster/assets/rtl.css') }}" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="//cdn.rawgit.com/morteza/bootstrap-rtl/v3.3.4/dist/css/bootstrap-rtl.min.css">
+    <link href="{{ asset('vendor/crudbooster/assets/rtl.css') }}" rel="stylesheet" type="text/css" />
     @endif
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
@@ -331,8 +327,6 @@
             overflow: hidden;
             border-top: 1px solid #f3f3f3;
         }
-
-        
     </style>
 </head>
 
@@ -340,298 +334,173 @@
 <div class="page-wrapper ">
     <div class="page-inner">
         <div class="page-content-wrapper">
-            <header class="page-header" role="banner"
-                style="background-color: #B0E4EF ; height: 70px; padding-left: 15px ;padding-right: 15px"">
-                <div class="hidden-md-down dropdown-icon-menu">
-                    <img src="/img/villagefund_1.png" alt="กองทุนหมู่บ้าน (สทบ.)" width="50%" height="auto"
-                        aria-roledescription="logo">
-                </div>
-                <div class="ml-auto d-flex justify-content-between">
-                    <div class="user-profile-container dropdown">
-                        <a href="#" data-toggle="dropdown" title="Email"
-                            class="header-icon d-flex align-items-center justify-content-center ml-2"
-                            aria-expanded="false">
-                            <img src="/img/avatars/user-avatar-vfoc.png" class="profile-image rounded-circle">
-                        </a>
-                        <div class="dropdown-menu dropdown-menu-animated dropdown-lg dropdown-menu-right"
-                            style="width: 300px;">
-                            <!-- Dropdown content -->
-                            <div class="dropdown-header bg-trans-gradient d-flex flex-row py-4 rounded-top">
-                                <div class="d-flex flex-row align-items-center mt-1 mb-1 color-white">
-                                    <span class="mr-2" style="margin-right: 10px">
-                                        <img src="/img/avatars/user-avatar-vfoc.png"
-                                            class="rounded-circle profile-image">
-                                    </span>
-                                    <div class="info-card-text">
-                                        <div class="fs-lg text-truncate text-truncate-lg">Firstname Last</div>
-                                        <span class="text-truncate text-truncate-md opacity-80">Email</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <a href="/Home/ProfileData" class="dropdown-item" style="margin: 10px">
-                                <span data-i18n="drpdwn.settings">แก้ไขข้อมูลส่วนตัว</span>
-                            </a>
-                            <div class="dropdown-divider m-0"></div>
-                            <a href="#" class="dropdown-item" data-action="app-fullscreen" style="margin: 10px">
-                                <span data-i18n="drpdwn.fullscreen">แสดงเติมจอ</span>
-                                <i class="float-right text-muted fw-n" style="float: right !important; padding-right: 15px">F11</i>
-                            </a>
-                            <div class="dropdown-divider m-0"></div>
-                            <a class="dropdown-item fw-500 pt-3 pb-3" href="/Identity/Account/Logout?returnUrl=%2F" style="margin: 10px">
-                                <span data-i18n="drpdwn.page-logout">ออกจากระบบ</span>
-                                <span class="float-right fw-n"></span>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </header>
-
-            <main id="js-page-content" role="main" class="page-content ">
-                <div class="row mt-6 mb-6">
-                    <h1 class="subheader-title text-center col-lg-12 kanit-font">
-                        <span class="font-weight-bold" style="font-size: 2.2rem">ระบบจัดการ
-                            โครงการบริหารกองทุนหมู่บ้านและชุมชนเมืองด้วยระบบเทคโนโลยีสารสนเทศ (VFOC Platform)</span>
-                    </h1>
-                    <h4 class="text-center col-lg-12 mt-3 kanit-font">
-                        <span class="font-weight-bold"
-                            style="font-size: 1.8rem">ระบบบริหารจัดการข้อมูลและการจัดเก็บของกองทุนหมู่บ้านและชุมชนเมืองในรูปแบบแพลตฟอร์มเดียวกัน
-                            ซึ่งโครงการได้ออกแบบให้เป็น "VFOC Platform" โดยจะเชื่อมโยงไปยังทุกระบบ</span>
-                    </h4>
-                </div>
-
-                {{-- <div class="row col-lg-12">
-                    @{
-                    foreach (var item in Model.OrderBy(o => o.Id))
-                    {
-                    if (item.IsLink == true)
-                    {
-                    <div class="col-lg-@colposter col-xl-@colposter mb-1">
-                        <div class="card p-1 rounded-plus" style="background-color: @colorbg">
-                            <a href="javascript:void(0)" class="activeToken" data-menuid="@item.Id">
-                                <div class="row ">
-                                    <div class="col-lg-12">
-                                        <div class="d-flex flex-column align-items-center justify-content-center p-4"
-                                            style="background-color: @colorbg;">
-
-                                            <img src="@item.ImageMenu" class="img-responsive" style="width:100%">
-
-                                        </div>
-                                    </div>
-                                    <div class="col-12">
-                                        <div class="text-center py-3" style="background-color:@colorbg">
-                                            <h1 class="mb-0 fw-700" style="font-size:@fontsizing;color:#039dab">
-                                                @item.MenuName</h1>
-                                        </div>
-                                    </div>
-                                </div>
-                            </a>
-                        </div>
-                    </div>
-                    }
-                    else
-                    {
-                    <div class="col-lg-@colposter col-xl-@colposter mb-1">
-                        <div class="card p-1 rounded-plus" style="background-color: @colorbg">
-                            <a href="@item.PathLink">
-                                <div class="row ">
-                                    <div class="col-lg-12">
-                                        <div class="d-flex flex-column align-items-center justify-content-center p-4"
-                                            style="background-color: @colorbg;">
-
-                                            <img src="@item.ImageMenu" class="img-responsive" style="width:100%">
-
-                                        </div>
-                                    </div>
-                                    <div class="col-12">
-                                        <div class="text-center py-3" style="background-color:@colorbg">
-                                            <h1 class="mb-0 fw-700" style="font-size:@fontsizing;color:#039dab">
-                                                @item.MenuName </h1>
-                                        </div>
-                                    </div>
-                                </div>
-                            </a>
-                        </div>
-                    </div>
-                    }
-
-                    }
-                    }         
-                </div> --}}
-
-                <div class="row col-lg-12">
-                    <div class="col-lg-3 col-xl-3 mb-1">
-                        <div class="card p-1 rounded-plus" style="background-color: #B0E4EF">
-                            <a href="/Home/Index">
-                                <div class="row ">
-                                    <div class="col-lg-12">
-                                        <div class="d-flex flex-column align-items-center justify-content-center p-4"
-                                            style="background-color: #B0E4EF;">
-
-                                            <img src="/img/backgrounds/Dashboard.png" class="img-responsive"
-                                                style="width:100%">
-
-                                        </div>
-                                    </div>
-                                    <div class="col-12">
-                                        <div class="text-center py-3" style="background-color:#B0E4EF">
-                                            <h1 class="mb-0 fw-700" style="font-size:3rem;color:#039dab">
-                                                รายงานสรุปภาพรวม </h1>
-                                        </div>
-                                    </div>
-                                </div>
-                            </a>
-                        </div>
-                    </div>
-                    <div class="col-lg-3 col-xl-3 mb-1">
-                        <div class="card p-1 rounded-plus" style="background-color: #B0E4EF">
-                            <a href="javascript:void(0)" class="activeToken" data-menuid="2">
-                                <div class="row ">
-                                    <div class="col-lg-12">
-                                        <div class="d-flex flex-column align-items-center justify-content-center p-4"
-                                            style="background-color: #B0E4EF;">
-
-                                            <img src="/img/backgrounds/eOffice.png" class="img-responsive"
-                                                style="width:100%">
-
-                                        </div>
-                                    </div>
-                                    <div class="col-12">
-                                        <div class="text-center py-3" style="background-color:#B0E4EF">
-                                            <h1 class="mb-0 fw-700" style="font-size:3rem;color:#039dab">
-                                                ระบบงานสารบรรณ</h1>
-                                        </div>
-                                    </div>
-                                </div>
-                            </a>
-                        </div>
-                    </div>
-                    <div class="col-lg-3 col-xl-3 mb-1">
-                        <div class="card p-1 rounded-plus" style="background-color: #B0E4EF">
-                            <a href="/ElectronicProjects/Index">
-                                <div class="row ">
-                                    <div class="col-lg-12">
-                                        <div class="d-flex flex-column align-items-center justify-content-center p-4"
-                                            style="background-color: #B0E4EF;">
-
-                                            <img src="/img/backgrounds/eProject.png" class="img-responsive"
-                                                style="width:100%">
-
-                                        </div>
-                                    </div>
-                                    <div class="col-12">
-                                        <div class="text-center py-3" style="background-color:#B0E4EF">
-                                            <h1 class="mb-0 fw-700" style="font-size:3rem;color:#039dab">
-                                                ระบบยื่นขอโครงการ </h1>
-                                        </div>
-                                    </div>
-                                </div>
-                            </a>
-                        </div>
-                    </div>
-                    <div class="col-lg-3 col-xl-3 mb-1">
-                        <div class="card p-1 rounded-plus" style="background-color: #B0E4EF">
-                            <a href="/EAccount/Index">
-                                <div class="row ">
-                                    <div class="col-lg-12">
-                                        <div class="d-flex flex-column align-items-center justify-content-center p-4"
-                                            style="background-color: #B0E4EF;">
-
-                                            <img src="/img/backgrounds/eAccount.png" class="img-responsive"
-                                                style="width:100%">
-
-                                        </div>
-                                    </div>
-                                    <div class="col-12">
-                                        <div class="text-center py-3" style="background-color:#B0E4EF">
-                                            <h1 class="mb-0 fw-700" style="font-size:3rem;color:#039dab">
-                                                ระบบบริหารงบประมาณ </h1>
-                                        </div>
-                                    </div>
-                                </div>
-                            </a>
-                        </div>
-                    </div>
-                    <div class="col-lg-3 col-xl-3 mb-1">
-                        <div class="card p-1 rounded-plus" style="background-color: #B0E4EF">
-                            <a href="/Villages/VillageIndex">
-                                <div class="row ">
-                                    <div class="col-lg-12">
-                                        <div class="d-flex flex-column align-items-center justify-content-center p-4"
-                                            style="background-color: #B0E4EF;">
-
-                                            <img src="/img/backgrounds/eRegister.png" class="img-responsive"
-                                                style="width:100%">
-
-                                        </div>
-                                    </div>
-                                    <div class="col-12">
-                                        <div class="text-center py-3" style="background-color:#B0E4EF">
-                                            <h1 class="mb-0 fw-700" style="font-size:3rem;color:#039dab">
-                                                ระบบบริหารสมาชิก </h1>
-                                        </div>
-                                    </div>
-                                </div>
-                            </a>
-                        </div>
-                    </div>
-                    <div class="col-lg-3 col-xl-3 mb-1">
-                        <div class="card p-1 rounded-plus" style="background-color: #B0E4EF">
-                            <a href="/NewsLatter/IndexAll">
-                                <div class="row ">
-                                    <div class="col-lg-12">
-                                        <div class="d-flex flex-column align-items-center justify-content-center p-4"
-                                            style="background-color: #B0E4EF;">
-
-                                            <img src="/img/backgrounds/eCommunication.png" class="img-responsive"
-                                                style="width:100%">
-
-                                        </div>
-                                    </div>
-                                    <div class="col-12">
-                                        <div class="text-center py-3" style="background-color:#B0E4EF">
-                                            <h1 class="mb-0 fw-700" style="font-size:3rem;color:#039dab">
-                                                ระบบสื่อสารสมาชิก </h1>
-                                        </div>
-                                    </div>
-                                </div>
-                            </a>
-                        </div>
-                    </div>
-                    <div class="col-lg-3 col-xl-3 mb-1">
-                        <div class="card p-1 rounded-plus" style="background-color: #B0E4EF">
-                            <a href="javascript:void(0)" class="activeToken" data-menuid="53">
-                                <div class="row ">
-                                    <div class="col-lg-12">
-                                        <div class="d-flex flex-column align-items-center justify-content-center p-4"
-                                            style="background-color: #B0E4EF;">
-
-                                            <img src="/img/backgrounds/eHR.png" class="img-responsive"
-                                                style="width:100%">
-
-                                        </div>
-                                    </div>
-                                    <div class="col-12">
-                                        <div class="text-center py-3" style="background-color:#B0E4EF">
-                                            <h1 class="mb-0 fw-700" style="font-size:3rem;color:#039dab">
-                                                ระบบทรัพยากรบุคคล</h1>
-                                        </div>
-                                    </div>
-                                </div>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-
-            </main>
-
+            <header class="page-header" role="banner" style="background-color: #B0E4EF ; height: 70px; padding-left: 15px ;padding-right: 15px"">
+                <div class=" hidden-md-down dropdown-icon-menu">
+                <img src="/img/villagefund_1.png" alt="กองทุนหมู่บ้าน (สทบ.)" width="50%" height="auto" aria-roledescription="logo">
         </div>
+        <div class="ml-auto d-flex justify-content-between">
+            <div class="user-profile-container dropdown">
+                <a href="#" data-toggle="dropdown" title="Email" class="header-icon d-flex align-items-center justify-content-center ml-2" aria-expanded="false">
+                    <img src="/img/avatars/user-avatar-vfoc.png" class="profile-image rounded-circle">
+                </a>
+                <div class="dropdown-menu dropdown-menu-animated dropdown-lg dropdown-menu-right" style="width: 300px;">
+                    <!-- Dropdown content -->
+                    <div class="dropdown-header bg-trans-gradient d-flex flex-row py-4 rounded-top">
+                        <div class="d-flex flex-row align-items-center mt-1 mb-1 color-white">
+                            <span class="mr-2" style="margin-right: 10px">
+                                <img src="/img/avatars/user-avatar-vfoc.png" class="rounded-circle profile-image">
+                            </span>
+                            <div class="info-card-text">
+                                <div class="fs-lg text-truncate text-truncate-lg">Firstname Last</div>
+                                <span class="text-truncate text-truncate-md opacity-80">Email</span>
+                            </div>
+                        </div>
+                    </div>
+                    <a href="/Home/ProfileData" class="dropdown-item" style="margin: 10px">
+                        <span data-i18n="drpdwn.settings">แก้ไขข้อมูลส่วนตัว</span>
+                    </a>
+                    <div class="dropdown-divider m-0"></div>
+                    <a href="#" class="dropdown-item" data-action="app-fullscreen" style="margin: 10px">
+                        <span data-i18n="drpdwn.fullscreen">แสดงเติมจอ</span>
+                        <i class="float-right text-muted fw-n" style="float: right !important; padding-right: 15px">F11</i>
+                    </a>
+                    <div class="dropdown-divider m-0"></div>
+                    <a class="dropdown-item fw-500 pt-3 pb-3" href="/Identity/Account/Logout?returnUrl=%2F" style="margin: 10px">
+                        <span data-i18n="drpdwn.page-logout">ออกจากระบบ</span>
+                        <span class="float-right fw-n"></span>
+                    </a>
+                </div>
+            </div>
+        </div>
+        </header>
+
+        <main id="js-page-content" role="main" class="page-content ">
+            <div class="row mt-6 mb-6">
+                <h1 class="subheader-title text-center col-lg-12 kanit-font">
+                    <span class="font-weight-bold" style="font-size: 2.2rem">ระบบจัดการ
+                        โครงการบริหารกองทุนหมู่บ้านและชุมชนเมืองด้วยระบบเทคโนโลยีสารสนเทศ (VFOC Platform)</span>
+                </h1>
+                <h4 class="text-center col-lg-12 mt-3 kanit-font">
+                    <span class="font-weight-bold" style="font-size: 1.8rem">ระบบบริหารจัดการข้อมูลและการจัดเก็บของกองทุนหมู่บ้านและชุมชนเมืองในรูปแบบแพลตฟอร์มเดียวกัน
+                        ซึ่งโครงการได้ออกแบบให้เป็น "VFOC Platform" โดยจะเชื่อมโยงไปยังทุกระบบ</span>
+                </h4>
+            </div>
+            <div class="row col-lg-12" id="menuContainer"></div>
+        </main>
+
     </div>
 </div>
-
-<!-- jQuery 2.2.3 -->
+</div>
 <script src="{{ asset('vendor/crudbooster/assets/adminlte/plugins/jQuery/jquery-2.2.3.min.js') }}"></script>
-<!-- Bootstrap 3.4.1 JS -->
 <script src="{{ asset('vendor/crudbooster/assets/adminlte/bootstrap/js/bootstrap.min.js') }}" type="text/javascript">
+</script>
+<script>
+    // Function to fetch data from the API endpoint
+    function fetchMenus() {
+        // Make an Ajax request to your API endpoint
+        $.ajax({
+            url: 'getMenus',
+            method: 'GET',
+            dataType: 'json',
+            success: function(data) {
+                if (data.api_status == 1) {
+                    buildMenuHtml(data.data);
+                }
+            },
+            error: function(error) {
+                console.error('Error fetching data:', error);
+            }
+        });
+    }
+
+    // Function to build HTML based on the fetched data
+    function buildMenuHtml(menuData) {
+        var menuContainer = $('#menuContainer');
+
+        // Iterate through the data and build HTML
+        $.each(menuData, function(index, item) {
+            var menuItemHtml = '';
+
+            // Use the data from each menu item
+            var linkAttribute = (item.IsLink === 1) ? `href="${item.PathLink}" data-id="${item.id}"` : 'href="/Home/Index"';
+            var imgSrc = item.ImageMenu;
+            var menuName = item.name;
+            if (item.IsLink === 1) {
+                menuItemHtml = `
+                    <div class="col-lg-3 col-xl-3 mb-1">
+                        <div class="card p-1 rounded-plus" style="background-color: #B0E4EF">
+                            <a data-id="${item.id}" class='activeToken'>
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        <div class="d-flex flex-column align-items-center justify-content-center p-4" style="background-color: #B0E4EF;">
+                                            <img src="${imgSrc}" class="img-responsive" style="width:100%">
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <div class="text-center py-3" style="background-color:#B0E4EF">
+                                            <h1 class="mb-0 fw-700" style="font-size:3rem;color:#039dab">
+                                                ${menuName}
+                                            </h1>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                `;
+            } else {
+                menuItemHtml = `
+                    <div class="col-lg-3 col-xl-3 mb-1">
+                        <div class="card p-1 rounded-plus" style="background-color: #B0E4EF">
+                            <a ${linkAttribute}>
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        <div class="d-flex flex-column align-items-center justify-content-center p-4" style="background-color: #B0E4EF;">
+                                            <img src="${imgSrc}" class="img-responsive" style="width:100%">
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <div class="text-center py-3" style="background-color:#B0E4EF">
+                                            <h1 class="mb-0 fw-700" style="font-size:3rem;color:#039dab">
+                                                ${menuName}
+                                            </h1>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                `;
+            }
+            // Append the built HTML to the container
+            menuContainer.append(menuItemHtml);
+        });
+        // Add click event listener
+        $('.activeToken').on('click', function() {
+            var MenuId = $(this).data('id');
+            var formData = new FormData();
+            formData.append('MenuId', MenuId);
+            $.ajax({
+                url: 'RedirectToOutSite',
+                method: 'POST',
+                data: formData,
+                contentType: false,
+                processData: false,
+                success: function(data) {
+                    if(data.valid == 1){
+                        window.open(data.data, '_blank');
+                    }
+                },
+                error: function(error) {
+                    console.error('Error fetching data:', error);
+                }
+            });
+        });
+
+    }
+
+    // Call
+    fetchMenus();
 </script>
 </body>
 

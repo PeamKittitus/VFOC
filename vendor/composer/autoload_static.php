@@ -155,6 +155,7 @@ class ComposerStaticInit86e9196331f7de55917f6e8f5f018ed9
         array (
             'Fruitcake\\Cors\\' => 15,
             'FontLib\\' => 8,
+            'Firebase\\JWT\\' => 13,
             'Fideloper\\Proxy\\' => 16,
             'Faker\\' => 6,
             'Facade\\Ignition\\' => 16,
@@ -449,8 +450,8 @@ class ComposerStaticInit86e9196331f7de55917f6e8f5f018ed9
         ),
         'Intervention\\Image\\' => 
         array (
-            0 => __DIR__ . '/..' . '/intervention/imagecache/src/Intervention/Image',
-            1 => __DIR__ . '/..' . '/intervention/image/src/Intervention/Image',
+            0 => __DIR__ . '/..' . '/intervention/image/src/Intervention/Image',
+            1 => __DIR__ . '/..' . '/intervention/imagecache/src/Intervention/Image',
         ),
         'Illuminate\\Support\\' => 
         array (
@@ -484,6 +485,10 @@ class ComposerStaticInit86e9196331f7de55917f6e8f5f018ed9
         'FontLib\\' => 
         array (
             0 => __DIR__ . '/..' . '/phenx/php-font-lib/src/FontLib',
+        ),
+        'Firebase\\JWT\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/firebase/php-jwt/src',
         ),
         'Fideloper\\Proxy\\' => 
         array (
@@ -612,7 +617,31 @@ class ComposerStaticInit86e9196331f7de55917f6e8f5f018ed9
     public static $classMap = array (
         'App\\Console\\Kernel' => __DIR__ . '/../..' . '/app/Console/Kernel.php',
         'App\\Exceptions\\Handler' => __DIR__ . '/../..' . '/app/Exceptions/Handler.php',
+        'App\\Http\\Controllers\\AdminAccountBookBankController' => __DIR__ . '/../..' . '/app/Http/Controllers/AdminAccountBookBankController.php',
+        'App\\Http\\Controllers\\AdminAccountBudgetController' => __DIR__ . '/../..' . '/app/Http/Controllers/AdminAccountBudgetController.php',
+        'App\\Http\\Controllers\\AdminCmsUsersController' => __DIR__ . '/../..' . '/app/Http/Controllers/AdminCmsUsersController.php',
+        'App\\Http\\Controllers\\AdminReportApproveNewsController' => __DIR__ . '/../..' . '/app/Http/Controllers/AdminReportApproveNewsController.php',
+        'App\\Http\\Controllers\\AdminTransactionNewsApproveController' => __DIR__ . '/../..' . '/app/Http/Controllers/AdminTransactionNewsApproveController.php',
+        'App\\Http\\Controllers\\AdminTransactionNewsController' => __DIR__ . '/../..' . '/app/Http/Controllers/AdminTransactionNewsController.php',
+        'App\\Http\\Controllers\\AdminTransactionNewsListController' => __DIR__ . '/../..' . '/app/Http/Controllers/AdminTransactionNewsListController.php',
+        'App\\Http\\Controllers\\AdminTransactionNewsReportApproveNewsByMonthController' => __DIR__ . '/../..' . '/app/Http/Controllers/AdminTransactionNewsReportApproveNewsByMonthController.php',
+        'App\\Http\\Controllers\\AdminTransactionNewsReportController' => __DIR__ . '/../..' . '/app/Http/Controllers/AdminTransactionNewsReportController.php',
+        'App\\Http\\Controllers\\AdminTransactionNewsReportCreatorMostNewsByController' => __DIR__ . '/../..' . '/app/Http/Controllers/AdminTransactionNewsReportCreatorMostNewsByController.php',
+        'App\\Http\\Controllers\\AdminTransactionNewsReportCreatorMostNewsByMonthController' => __DIR__ . '/../..' . '/app/Http/Controllers/AdminTransactionNewsReportCreatorMostNewsByMonthController.php',
+        'App\\Http\\Controllers\\AdminTransactionNewsReportCreatorMostNewsController' => __DIR__ . '/../..' . '/app/Http/Controllers/AdminTransactionNewsReportCreatorMostNewsController.php',
+        'App\\Http\\Controllers\\AdminTransactionNewsReportCreatorNewsController' => __DIR__ . '/../..' . '/app/Http/Controllers/AdminTransactionNewsReportCreatorNewsController.php',
+        'App\\Http\\Controllers\\AdminTransactionNewsReportLateNewsController' => __DIR__ . '/../..' . '/app/Http/Controllers/AdminTransactionNewsReportLateNewsController.php',
+        'App\\Http\\Controllers\\AdminTransactionNewsReportOnNewsController' => __DIR__ . '/../..' . '/app/Http/Controllers/AdminTransactionNewsReportOnNewsController.php',
+        'App\\Http\\Controllers\\AdminTransactionNewsReportTypeNewsByMonthController' => __DIR__ . '/../..' . '/app/Http/Controllers/AdminTransactionNewsReportTypeNewsByMonthController.php',
+        'App\\Http\\Controllers\\AdminTransactionNewsReportTypeNewsController' => __DIR__ . '/../..' . '/app/Http/Controllers/AdminTransactionNewsReportTypeNewsController.php',
+        'App\\Http\\Controllers\\AdminUserController' => __DIR__ . '/../..' . '/app/Http/Controllers/AdminUserController.php',
+        'App\\Http\\Controllers\\ApiAccountBudgetController' => __DIR__ . '/../..' . '/app/Http/Controllers/ApiAccountBudgetController.php',
+        'App\\Http\\Controllers\\ApiNewsController' => __DIR__ . '/../..' . '/app/Http/Controllers/ApiNewsController.php',
+        'App\\Http\\Controllers\\ApiRegisterController' => __DIR__ . '/../..' . '/app/Http/Controllers/ApiRegisterController.php',
+        'App\\Http\\Controllers\\ApiUserController' => __DIR__ . '/../..' . '/app/Http/Controllers/ApiUserController.php',
+        'App\\Http\\Controllers\\CBHook' => __DIR__ . '/../..' . '/app/Http/Controllers/CBHook.php',
         'App\\Http\\Controllers\\Controller' => __DIR__ . '/../..' . '/app/Http/Controllers/Controller.php',
+        'App\\Http\\Controllers\\FunctionController' => __DIR__ . '/../..' . '/app/Http/Controllers/FunctionController.php',
         'App\\Http\\Kernel' => __DIR__ . '/../..' . '/app/Http/Kernel.php',
         'App\\Http\\Middleware\\Authenticate' => __DIR__ . '/../..' . '/app/Http/Middleware/Authenticate.php',
         'App\\Http\\Middleware\\EncryptCookies' => __DIR__ . '/../..' . '/app/Http/Middleware/EncryptCookies.php',
@@ -1943,6 +1972,14 @@ class ComposerStaticInit86e9196331f7de55917f6e8f5f018ed9
         'Faker\\ValidGenerator' => __DIR__ . '/..' . '/fzaninotto/faker/src/Faker/ValidGenerator.php',
         'Fideloper\\Proxy\\TrustProxies' => __DIR__ . '/..' . '/fideloper/proxy/src/TrustProxies.php',
         'Fideloper\\Proxy\\TrustedProxyServiceProvider' => __DIR__ . '/..' . '/fideloper/proxy/src/TrustedProxyServiceProvider.php',
+        'Firebase\\JWT\\BeforeValidException' => __DIR__ . '/..' . '/firebase/php-jwt/src/BeforeValidException.php',
+        'Firebase\\JWT\\CachedKeySet' => __DIR__ . '/..' . '/firebase/php-jwt/src/CachedKeySet.php',
+        'Firebase\\JWT\\ExpiredException' => __DIR__ . '/..' . '/firebase/php-jwt/src/ExpiredException.php',
+        'Firebase\\JWT\\JWK' => __DIR__ . '/..' . '/firebase/php-jwt/src/JWK.php',
+        'Firebase\\JWT\\JWT' => __DIR__ . '/..' . '/firebase/php-jwt/src/JWT.php',
+        'Firebase\\JWT\\JWTExceptionWithPayloadInterface' => __DIR__ . '/..' . '/firebase/php-jwt/src/JWTExceptionWithPayloadInterface.php',
+        'Firebase\\JWT\\Key' => __DIR__ . '/..' . '/firebase/php-jwt/src/Key.php',
+        'Firebase\\JWT\\SignatureInvalidException' => __DIR__ . '/..' . '/firebase/php-jwt/src/SignatureInvalidException.php',
         'FontLib\\AdobeFontMetrics' => __DIR__ . '/..' . '/phenx/php-font-lib/src/FontLib/AdobeFontMetrics.php',
         'FontLib\\Autoloader' => __DIR__ . '/..' . '/phenx/php-font-lib/src/FontLib/Autoloader.php',
         'FontLib\\BinaryStream' => __DIR__ . '/..' . '/phenx/php-font-lib/src/FontLib/BinaryStream.php',

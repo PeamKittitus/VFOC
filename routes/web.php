@@ -75,6 +75,8 @@ Route::get('/getTypeNews', '\App\Http\Controllers\ApiNewsController@getTypeNews'
 Route::post('/editNews', '\App\Http\Controllers\ApiNewsController@editNews');
 Route::post('/delNews', '\App\Http\Controllers\ApiNewsController@delNews');
 Route::post('/approveNews', '\App\Http\Controllers\ApiNewsController@approveNews');
+Route::get('/getMenus', '\App\Http\Controllers\FunctionController@getMenus');
+Route::post('/RedirectToOutSite', '\App\Http\Controllers\FunctionController@RedirectToOutSite');
 //========================================================================================== API
 
 //========================================================================================== Report
