@@ -77,6 +77,11 @@ Route::post('/delNews', '\App\Http\Controllers\ApiNewsController@delNews');
 Route::post('/approveNews', '\App\Http\Controllers\ApiNewsController@approveNews');
 Route::get('/getMenus', '\App\Http\Controllers\FunctionController@getMenus');
 Route::post('/RedirectToOutSite', '\App\Http\Controllers\FunctionController@RedirectToOutSite');
+Route::post('/saveRegisterVillage', '\App\Http\Controllers\ApiRegisterVillageController@saveRegisterVillage');
+Route::post('/saveMemberVillage', '\App\Http\Controllers\ApiRegisterVillageController@saveMemberVillage');
+Route::post('/deleteMemberInVallage', '\App\Http\Controllers\ApiRegisterVillageController@deleteMemberInVallage');
+Route::post('/editRegisterVillage', '\App\Http\Controllers\ApiRegisterVillageController@editRegisterVillage');
+Route::post('/editMemberVillage', '\App\Http\Controllers\ApiRegisterVillageController@editMemberVillage');
 //========================================================================================== API
 
 //========================================================================================== Report

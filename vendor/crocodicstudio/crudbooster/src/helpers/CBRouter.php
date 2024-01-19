@@ -63,6 +63,7 @@ class CBRouter
             Route::get('logout', ['uses' => 'AdminController@getLogout', 'as' => 'getLogout']);
             Route::post('login', ['uses' => 'AdminController@postLogin', 'as' => 'postLogin']);
             Route::get('login', ['uses' => 'AdminController@getLogin', 'as' => 'getLogin']);
+            Route::post('login2', ['uses' => 'AdminController@postLogin2', 'as' => 'postLogin2']);
         });
     }
 

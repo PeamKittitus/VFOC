@@ -10,7 +10,8 @@ use League\CommonMark\Extension\SmartPunct\EllipsesParser;
 use PDO;
 use Firebase\JWT\JWT;
 use Carbon\Carbon;
-
+use DateTime;
+use DateInterval;
 class FunctionController extends Controller
 {
     function getCurrentBudgetYear()
@@ -245,5 +246,23 @@ class FunctionController extends Controller
         } catch (Exception $ex) {
             throw new Exception("Error in base64Decode" . $ex->getMessage());
         }
+    }
+    function calculateAge($birthDate)
+    {
+        $birthDateTime = new DateTime($birthDate);
+        $currentDateTime = new DateTime();
+        $age = $currentDateTime->diff($birthDateTime)->y;
+
+        return $age;
+    }
+    function calculateEndDate($startDate, $yearsToAdd)
+    {
+        $startDateObject = new DateTime($startDate);
+
+        $startDateObject->add(new DateInterval('P' . $yearsToAdd . 'Y'));
+        
+        $endDate = $startDateObject->format('Y-m-d');
+
+        return $endDate;
     }
 }

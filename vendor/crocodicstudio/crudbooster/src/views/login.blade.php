@@ -93,7 +93,7 @@
     <div class="height-10 w-100 shadow-lg px-4 bg-brand-gradient"
         style="background-color: #FFFFFF; position: relative;">
         <div class="container p-0">
-            <div style="display: flex; align-items: center;">
+            <div style="display: flex; align-items: center;gap:2%;">
                 <div style="flex: 1;">
                     <a href="javascript:void(0)">
                         <img src="/img/messageImage_1660636852495.jpg" style="width: 271px; padding: 1.5rem;">
@@ -101,6 +101,8 @@
                 </div>
                 <a href="/register" class="btn-link text-break btn btn-info hidden-sm-down"
                     style="background-color: #8dcde1; color: #000; margin-left: auto;">ลงทะเบียน</a>
+                <a href="/register?IsVillageMember=True" class="btn-link text-break btn btn-info hidden-sm-down"
+                style="background-color: #8dcde1; color: #000; margin-left: auto;">ลงทะเบียนสมาชิกกองทุน</a>
             </div>
         </div>
     </div>

@@ -72,12 +72,9 @@ class AdminController extends CBController
         $email = Request::input("email");
         $password = Request::input("password");
         $users = DB::table(config('crudbooster.USER_TABLE'))->where("email", $email)->first();
-
         if (\Hash::check($password, $users->password)) {
             $priv = DB::table("cms_privileges")->where("id", $users->id_cms_privileges)->first();
-
             $roles = DB::table('cms_privileges_roles')->where('id_cms_privileges', $users->id_cms_privileges)->join('cms_moduls', 'cms_moduls.id', '=', 'id_cms_moduls')->select('cms_moduls.name', 'cms_moduls.path', 'is_visible', 'is_create', 'is_read', 'is_edit', 'is_delete')->get();
-
             $photo = ($users->photo) ? asset($users->photo) : asset('vendor/crudbooster/avatar.jpg');
             Session::put('admin_id', $users->id);
             Session::put('admin_is_superadmin', $priv->is_superadmin);
@@ -94,13 +91,18 @@ class AdminController extends CBController
 
             $cb_hook_session = new \App\Http\Controllers\CBHook;
             $cb_hook_session->afterLogin();
-
-            return redirect(CRUDBooster::adminPath());
+            // $this->postLogin2();
+            return redirect('/home');
+            // return redirect(CRUDBooster::adminPath());
         } else {
             return redirect()->route('getLogin')->with('message', cbLang('alert_password_wrong'));
         }
     }
+    public function postLogin2()
+    {
 
+        // dd('s');
+    }
     public function getForgot()
     {
         if (CRUDBooster::myId()) {
