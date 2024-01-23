@@ -26,26 +26,25 @@ class ApiRegisterVillageController extends Controller
         $DbdDate = $request['DbdDate'];
   
         
-        $UserId = 20; // CRUDBooster::myId();
+        $UserId = CRUDBooster::myId();
         $UserData = DB::table('user')->select('orgProvinceId')->where('cmsUserId', $UserId)->first();
         $UserOrgProvinceId = $UserData->orgProvinceId;
         DB::beginTransaction();
         try {
             $DataTransReqVillage = [];
-            $DataTransReqVillage['UserId'] = 20; //CRUDBooster::myId();
+            $DataTransReqVillage['UserId'] = CRUDBooster::myId();
             $DataTransReqVillage['TransactionType'] = 1;
             $DataTransReqVillage['TransactionYear'] = date('Y') + 543;
             $DataTransReqVillage['StatusId'] = 3;
             $DataTransReqVillage['CreatedAt'] = date('Y-m-d H:i:s');
-            $DataTransReqVillage['CreatedBy'] = 20; //CRUDBooster::myId();
+            $DataTransReqVillage['CreatedBy'] = CRUDBooster::myId();
             $DataTransReqVillage['OrgProvinceId'] = $UserOrgProvinceId;
-
             $DataTransReqVillageId = DB::table('transactionReqVillage')->insertGetId($DataTransReqVillage);
             if ($DataTransReqVillageId) {
               
                 $DataTransVillage = [];
                 $DataTransVillage['TransactionReqId'] = $DataTransReqVillageId;
-                $DataTransVillage['UserId'] = 20; //CRUDBooster::myId();
+                $DataTransVillage['UserId'] = CRUDBooster::myId();
                 $DataTransVillage['VillageDbd'] = $VillageDbd;
                 $DataTransVillage['VillageName'] = $VillageName;
                 $DataTransVillage['VillageAddress'] = $VillageAddress;
@@ -58,9 +57,9 @@ class ApiRegisterVillageController extends Controller
                 $DataTransVillage['VillageBdbCode'] = $VillageBdbCode;
                 $DataTransVillage['Phone'] = $Phone;
                 $DataTransVillage['Email'] = $Email;
-                $DataTransVillage['DbdDate'] = 2024-01-01;
-                $DataTransVillage['VillageStartDate'] = 2024-01-01;
-                $DataTransVillage['VillageEndDate'] = 2025-01-01;
+                $DataTransVillage['DbdDate'] = $DbdDate;
+                $DataTransVillage['VillageStartDate'] = $DbdDate;
+                $DataTransVillage['VillageEndDate'] = (new FunctionController)->calculateEndDate($DbdDate, 1);
                 $DataTransVillage['IsActive'] = 1;
                 $DataTransVillage['OrgProvinceId'] = $UserOrgProvinceId;
 
@@ -114,46 +113,37 @@ class ApiRegisterVillageController extends Controller
         try {
             $DataUpdateTransReqVillage = [];
             $DataUpdateTransReqVillage['UpdatedAt'] = date('Y-m-d H:i:s');
-            $DataUpdateTransReqVillage['UpdatedBy'] = 20; //CRUDBooster::myId();
-
+            $DataUpdateTransReqVillage['UpdatedBy'] = CRUDBooster::myId();
             $DataUpdateTransReqVillageId = DB::table('transactionReqVillage')->where('id', $TransactionRequestId)->update($DataUpdateTransReqVillage);
-            if ($DataUpdateTransReqVillageId) {
-              
-                $DataUpdateTransVillage = [];
-                $DataUpdateTransVillage['VillageDbd'] = $VillageDbd;
-                $DataUpdateTransVillage['VillageName'] = $VillageName;
-                $DataUpdateTransVillage['VillageAddress'] = $VillageAddress;
-                $DataUpdateTransVillage['VillageMoo'] = $VillageMoo;
-                $DataUpdateTransVillage['VillageProvinceId'] = $VillageProvinceId;
-                $DataUpdateTransVillage['VillageDistrictId'] = $VillageDistrictId;
-                $DataUpdateTransVillage['VillageSubDistrictId'] = $VillageSubDistrictId;
-                $DataUpdateTransVillage['VillagePostCode'] = $VillagePostCode;
-                $DataUpdateTransVillage['VillageCodeText'] = $VillageCodeText;
-                $DataUpdateTransVillage['VillageBdbCode'] = $VillageBdbCode;
-                $DataUpdateTransVillage['Phone'] = $Phone;
-                $DataUpdateTransVillage['Email'] = $Email;
-                $DataUpdateTransVillage['DbdDate'] = $DbdDate; //2024-01-01;
-                $DataUpdateTransVillage['VillageStartDate'] = 2024-01-01;
-                $DataUpdateTransVillage['VillageEndDate'] = 2025-01-01;
-                $DataUpdateTransVillage['UpdatedAt'] = date('Y-m-d H:i:s');
-                $DataUpdateTransVillage['UpdatedBy'] = 20; //CRUDBooster::myId();
 
-                $DataUpdateTransVillageId = DB::table('transactionVillage')->insertGetId($DataUpdateTransVillage);
-                if($DataUpdateTransVillageId){
-                    DB::commit();
-                    $data['api_status'] = 1;
-                    $data['api_message'] = 'Success';
-                    $data['id'] = $DataUpdateTransVillageId;
-                    return response()->json($data, 200)
-                        ->header("Access-Control-Allow-Origin", config('cors.allowed_origins'))
-                        ->header("Access-Control-Allow-Methods", config('cors.allowed_methods'));
-                }else{
-                    DB::rollback();
-                    $data['api_status'] = 0;
-                    $data['api_message'] = 'กรุณาทำรายการใหม่อีกครั้ง';
-                    return response()->json($data, 200);
-                }
-            } else {
+            $DataUpdateTransVillage = [];
+            $DataUpdateTransVillage['VillageDbd'] = $VillageDbd;
+            $DataUpdateTransVillage['VillageName'] = $VillageName;
+            $DataUpdateTransVillage['VillageAddress'] = $VillageAddress;
+            $DataUpdateTransVillage['VillageMoo'] = $VillageMoo;
+            $DataUpdateTransVillage['VillageProvinceId'] = $VillageProvinceId;
+            $DataUpdateTransVillage['VillageDistrictId'] = $VillageDistrictId;
+            $DataUpdateTransVillage['VillageSubDistrictId'] = $VillageSubDistrictId;
+            $DataUpdateTransVillage['VillagePostCode'] = $VillagePostCode;
+            $DataUpdateTransVillage['VillageCodeText'] = $VillageCodeText;
+            $DataUpdateTransVillage['VillageBdbCode'] = $VillageBdbCode;
+            $DataUpdateTransVillage['Phone'] = $Phone;
+            $DataUpdateTransVillage['Email'] = $Email;
+            $DataUpdateTransVillage['DbdDate'] = $DbdDate; //2024-01-01;
+            $DataUpdateTransVillage['VillageStartDate'] = $DbdDate;
+            $DataUpdateTransVillage['VillageEndDate'] = (new FunctionController)->calculateEndDate($DbdDate, 1);
+            $DataUpdateTransVillage['UpdatedAt'] = date('Y-m-d');
+            $DataUpdateTransVillage['UpdatedBy'] =CRUDBooster::myId();
+            $DataUpdateTransVillageId = DB::table('transactionVillage')->where('transactionVillage.TransactionReqId', $TransactionRequestId)->update($DataUpdateTransVillage);
+            if($DataUpdateTransVillageId){
+                DB::commit();
+                $data['api_status'] = 1;
+                $data['api_message'] = 'Success';
+                $data['id'] = $DataUpdateTransVillageId;
+                return response()->json($data, 200)
+                    ->header("Access-Control-Allow-Origin", config('cors.allowed_origins'))
+                    ->header("Access-Control-Allow-Methods", config('cors.allowed_methods'));
+            }else{
                 DB::rollback();
                 $data['api_status'] = 0;
                 $data['api_message'] = 'กรุณาทำรายการใหม่อีกครั้ง';
@@ -387,6 +377,7 @@ class ApiRegisterVillageController extends Controller
     function getVillage()
     {
         $Data=[];
+        $getCmsUser = DB::table('cms_users')->where('id', CRUDBooster::myId())->first();
         $VillageData = DB::table('transactionVillage')
         ->leftjoin('systemProvinces', 'systemProvinces.id', 'transactionVillage.VillageProvinceId')
         ->leftjoin('systemAmphures', 'systemAmphures.id', 'transactionVillage.VillageDistrictId')
@@ -416,35 +407,68 @@ class ApiRegisterVillageController extends Controller
             'systemTambons.zip_code as ZipCode',
             'transactionReqVillage.StatusId as StatusId',
         )
-        ->where('transactionVillage.UserId', 20)  //CRUDBooster::myId();
+        ->where('transactionVillage.UserId', CRUDBooster::myId())  //CRUDBooster::myId();
+        ->where('transactionVillage.IsActive', 1)
+        ->where('transactionReqVillage.StatusId', 3)
+        ->get();
+        // $AccountBankData = DB::table('accountBookBank')
+        // ->leftjoin('accountBankMaster', 'accountBankMaster.id', 'accountBookBank.BankMasterId')
+        // ->leftjoin('transactionFileBookbank', 'transactionFileBookbank.bookbank_id', 'accountBookBank.id')
+        // ->select('accountBookBank.id',
+        //     'accountBookBank.BankMasterId',
+        //     'accountBookBank.BookBankNumber',
+        //     'accountBookBank.BookBankName',
+        //     'accountBookBank.created_by',
+        //     'accountBookBank.WithdrawName',
+        //     'accountBookBank.WithdrawName2',
+        //     'accountBookBank.WithdrawName3',
+        //     'accountBookBank.WithdrawName4',
+        //     'accountBookBank.WithdrawName5',
+        //     'accountBankMaster.BankCode',
+        //     'accountBankMaster.BankName',
+        //     'accountBankMaster.BankShortName',
+        //     'transactionFileBookbank.FilePath',
+        //     'transactionFileBookbank.FileName'
+        // )
+        // ->where('accountBookBank.OrgId',$getCmsUser->orgId) //CRUDBooster::myId();
+        // ->where('accountBookBank.is_active', 1)
+        // ->get();
+        // $Data['Village']=$VillageData;
+        // $Data['AccountBankData']=$AccountBankData;
+        return $VillageData;
+    }
+    function getVillageById($VillageId)
+    {
+        $Data=[];
+        $VillageData = DB::table('transactionVillage')
+        ->leftjoin('transactionReqVillage', 'transactionReqVillage.id', 'transactionVillage.TransactionReqId')
+        ->select('transactionVillage.id',
+            'transactionVillage.TransactionReqId',
+            'transactionVillage.VillageDbd',
+            'transactionVillage.VillageName',
+            'transactionVillage.VillageAddress',
+            'transactionVillage.VillageMoo',
+            'transactionVillage.VillageProvinceId',
+            'transactionVillage.VillageDistrictId',
+            'transactionVillage.VillageSubDistrictId',
+            'transactionVillage.VillagePostCode',
+            'transactionVillage.Phone',
+            'transactionVillage.Email',
+            'transactionVillage.DbdDate',
+            'transactionVillage.VillageStartDate',
+            'transactionVillage.VillageEndDate',
+            'transactionVillage.OrgProvinceId',
+            'transactionVillage.VillageCodeText',
+            'transactionVillage.VillageBdbCode',
+            'transactionVillage.IsActive',
+            'transactionReqVillage.StatusId as StatusId',
+        )
+        ->where('transactionVillage.id',$VillageId )
+        ->where('transactionVillage.UserId', CRUDBooster::myId())  //CRUDBooster::myId();
         ->where('transactionVillage.IsActive', 1)
         ->where('transactionReqVillage.StatusId', 3)
         ->first();
-        $AccountBankData = DB::table('accountBookBank')
-        ->leftjoin('accountBankMaster', 'accountBankMaster.id', 'accountBookBank.BankMasterId')
-        ->leftjoin('transactionFileBookbank', 'transactionFileBookbank.bookbank_id', 'accountBookBank.id')
-        ->select('accountBookBank.id',
-            'accountBookBank.BankMasterId',
-            'accountBookBank.BookBankNumber',
-            'accountBookBank.BookBankName',
-            'accountBookBank.created_by',
-            'accountBookBank.WithdrawName',
-            'accountBookBank.WithdrawName2',
-            'accountBookBank.WithdrawName3',
-            'accountBookBank.WithdrawName4',
-            'accountBookBank.WithdrawName5',
-            'accountBankMaster.BankCode',
-            'accountBankMaster.BankName',
-            'accountBankMaster.BankShortName',
-            'transactionFileBookbank.FilePath',
-            'transactionFileBookbank.FileName'
-        )
-        ->where('accountBookBank.created_by', 20) //CRUDBooster::myId();
-        ->where('accountBookBank.is_active', 1)
-        ->get();
-        $Data['Village']=$VillageData;
-        $Data['AccountBankData']=$AccountBankData;
-        return $Data;
+        return $VillageData;
     }
     function getMemberVillage($TransactionVillageId)
     {

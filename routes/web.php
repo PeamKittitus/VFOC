@@ -47,6 +47,10 @@ Route::get('/editproject/{id}', '\App\Http\Controllers\AdminAccountBudgetControl
 Route::get('/editNews/{id}', '\App\Http\Controllers\AdminTransactionNewsController@editNews');
 Route::get('/addNews', '\App\Http\Controllers\AdminTransactionNewsController@addNews');
 Route::get('/viewNews/{id}', '\App\Http\Controllers\AdminTransactionNewsController@viewNews');
+Route::get('/addVilage', '\App\Http\Controllers\AdminTransactionReqVillageController@addVilage');
+Route::get('/editVillage/{id}', '\App\Http\Controllers\AdminTransactionReqVillageController@editVillage');
+Route::get('/addBookBankVillage', '\App\Http\Controllers\AdminTransactionReqVillageController@addBookBankVillage');
+
 //==========================================================================================Route
 
 
@@ -82,6 +86,9 @@ Route::post('/saveMemberVillage', '\App\Http\Controllers\ApiRegisterVillageContr
 Route::post('/deleteMemberInVallage', '\App\Http\Controllers\ApiRegisterVillageController@deleteMemberInVallage');
 Route::post('/editRegisterVillage', '\App\Http\Controllers\ApiRegisterVillageController@editRegisterVillage');
 Route::post('/editMemberVillage', '\App\Http\Controllers\ApiRegisterVillageController@editMemberVillage');
+Route::post('/getAmphuresById', '\App\Http\Controllers\FunctionController@getAmphuresById');
+Route::post('/getTambonsById', '\App\Http\Controllers\FunctionController@getTambonsById');
+Route::post('/getZipCodeById', '\App\Http\Controllers\FunctionController@getZipCodeById');
 //========================================================================================== API
 
 //========================================================================================== Report

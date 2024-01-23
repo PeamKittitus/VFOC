@@ -265,4 +265,92 @@ class FunctionController extends Controller
 
         return $endDate;
     }
+    function getProvince()
+    {
+        $provinceData = DB::table('systemProvinces')
+        ->select(
+            'systemProvinces.id',
+            'systemProvinces.name_th'
+        )
+        ->get();
+        return $provinceData;
+    }
+    function getAmphures()
+    {
+        $AmphuresData = DB::table('systemAmphures')
+        ->select(
+            'systemAmphures.id',
+            'systemAmphures.name_th'
+        )
+        ->get();
+        return $AmphuresData;
+    }
+    function getTambons()
+    {
+        $TambonsData = DB::table('systemTambons')
+        ->select(
+            'systemTambons.id',
+            'systemTambons.name_th'
+        )
+        ->get();
+        return $TambonsData;
+    }
+    function getAmphuresById(Request $request)
+    {
+        $VillageProvinceId = $request['VillageProvinceId'];
+        $amphuresData = DB::table('systemAmphures')->where('province_id', $VillageProvinceId)->get();
+        try {
+            if ($amphuresData) {
+                $data['api_status'] = 1;
+                $data['api_message'] = 'สำเร็จ';
+                $data['api_data'] = $amphuresData;
+            } else {
+                $data['api_status'] = 0;
+                $data['api_message'] = 'ไม่พบข้อมูล';
+            }
+        } catch (\Exception $e) {
+            $data['api_status'] = 0;
+            $data['api_message'] = 'กรุณาทำรายการใหม่อีกครั้ง';
+        }
+        return response()->json($data, 200);
+    }
+    function getTambonsById(Request $request)
+    {
+        $VillageDistrictId = $request['VillageDistrictId'];
+        $tambonsData = DB::table('systemTambons')->where('amphure_id', $VillageDistrictId)->get();
+        try {
+            if ($tambonsData) {
+                $data['api_status'] = 1;
+                $data['api_message'] = 'สำเร็จ';
+                $data['api_data'] = $tambonsData;
+            } else {
+                $data['api_status'] = 0;
+                $data['api_message'] = 'ไม่พบข้อมูล';
+            }
+        } catch (\Exception $e) {
+            $data['api_status'] = 0;
+            $data['api_message'] = 'กรุณาทำรายการใหม่อีกครั้ง';
+        }
+        return response()->json($data, 200);
+    }
+    function getZipCodeById(Request $request)
+    {
+        $VillageSubDistrictId = $request['VillageSubDistrictId'];
+        $zipcodeData = DB::table('systemTambons')->where('id', $VillageSubDistrictId)->get();
+        try {
+            if ($zipcodeData) {
+                $data['api_status'] = 1;
+                $data['api_message'] = 'สำเร็จ';
+                $data['api_data'] = $zipcodeData;
+            } else {
+                $data['api_status'] = 0;
+                $data['api_message'] = 'ไม่พบข้อมูล';
+            }
+        } catch (\Exception $e) {
+            $data['api_status'] = 0;
+            $data['api_message'] = 'กรุณาทำรายการใหม่อีกครั้ง';
+        }
+        return response()->json($data, 200);
+    }
+    
 }
