@@ -54,6 +54,7 @@ Route::get('/addVilage', '\App\Http\Controllers\AdminTransactionReqVillageContro
 Route::get('/editVillage/{id}', '\App\Http\Controllers\AdminTransactionReqVillageController@editVillage');
 Route::get('/addBookBankVillage', '\App\Http\Controllers\AdminTransactionReqVillageController@addBookBankVillage');
 Route::get('/approveVillage/{id}', '\App\Http\Controllers\AdminTransactionVillageController@approveVillage');
+Route::get('/approveMemberVillage/{id}', '\App\Http\Controllers\AdminMemberVillageController@approveMemberVillage');
 //==========================================================================================Route
 
 
@@ -102,6 +103,7 @@ Route::get('/getProvince', '\App\Http\Controllers\FunctionController@getProvince
 Route::post('/approveVillage', '\App\Http\Controllers\ApiRegisterVillageController@approveVillage');
 Route::post('/getVillageByIdProvince', '\App\Http\Controllers\FunctionController@getVillageByIdProvince');
 Route::post('/saveRegisterVillageMember', '\App\Http\Controllers\ApiRegisterVillageController@saveRegisterVillageMember');
+Route::post('/approveMemberVillage', '\App\Http\Controllers\ApiRegisterVillageController@approveMemberVillage');
 //========================================================================================== API
 
 //========================================================================================== Report

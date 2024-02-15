@@ -16,7 +16,7 @@
 
     <style>
         body {
-            font-family: 'Kanit', sans-serif;
+            font-family: 'Sarabun', sans-serif !important;
         }
 
         .select2-container2 {

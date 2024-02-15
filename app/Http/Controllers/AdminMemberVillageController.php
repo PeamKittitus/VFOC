@@ -344,6 +344,112 @@
 
 
 	    //By the way, you can still create your own method in here... :) 
-
-
+		public function getIndex()
+		{
+			$getVillage = (new ApiRegisterVillageController)->getDetailVillageById();
+			$data['getVillage'] = $getVillage;
+			return view('village/superuserapprove/index',$data);
+		}
+		public function approveMemberVillage($id)
+		{
+			$getVillageDetail = $this->getVillageDetail($id);
+			$getVillageMemberDetail =  $this->getVillageMemberDetail($id);
+			$getVillageFile =  $this->getVillageFile($id);
+			$getVillageBank =  $this->getVillageBank($id);
+			
+			$data['getVillageDetail'] = $getVillageDetail;
+			$data['getVillageMemberDetail'] = $getVillageMemberDetail;
+			$data['getVillageFile'] = $getVillageFile;
+			$data['getVillageBank'] = $getVillageBank;
+			return view('village/superuserapprove/approveMember',$data);
+		}
+		function getVillageDetail($id)
+		{
+			$VillageDetail = DB::table('village')
+				->leftjoin('systemProvinces','systemProvinces.id','village.VillageProvinceId')
+				->leftjoin('systemAmphures','systemAmphures.id','village.VillageDistrictId')
+				->leftjoin('systemTambons','systemTambons.id','village.VillageSubDistrictId')
+				->select(
+					'village.id',
+					'village.VillageCodeText',
+					'village.VillageBdbCode',
+					'village.VillageDbd', 
+					'village.VillageName', 
+					'village.VillageAddress',
+					'village.VillageMoo',
+					'village.VillagePostCode',
+					'village.Phone as VillagePhone',
+					'village.Email as VillageEmail',
+					'village.DbdDate',
+					'village.VillageStartDate',
+					'village.VillageEndDate',
+					'village.OrgProvinceId',
+					'systemProvinces.name_th as ProvinceName',
+					'systemAmphures.name_th as AmphuresName',
+					'systemTambons.name_th as TambonsName'
+				)
+				->where('village.IsActive',1)
+				->where('village.id',$id)
+				->first();
+			return $VillageDetail;
+		}
+		function getVillageMemberDetail($id)
+		{
+			$VillageMemberDetail = DB::table('memberVillage')
+				->leftjoin('systemMemberPosition','systemMemberPosition.id','memberVillage.MemberPositionId')
+				->leftjoin('systemMemberStatus','systemMemberStatus.id','memberVillage.MemberStatusId')
+				->select(
+					'memberVillage.id',
+					'memberVillage.VillageId',
+					'memberVillage.MemberCode',
+					'memberVillage.MemberFirstName', 
+					'memberVillage.MemberLastName', 
+					'memberVillage.MemberStatusId',
+					'memberVillage.Connection',
+					'memberVillage.MemberOffComment',
+					'memberVillage.MemberStatusApprove',
+					'systemMemberPosition.PositionNameTh as PositionName',
+					'systemMemberStatus.StatusName'
+				)
+				->whereIn('memberVillage.MemberStatusApprove', [1, 0])
+				->where('memberVillage.VillageId',$id)
+				->orderBy('memberVillage.id')
+				->get();
+			return $VillageMemberDetail;
+		}
+		function getVillageFile($id)
+		{
+			$VillageFileDetail = DB::table('fileVillage')
+				->select(
+					'fileVillage.id',
+					'fileVillage.FileName',
+					'fileVillage.FilePath',
+					'fileVillage.CreatedAt',
+					
+				)
+				->where('fileVillage.VillageId',$id)
+				->orderBy('fileVillage.id')
+				->get();
+			return $VillageFileDetail;
+		}
+		function getVillageBank($id)
+		{
+			$VillageUserId = DB::table('village')->select('village.UserId')->where('village.id',$id)->first();
+			$VillageBankDetail = DB::table('accountBookBank')
+				->leftjoin('accountBankMaster','accountBankMaster.id','accountBookBank.BankMasterId')
+				->leftjoin('transactionFileBookbank','transactionFileBookbank.bookbank_id','accountBookBank.id')
+				->select(
+					'accountBookBank.id',
+					'accountBookBank.BookBankNumber',
+					'accountBookBank.BookBankName',
+					'accountBankMaster.BankName',
+					'accountBankMaster.BankShortName',
+					'transactionFileBookbank.FileName',
+					'transactionFileBookbank.FilePath'
+				)
+				->where('accountBookBank.created_by',$VillageUserId->UserId)
+				->orderBy('accountBookBank.id')
+				->get();
+			return $VillageBankDetail;
+		}
 	}

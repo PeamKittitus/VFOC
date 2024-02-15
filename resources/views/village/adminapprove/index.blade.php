@@ -180,7 +180,7 @@
                                                     <tr>
                                                         <th style="text-align:center">ลำดับ</th>
                                                         <th style="text-align:center">รหัสกองทุนหมู่บ้าน</th>
-                                                        <th style="text-align:center">ชื่อนินิบุคคล</th>
+                                                        <th style="text-align:center">ชื่อนิติบุคคล</th>
                                                         <th style="text-align:center">รหัสนิติบุคคล</th>
                                                         <th style="text-align:center">สถานะ</th>
                                                         <th style="text-align:center">จัดการข้อมูล</th>
@@ -219,6 +219,25 @@
 <script>
     jQuery(document).ready(function($) {
         $('.select2').select2();
+        $.extend(true, $.fn.dataTable.defaults, {
+            "language": {
+                    "sProcessing": "กำลังดำเนินการ...",
+                    "sLengthMenu": "แสดง_MENU_ แถว",
+                    "sZeroRecords": "ไม่พบข้อมูล",
+                    "sInfo": "แสดง _START_ ถึง _END_ จาก _TOTAL_ แถว",
+                    "sInfoEmpty": "แสดง 0 ถึง 0 จาก 0 แถว",
+                    "sInfoFiltered": "(กรองข้อมูล _MAX_ ทุกแถว)",
+                    "sInfoPostFix": "",
+                    "sSearch": "ค้นหา:",
+                    "sUrl": "",
+                    "oPaginate": {
+                                    "sFirst": "เิริ่มต้น",
+                                    "sPrevious": "ก่อนหน้า",
+                                    "sNext": "ถัดไป",
+                                    "sLast": "สุดท้าย"
+                    }
+            }
+        });
         $('#datatable').DataTable();
     });
 </script>

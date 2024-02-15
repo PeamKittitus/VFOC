@@ -863,6 +863,23 @@ class ApiRegisterVillageController extends Controller
             ->get();
         return $RequestVillage;
     }
+    function getDetailVillageById()
+    {
+        $VillageData = DB::table('village')
+            ->select(
+                'village.id',
+                'village.VillageCode',
+                'village.VillageDbd',
+                'village.VillageName',
+                'village.IsActive',
+                'village.VillageCodeText',
+                'village.VillageBdbCode',
+                'village.Status',
+            )
+            ->where('village.UserId',CRUDBooster::myId())
+            ->get();
+        return $VillageData;
+    }
     function getVillageDetail($id)
     {
         $VillageDetail = DB::table('transactionVillage')
@@ -1047,9 +1064,37 @@ class ApiRegisterVillageController extends Controller
                     $DataVillage['VillageStartDate'] = date('Y-m-d');
                     $DataVillage['VillageEndDate'] =(new FunctionController)->calculateEndDate($DataVillage['VillageStartDate'], 2);
                     $DataVillage['IsActive'] = 1;
+                    $DataVillage['Status'] = 1;
                     $DataVillage['OrgProvinceId'] = $VillageData->OrgProvinceId;
                     $VillageId = DB::table('village')->insertGetId($DataVillage);
                     if($VillageId){
+
+                        //=============AddFileIntoFileVillage
+                        $FileData = DB::table('transactionFileVillage')
+                        ->select(
+                            'transactionFileVillage.id',
+                            'transactionFileVillage.TransactionVillageId',
+                            'transactionFileVillage.TransactionYear',
+                            'transactionFileVillage.FileName',
+                            'transactionFileVillage.FilePath',
+                        )
+                        ->where('transactionFileVillage.TransactionVillageId',$VillageData->id)
+                        ->get();
+                        foreach ($FileData as $file) {
+                            $TransactionYear = $file->TransactionYear;
+                            $FileName = $file->FileName;
+                            $FilePath = $file->FilePath;
+
+                            $DataFileVillage = [];
+                            $DataFileVillage['VillageId'] = $VillageId;
+                            $DataFileVillage['TransactionYear'] = $TransactionYear;
+                            $DataFileVillage['FileName'] = $FileName;
+                            $DataFileVillage['FilePath'] = $FilePath;
+                            $DataFileVillage['CreatedAt'] =  date('Y-m-d');
+                            $DataFileVillage['CreatedBy'] =  CRUDBooster::myId();
+
+                            $DataFileVillageId = DB::table('fileVillage')->insertGetId($DataFileVillage);
+                        }
 
                         //=============AddMemberIntoVillage
                         $MemberData = DB::table('transactionMemberVillage')
@@ -1371,4 +1416,197 @@ class ApiRegisterVillageController extends Controller
         response()->json($data, 200)->header("Access-Control-Allow-Origin", config('cors.allowed_origins'))
             ->header("Access-Control-Allow-Methods", config('cors.allowed_methods'))->send();
     }
+    function approveMemberVillage(Request $request)
+    {
+        $memberId = $request['memberId'];
+        $villageId = $request['villageId'];
+        $ValueApprove = $request['ValueApprove'];
+        $VillageComment = $request['VillageComment'];
+        $VillageCommentFile = $request['VillageCommentFile'];
+        $array_file = [];
+        $randomPassword = $this->generateRandomPassword();
+        DB::beginTransaction();
+        try {
+           if($ValueApprove == 1){
+                $DataUpdateVillage = [];
+                $DataUpdateVillage['UpdatedAt'] = date('Y-m-d');
+                $DataUpdateVillage['UpdatedBy'] = CRUDBooster::myId();
+                $DataUpdateVillageId = DB::table('village')->where('id', $villageId)->update($DataUpdateVillage);
+                if($DataUpdateVillageId){
+                    $VillageMemberData = DB::table('memberVillage')
+                    ->select(
+                        'memberVillage.id',
+                        'memberVillage.UserId',
+                    )
+                    ->where('memberVillage.id',$memberId)
+                    ->first();
+                    $UserData = DB::table('cms_users')
+                    ->select(
+                        'cms_users.id',
+                        'cms_users.name',
+                        'cms_users.email',
+                    )
+                    ->where('cms_users.id',$VillageMemberData->UserId)
+                    ->first();
+                    $VillageData = DB::table('village')
+                    ->select(
+                        'village.id',
+                        'village.VillageName',
+                    )
+                    ->where('village.id',$villageId)
+                    ->first();
+                    $DataUpdateUser = [];
+                    $hashedPassword = \Hash::make($randomPassword);
+                    $DataUpdateUser['password'] = $hashedPassword;
+                    $DataUpdateUser['updated_at'] = date('Y-m-d');
+                    $DataUpdateUser['id_cms_privileges'] = 4;
+                    $DataUpdateUserId = DB::table('cms_users')->where('id', $VillageMemberData->UserId)->update($DataUpdateUser);
+                    if($DataUpdateUserId){
+                        $DataUpdateMemberStatusVillage = [];
+                        $DataUpdateMemberStatusVillage['MemberStatusApprove'] = 1;
+                        $DataUpdateMemberStatusVillage['UpdatedAt'] = date('Y-m-d');
+                        $DataUpdateMemberStatusVillage['UpdatedBy'] = CRUDBooster::myId();
+                        $DataUpdateMemberStatusVillageId = DB::table('memberVillage')->where('id', $memberId)->update($DataUpdateMemberStatusVillage);
+                        if($DataUpdateMemberStatusVillageId){
+                            DB::commit();
+                            $data['api_status'] = 1;
+                            $data['api_message'] = 'Success';
+                            $data['id'] = $DataUpdateMemberStatusVillageId;
+                            $html_content = 
+                                '<!DOCTYPE html>
+                                <html>
+                                <head>
+                                    <meta charset="utf-8">
+                                    <title>Welcome to Net!</title>
+                                </head>
+                                <body>
+                                    <p>เรียน '.$UserData -> name.'</p>
+                                    <p>
+                                        อีเมลผู้ใช้ : '.$UserData -> email.'<br>
+                                        รหัสผ่าน : '.$randomPassword.'
+                                    </p>
+                                    <span style="color:red;">* การลงทะเบียนสมาชิกกองทุน ('.$VillageData->VillageName.') ของคุณรับการอนุมัติ</span><br>
+                                    
+                                    <p>หากท่านมีคำถามหรือต้องการความช่วยเหลือในการเข้าใช้งาน หรือมีข้อสงสัยใด ๆ เกี่ยวกับการใช้งานแอปพลิเคชัน หรือบริการอื่นๆ กรุณาติดต่อเราทางอีเมลที่ support@email.com</p>
+                                    <strong style="color: red;">อีเมลฉบับนี้เป็นการแจ้งข้อมูลจากระบบอัตโนมัติ กรุณาอย่าตอบกลับ</strong>
+                                    <p>ขอแสดงความนับถือ,<br>
+                                    ทีมผู้ดูแล สทบ</p><br><br>
+                                </body>
+                                </html>'
+                            ;
+                            $object = new stdClass();
+                            $object->email_content = $html_content;
+                            Mail::to($UserData -> email)->send(new JobMail($object, "แจ้งข้อมูลสำหรับเข้าใช้งานระบบ สทบ. ของสมาชิก"));
+                            return response()->json($data, 200)
+                            ->header("Access-Control-Allow-Origin", config('cors.allowed_origins'))
+                            ->header("Access-Control-Allow-Methods", config('cors.allowed_methods'));
+                        }else{
+                            DB::rollback();
+                            $data['api_status'] = 0;
+                            $data['api_message'] = 'กรุณาทำรายการใหม่อีกครั้ง';
+                            return response()->json($data, 200);
+                        }
+                    }else{
+                        DB::rollback();
+                        $data['api_status'] = 0;
+                        $data['api_message'] = 'กรุณาทำรายการใหม่อีกครั้ง';
+                        return response()->json($data, 200);
+                    }
+                }
+           }else{
+                $VillageMemberData = DB::table('memberVillage')
+                    ->select(
+                        'memberVillage.id',
+                        'memberVillage.UserId',
+                    )
+                    ->where('memberVillage.id',$memberId)
+                    ->first();
+                $UserData = DB::table('cms_users')
+                    ->select(
+                        'cms_users.id',
+                        'cms_users.name',
+                        'cms_users.email',
+                    )
+                    ->where('cms_users.id',$VillageMemberData->UserId)
+                    ->first();
+                $VillageData = DB::table('village')
+                    ->select(
+                        'village.id',
+                        'village.VillageName',
+                    )
+                    ->where('village.id',$villageId)
+                    ->first();
+                $DataUpdateVillage = [];
+                $DataUpdateVillage['UpdatedAt'] = date('Y-m-d');
+                $DataUpdateVillage['UpdatedBy'] = CRUDBooster::myId();
+                $DataUpdateVillageId = DB::table('village')->where('id', $villageId)->update($DataUpdateVillage);
+        
+                $DataUpdateMemberStatusVillage = [];
+                $DataUpdateMemberStatusVillage['MemberStatusApprove'] = 2;
+                $DataUpdateMemberStatusVillage['UpdatedAt'] = date('Y-m-d');
+                $DataUpdateMemberStatusVillage['UpdatedBy'] = CRUDBooster::myId();
+                $DataUpdateMemberStatusVillageId = DB::table('memberVillage')->where('id', $memberId)->update($DataUpdateMemberStatusVillage);
+
+                $DataUpdateTransReqVillageComment = [];
+                $DataUpdateTransReqVillageComment['VillageId'] = $villageId;
+                $DataUpdateTransReqVillageComment['Comment'] = $VillageComment;
+                $DataUpdateTransReqVillageComment['CreatedAt'] = date('Y-m-d');
+                $DataUpdateTransReqVillageComment['CreatedBy'] = CRUDBooster::myId();
+                foreach ($VillageCommentFile as $index => $val) {
+                    $DataUpdateTransReqVillageComment['FileName'] = $val->getClientOriginalName();
+                    $DataUpdateTransReqVillageComment['FilePath'] = "uploads/" . $val->getClientOriginalName();
+                }
+                $transactionRequestVillageCommentId = DB::table('villageComment')->insertGetId($DataUpdateTransReqVillageComment);
+                if ($transactionRequestVillageCommentId) {
+                    DB::commit();
+                    $data['api_status'] = 1;
+                    $data['api_message'] = 'Success';
+                    $data['id'] = $transactionRequestVillageCommentId;
+                    Storage::putFileAs('uploads/', $val, $val->getClientOriginalName());
+                    array_push($array_file, $val->getClientOriginalName() . '.' . $val->getClientOriginalExtension());
+                    $html_content = 
+                        '<!DOCTYPE html>
+                        <html>
+                        <head>
+                            <meta charset="utf-8">
+                            <title>Welcome to Net!</title>
+                        </head>
+                        <body>
+                            <p>เรียน '.$UserData -> name.'</p>
+                            <p>
+                                อีเมลผู้ใช้ : '.$UserData -> email.'<br>
+                            </p>
+                            <span style="color:red;">* การลงทะเบียนสมาชิกกองทุน ('.$VillageData->VillageName.') ของคุณไม่ได้รับการอนุมัติ</span><br>
+                            
+                            <p> เนื่องจาก '.$VillageComment.' หากท่านมีคำถามหรือต้องการความช่วยเหลือในการเข้าใช้งาน หรือมีข้อสงสัยใด ๆ เกี่ยวกับการใช้งานแอปพลิเคชัน หรือบริการอื่นๆ กรุณาติดต่อเราทางอีเมลที่ support@email.com</p>
+                            <strong style="color: red;">อีเมลฉบับนี้เป็นการแจ้งข้อมูลจากระบบอัตโนมัติ กรุณาอย่าตอบกลับ</strong>
+                            <p>ขอแสดงความนับถือ,<br>
+                            ทีมผู้ดูแล สทบ</p><br><br>
+                        </body>
+                        </html>'
+                    ;
+                    $object = new stdClass();
+                    $object->email_content = $html_content;
+                    Mail::to($UserData -> email)->send(new JobMail($object, "แจ้งข้อมูลสำหรับเข้าใช้งานระบบ สทบ. ของสมาชิก"));
+                    
+                    return response()->json($data, 200)
+                        ->header("Access-Control-Allow-Origin", config('cors.allowed_origins'))
+                        ->header("Access-Control-Allow-Methods", config('cors.allowed_methods'));
+                } else {
+                    DB::rollback();
+                    $data['api_status'] = 0;
+                    $data['api_message'] = 'กรุณาทำรายการใหม่อีกครั้ง';
+                    return response()->json($data, 200);
+                }
+           }
+        } catch (\Exception $e) {
+            DB::rollback();
+            $data['api_status'] = 0;
+            $data['api_message'] = 'กรุณาทำรายการใหม่อีกครั้ง';
+            $data['api_data'] = $e;
+        }
+        response()->json($data, 200)->header("Access-Control-Allow-Origin", config('cors.allowed_origins'))
+            ->header("Access-Control-Allow-Methods", config('cors.allowed_methods'))->send();
+    }
+    
 }

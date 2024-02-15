@@ -1133,7 +1133,7 @@
                                 }).then((result) => {
                                     if (result.isConfirmed) {
                                         window.location.href =
-                                            "/admin/accountBookBank";
+                                            "/admin/login";
                                     }
                                 });
                             },

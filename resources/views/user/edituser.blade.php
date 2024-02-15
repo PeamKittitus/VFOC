@@ -1,154 +1,248 @@
 @extends('crudbooster::admin_template')
 @section("content")
 <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;700&display=swap" rel="stylesheet">
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 <style>
-    .card {
-        box-shadow: 0 0 1px rgba(0, 0, 0, .125), 0 1px 3px rgba(0, 0, 0, .2);
-        margin-bottom: 1rem;
-        position: relative;
-        display: -ms-flexbox;
-        display: flex;
-        -ms-flex-direction: column;
-        flex-direction: column;
-        min-width: 0;
-        word-wrap: break-word;
-        background-color: #fff;
-        background-clip: border-box;
-        border: 0 solid rgba(0, 0, 0, .125);
-        border-radius: .25rem;
+    body {
+        font-family: 'Sarabun', sans-serif !important;
     }
 
-    .card-info:not(.card-outline)>.card-header,
-    .card-info:not(.card-outline)>.card-header a {
+    .select2-container2 {
+        box-sizing: border-box;
+        display: inline-block;
+        margin: 0;
+        position: relative;
+        vertical-align: middle;
+        width: 200px !important;
+    }
+
+    #datatable thead th {
+        background-color: #1ab3a3;
         color: #fff;
     }
 
-    .card-info:not(.card-outline)>.card-header {
-        background-color: #039dab;
+    table.dataTable.dtr-inline.collapsed>tbody>tr>td.dtr-control:before {
+        background-color: #886ab5;
     }
 
-    .card-header {
-        background-color: transparent;
-        border-bottom: 1px solid rgba(0, 0, 0, .125);
-        padding: .75rem 1.25rem;
+    .dataTables_wrapper {
         position: relative;
-        border-top-left-radius: .25rem;
-        border-top-right-radius: .25rem;
-        padding: .75rem 1.25rem;
-        margin-bottom: 0;
-        background-color: rgba(0, 0, 0, .03);
-        border-bottom: 0 solid rgba(0, 0, 0, .125);
+        clear: both;
+        margin-top: 25px !important;
     }
 
-    .card-body {
-        -ms-flex: 1 1 auto;
-        flex: 1 1 auto;
-        min-height: 1px;
-        padding: 1.25rem;
+    .breadcrumb {
+        background-color: #fff;
     }
 
-    .form-group {
+    .page-content {
+        padding: 1.5rem 2rem;
+    }
+
+    .page-breadcrumb {
+        padding: 0;
+        background: transparent;
+        margin: 0 0 1.5rem;
+        position: relative;
+        text-shadow: #fff 0 1px;
+    }
+
+    .a {
+        color: #039dab !important;
+    }
+
+    .breadcrumb>li>a {
+        text-decoration: none !important;
+        color: #039dab !important;
+    }
+
+    .breadcrumb-item.active {
+        color: #868e96;
+    }
+
+    .color-primary-600 {
+        color: #7a59ad;
+    }
+
+    .page-content .panel {
         margin-bottom: 1.5rem;
     }
 
-    .label:not(.form-check-label):not(.custom-file-label) {
-        font-weight: 700;
-    }
-
-    .col-form-label {
-        padding-top: calc(.375rem + 1px);
-        padding-bottom: calc(.375rem + 1px);
-        margin-bottom: 0;
-        font-size: inherit;
-        line-height: 1.5;
-    }
-
-    .card-footer {
-        padding: .75rem 1.25rem;
-        background-color: rgba(0, 0, 0, .03);
-        border-top: 0 solid rgba(0, 0, 0, .125);
+    .panel {
+        padding: 1.5rem 2rem;
+        display: -webkit-box;
+        display: -ms-flexbox;
         display: flex;
-        justify-content: end;
-        gap: 1%;
+        -webkit-box-orient: vertical;
+        -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+        flex-direction: column;
+        position: relative;
+        background-color: #fff;
+        -webkit-box-shadow: 0px 0px 13px 0px rgba(62, 44, 90, 0.08);
+        box-shadow: 0px 0px 13px 0px rgba(62, 44, 90, 0.08);
+        margin-bottom: 1.5rem;
+        border-radius: 4px;
+        border: 1px solid rgba(0, 0, 0, 0.09);
+        border-bottom: 1px solid #e0e0e0;
+        border-radius: 4px;
+        -webkit-transition: border 500ms ease-out;
+        transition: border 500ms ease-out;
     }
 
-    .btn-info {
-        color: #fff;
-        background-color: #039dab;
-        border-color: #17a2b8;
-        box-shadow: none;
+    .panel-hdr {
+        display: -webkit-box;
+        display: -ms-flexbox;
+        display: flex;
+        -webkit-box-align: center;
+        -ms-flex-align: center;
+        align-items: center;
+        background: #fff;
+        min-height: 3rem;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.07);
+        border-radius: 4px 4px 0 0;
+        -webkit-transition: background-color 0.4s ease-out;
+        transition: background-color 0.4s ease-out;
     }
 
-    .select2-container {
-        width: 100% !important;
+    .panel-hdr h2 {
+        -webkit-box-flex: 1;
+        -ms-flex: 1;
+        flex: 1;
+        font-size: 0.875rem;
+        margin: 0;
+        display: -webkit-box;
+        display: -ms-flexbox;
+        display: flex;
+        -webkit-box-align: center;
+        -ms-flex-align: center;
+        align-items: center;
+        line-height: 3rem;
+        color: inherit;
+        color: #333;
+        position: relative;
+        font-weight: 500;
+        font-size: 15px;
     }
 
-    .select2-container .select2-selection--single {
-        height: 34px !important;
+    .subheader-icon {
+        color: #a8a6ac;
+        margin-right: 0.25rem;
+    }
+
+    .fal {
+        font-family: 'Font Awesome 5 Pro';
+        font-weight: 300;
+    }
+
+    .center {
+        text-align: center;
+    }
+
+    .table.dataTable.no-footer {
+        border-bottom: none;
     }
 </style>
-<div class="card card-info">
-    <div class="card-header">
-        <h3 class="card-title">แก้ไขข้อมูลส่วนตัว</h3>
+<div class="w-box" style="margin: auto !important; padding: 10px">
+    <h4 style="text-align: center;color:black;font-family: 'Sarabun', sans-serif !important;">แก้ไขข้อมูลส่วนตัว</h4>
+    <div class="row">
+        <form id="editProfile" name="editProfile" method="post" enctype="multipart/form-data">
+            <div class="col-12 col-sm-12 box-right">
+                <div class="box-right-d">
+                    <div class="row mt-1">
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <label>สังกัดภายใต้เขต</label>
+                                <select name="SystemOrg" id="SystemOrg" style="width: 100%;">
+                                    @foreach($getSystemOrg as $value)
+                                    <option value="{{$value->id}}" @if($getDataUser->orgId == $value->id) selected @endif>{{$value->orgName}}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mt-1">
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <label>ชื่อ <span style="color:red">*</span></label>
+                                <input type="text" class="form-control checkNumber" id="firstName" value="{{$getDataUser->firstName}}">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mt-1">
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <label>นามสกุล <span style="color:red">*</span></label>
+                                <input type="text" class="form-control" id="lastName" value="{{$getDataUser->lastName}}">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mt-1">
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <label>เลขบัตรประจำตัวประชาชน <span style="color:red">*</span></label>
+                                <input type="text" class="form-control checkNumber" id="idCard" value="{{$getDataUser->idCard}}" maxlength="13">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mt-1">
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <label>เบอร์โทร<span style="color:red">*</span></label>
+                                <input type="text" class="form-control checkNumber" id="phoneNumber" value="{{$getDataUser->phoneNumber}}" maxlength="10">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mt-1">
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <label>อีเมล (e-mail)<span style="color:red">*</span></label>
+                                <input type="text" class="form-control" id="email" value="{{$getDataUser->email}}">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mt-1">
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <label>ชื่อบัญชีผู้ใช้งานระบบ<span style="color:red">*</span></label>
+                                <input type="text" class="form-control" id="username" value="{{$getDataUser->name}}">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mt-1">
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label>รหัสผ่าน <span style="color:red">*</span></label>
+                                <input type="password" class="form-control" id="Password">
+                                <span style="color:gray ; font-size: 1rem">รหัสผ่านควรมีความยาวอย่างน้อย 6
+                                    ตัวอักษร* (ตัวพิมพ์ใหญ่, พิมพ์เล็ก, ตัวเลข, อักขระพิเศษ) เช่น
+                                    P@sswOrd*</span>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label>ยืนยันรหัสผ่าน <span style="color:red">*</span></label>
+                                <input type="password" class="form-control" id="ConfirmPassword">
+                                <span style="color:gray ; font-size: 1rem">รหัสผ่านควรมีความยาวอย่างน้อย 6
+                                    ตัวอักษร* (ตัวพิมพ์ใหญ่, พิมพ์เล็ก, ตัวเลข, อักขระพิเศษ) เช่น
+                                    P@sswOrd*</span>
+                            </div>
+                        </div>
+                        <input type="hidden" class="form-control" id="cmsUserId" value="{{$getDataUser->cmsUserId}}">
+                    </div>
+                    <div class="row mt-1">
+                        <div class="col-12">
+                            <div class="form-group" style="display: flex;justify-content:end;gap:1%">
+                                <button type="submit" class="btn" style="color: white ; background-color:#1dc9b7">บันทึก</button>
+                                <a href="/admin" class="btn" style="color: white ; background-color:red">ยกเลิก</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
     </div>
-
-
-    <form id="editProfile" name="editProfile" method="post" enctype="multipart/form-data">
-        <div class="box-body">
-            <div class="form-group">
-                <label>สังกัดภายใต้เขต</label>
-                <select name="SystemOrg" id="SystemOrg">
-                    @foreach($getSystemOrg as $value)
-                    <option value="{{$value->id}}" @if($getDataUser->orgId == $value->id) selected @endif>{{$value->orgName}}</option>
-                    @endforeach
-                </select>
-            </div>
-            <div class="form-group">
-                <label>ชื่อ <span style="color:red">*</span></label>
-                <input type="text" class="form-control checkNumber" id="firstName" value="{{$getDataUser->firstName}}">
-            </div>
-            <div class="form-group">
-                <label>นามสกุล <span style="color:red">*</span></label>
-                <input type="text" class="form-control" id="lastName" value="{{$getDataUser->lastName}}">
-            </div>
-            <div class="form-group">
-                <label>เลขบัตรประจำตัวประชาชน <span style="color:red">*</span></label>
-                <input type="text" class="form-control checkNumber" id="idCard" value="{{$getDataUser->idCard}}" maxlength="13">
-            </div>
-            <div class="form-group">
-                <label>เบอร์โทร<span style="color:red">*</span></label>
-                <input type="text" class="form-control checkNumber" id="phoneNumber" value="{{$getDataUser->phoneNumber}}" maxlength="10">
-            </div>
-            <div class="form-group">
-                <label>อีเมล (e-mail)<span style="color:red">*</span></label>
-                <input type="text" class="form-control" id="email" value="{{$getDataUser->email}}">
-            </div>
-            <div class="form-group">
-                <label>ชื่อบัญชีผู้ใช้งานระบบ<span style="color:red">*</span></label>
-                <input type="text" class="form-control" id="username" value="{{$getDataUser->name}}">
-            </div>
-            <div class="form-group">
-                <label>รหัสผ่าน <span style="color:red">*</span></label>
-                <input type="password" class="form-control" id="Password">
-                <span style="color:gray ; font-size: 1rem">รหัสผ่านควรมีความยาวอย่างน้อย 6
-                    ตัวอักษร* (ตัวพิมพ์ใหญ่, พิมพ์เล็ก, ตัวเลข, อักขระพิเศษ) เช่น
-                    P@sswOrd*</span>
-            </div>
-            <div class="form-group">
-                <label>ยืนยันรหัสผ่าน <span style="color:red">*</span></label>
-                <input type="password" class="form-control" id="ConfirmPassword">
-                <span style="color:gray ; font-size: 1rem">รหัสผ่านควรมีความยาวอย่างน้อย 6
-                    ตัวอักษร* (ตัวพิมพ์ใหญ่, พิมพ์เล็ก, ตัวเลข, อักขระพิเศษ) เช่น
-                    P@sswOrd*</span>
-            </div>
-        </div>
-        <div class="card-footer">
-            <button type="submit" class="btn btn-info">บันทึก</button>
-            <a href="javascript:history.back()" class="btn btn-default">ยกเลิก</a>
-        </div>
-        <input type="hidden" class="form-control" id="cmsUserId" value="{{$getDataUser->cmsUserId}}">
-    </form>
 </div>
 @push('bottom')
 <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
@@ -304,7 +398,7 @@
                                         "/admin/user";
                                 }
                             });
-                        } else if(response.api_status == 2) {
+                        } else if (response.api_status == 2) {
                             Swal.fire({
                                 title: "Error",
                                 text: "ไม่สามารถใช้ email นี้ได้ เนื่องจากมี email นี้ในระบบแล้ว",
@@ -312,7 +406,7 @@
                                 showCancelButton: false,
                                 confirmButtonText: "OK",
                             });
-                        }else{
+                        } else {
                             Swal.fire({
                                 title: "Error",
                                 text: "An error occurred while saving the form data.",

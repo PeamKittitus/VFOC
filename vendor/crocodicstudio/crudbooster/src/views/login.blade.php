@@ -79,7 +79,7 @@
         body {
             overflow-x: hidden;
             overflow-y: auto;
-            font-family: 'Kanit', sans-serif;
+            font-family: 'Sarabun', sans-serif !important;
         }
 
         img {
