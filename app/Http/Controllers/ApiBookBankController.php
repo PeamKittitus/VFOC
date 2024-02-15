@@ -67,7 +67,6 @@ class ApiBookbankController extends Controller
     }
     function saveBookbank(Request $request)
     {
-        dd($request);
         $BankMasterId = $request['BankMasterId'];
         $BookBankName = $request['BookBankName'];
         $BookBankNumber = $request['BookBankNumber'];

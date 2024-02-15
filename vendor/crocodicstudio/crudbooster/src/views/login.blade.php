@@ -101,7 +101,7 @@
                 </div>
                 <a href="/register" class="btn-link text-break btn btn-info hidden-sm-down"
                     style="background-color: #8dcde1; color: #000; margin-left: auto;">ลงทะเบียน</a>
-                <a href="/register?IsVillageMember=True" class="btn-link text-break btn btn-info hidden-sm-down"
+                <a href="/registerMember?IsVillageMember=True" class="btn-link text-break btn btn-info hidden-sm-down"
                 style="background-color: #8dcde1; color: #000; margin-left: auto;">ลงทะเบียนสมาชิกกองทุน</a>
             </div>
         </div>

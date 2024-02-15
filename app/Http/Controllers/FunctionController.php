@@ -352,5 +352,23 @@ class FunctionController extends Controller
         }
         return response()->json($data, 200);
     }
-    
+    function getVillageByIdProvince(Request $request)
+    {
+        $id = $request['id'];
+        $villageData = DB::table('village')->select('village.id','village.VillageName','village.OrgProvinceId')->where('village.OrgProvinceId', $id)->get();
+        try {
+            if ($villageData) {
+                $data['api_status'] = 1;
+                $data['api_message'] = 'สำเร็จ';
+                $data['data'] = $villageData;
+            } else {
+                $data['api_status'] = 0;
+                $data['api_message'] = 'ไม่พบข้อมูล';
+            }
+        } catch (\Exception $e) {
+            $data['api_status'] = 0;
+            $data['api_message'] = 'กรุณาทำรายการใหม่อีกครั้ง';
+        }
+        return response()->json($data, 200);
+    }
 }

@@ -19,6 +19,9 @@ Route::get('/', function () {
 Route::get('/register', function () {
     return view('register/index');
 });
+Route::get('/registerMember', function () {
+    return view('register/indexMember');
+});
 Route::get('/home', function () {
     return view('home/index');
 });
@@ -50,7 +53,7 @@ Route::get('/viewNews/{id}', '\App\Http\Controllers\AdminTransactionNewsControll
 Route::get('/addVilage', '\App\Http\Controllers\AdminTransactionReqVillageController@addVilage');
 Route::get('/editVillage/{id}', '\App\Http\Controllers\AdminTransactionReqVillageController@editVillage');
 Route::get('/addBookBankVillage', '\App\Http\Controllers\AdminTransactionReqVillageController@addBookBankVillage');
-
+Route::get('/approveVillage/{id}', '\App\Http\Controllers\AdminTransactionVillageController@approveVillage');
 //==========================================================================================Route
 
 
@@ -89,6 +92,16 @@ Route::post('/editMemberVillage', '\App\Http\Controllers\ApiRegisterVillageContr
 Route::post('/getAmphuresById', '\App\Http\Controllers\FunctionController@getAmphuresById');
 Route::post('/getTambonsById', '\App\Http\Controllers\FunctionController@getTambonsById');
 Route::post('/getZipCodeById', '\App\Http\Controllers\FunctionController@getZipCodeById');
+Route::get('/getAccountBankMasterApi', '\App\Http\Controllers\ApiRegisterController@getAccountBankMasterApi');
+Route::get('/getGenderApi', '\App\Http\Controllers\ApiRegisterVillageController@getGenderApi');
+Route::get('/getOccupationApi', '\App\Http\Controllers\ApiRegisterVillageController@getOccupationApi');
+Route::get('/getMemberPositionApi', '\App\Http\Controllers\ApiRegisterVillageController@getMemberPositionApi');
+Route::get('/getMemberStatusApi', '\App\Http\Controllers\ApiRegisterVillageController@getMemberStatusApi');
+Route::post('/saveRegisterVillageAll', '\App\Http\Controllers\ApiRegisterVillageController@saveRegisterVillageAll');
+Route::get('/getProvince', '\App\Http\Controllers\FunctionController@getProvince');
+Route::post('/approveVillage', '\App\Http\Controllers\ApiRegisterVillageController@approveVillage');
+Route::post('/getVillageByIdProvince', '\App\Http\Controllers\FunctionController@getVillageByIdProvince');
+Route::post('/saveRegisterVillageMember', '\App\Http\Controllers\ApiRegisterVillageController@saveRegisterVillageMember');
 //========================================================================================== API
 
 //========================================================================================== Report
