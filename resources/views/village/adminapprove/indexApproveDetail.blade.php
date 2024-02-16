@@ -161,13 +161,13 @@
     <div class="page-content">
         <ol class="breadcrumb page-breadcrumb">
             <li class="breadcrumb-item"><a href="/home">หน้าหลัก</a></li>
-            <li class="breadcrumb-item active">รายละเอียดหมู่บ้าน</li>
+            <li class="breadcrumb-item active">พิจารณาอนุมัติแก้ไขรายละเอียดกองทุน</li>
         </ol>
         <div class="row">
             <div class="col-lg-12 sortable-grid ui-sortable" style="padding: 10px;">
                 <div class="panel panel-sortable" role="widget">
                     <div class="panel-hdr" role="heading">
-                        <h2 class="ui-sortable-handle"><i class="subheader-icon fal fa-money-bill"></i>รายละเอียดหมู่บ้าน</h2>
+                        <h2 class="ui-sortable-handle"><i class="subheader-icon fal fa-money-bill"></i>พิจารณาอนุมัติแก้ไขรายละเอียดกองทุน</h2>
                     </div>
                     <div class="panel-container show" role="content">
                         <div class="panel-content">
@@ -182,30 +182,24 @@
                                                         <th style="text-align:center">รหัสกองทุนหมู่บ้าน</th>
                                                         <th style="text-align:center">ชื่อนิติบุคคล</th>
                                                         <th style="text-align:center">รหัสนิติบุคคล</th>
-                                                        <th style="text-align:center">สถานะกองทุน</th>
+                                                        <th style="text-align:center">สถานะ</th>
                                                         <th style="text-align:center">จัดการข้อมูล</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    @foreach($getVillage as $index => $value)
+                                                    @foreach($getNewDetailVillage as $index => $value)
                                                     <tr>
                                                         <td style="text-align:center"><?= $index + 1 ?></td>
-                                                        <td style="text-align:center">{{$value->VillageCodeText}}</td>
-                                                        <td style="text-align:center">{{$value->VillageName}}</td>
-                                                        <td style="text-align:center">{{$value->VillageDbd}}</td>
-                                                        @if($value->Status == 1)
-                                                            <td style="text-align:center;color:#1dc9b7">กองทุนเปิดใช้งาน</td>
-                                                        @else
-                                                            <td style="text-align:center;color:#ffc241">รอการแก้ไขอนุมัติข้อมูลกองทุน</td>
-                                                        @endif
-                                                        <td style="text-align:center; display: flex; gap: 1%; justify-content: center;">
-                                                            <a href="/detailMemberVillage/{{$value->id}}" class="btn" style="color: white; background-color: #09d7f7">รายละเอียดกองทุน</a>
-                                                            @if($value->Status != 2)
-                                                            <a href="/editMemberVillage/{{$value->id}}" class="btn" style="color: white; background-color: #ffc241">แก้ไขรายละเอียดกองทุน</a>
+                                                        <td style="text-align:center">{{$value->VillageCodeTextOld}}</td>
+                                                        <td style="text-align:center">{{$value->VillageNameOld}}</td>
+                                                        <td style="text-align:center">{{$value->VillageDbdOld}}</td>
+                                                        <td style="text-align:center">
+                                                            @if($value->VillageStatusOld == 2)
+                                                                รอดำเนินการ
                                                             @endif
-                                                            @if(isset($getCountMemberVillage) && $getCountMemberVillage > 0 && $value->Status != 2)
-                                                                <a href="/approveMemberVillage/{{$value->id}}" class="btn" style="color: white; background-color: #fd3995">อนุมัติสมาชิกกองทุน</a>
-                                                            @endif
+                                                        </td>
+                                                        <td style="text-align:center" style="display: flex;gap:1%;justify-content:center;">
+                                                            <a href="/approveEditDetail/{{$value->id}}" class="btn" style="color: white ; background-color: #049DAB">ดำเนินการ </a>
                                                         </td>
                                                     </tr>
                                                     @endforeach

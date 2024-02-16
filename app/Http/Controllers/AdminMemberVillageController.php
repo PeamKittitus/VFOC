@@ -1,10 +1,9 @@
 <?php namespace App\Http\Controllers;
 
 	use Session;
-	use Request;
 	use DB;
 	use CRUDBooster;
-
+	use Illuminate\Http\Request;
 	class AdminMemberVillageController extends \crocodicstudio\crudbooster\controllers\CBController {
 
 	    public function cbInit() {
@@ -347,7 +346,9 @@
 		public function getIndex()
 		{
 			$getVillage = (new ApiRegisterVillageController)->getDetailVillageById();
+			$getCountMemberVillage = $this->getCountVillageMemberDetail();
 			$data['getVillage'] = $getVillage;
+			$data['getCountMemberVillage'] = $getCountMemberVillage;
 			return view('village/superuserapprove/index',$data);
 		}
 		public function approveMemberVillage($id)
@@ -362,6 +363,46 @@
 			$data['getVillageFile'] = $getVillageFile;
 			$data['getVillageBank'] = $getVillageBank;
 			return view('village/superuserapprove/approveMember',$data);
+		}
+		public function detailMemberVillage($id)
+		{
+			$getVillageDetail = $this->getVillageDetail($id);
+			$getVillageMemberDetail =  $this->getVillageMemberDetail($id);
+			$getVillageFile =  $this->getVillageFile($id);
+			$getVillageBank =  $this->getVillageBank($id);
+			
+			$data['getVillageDetail'] = $getVillageDetail;
+			$data['getVillageMemberDetail'] = $getVillageMemberDetail;
+			$data['getVillageFile'] = $getVillageFile;
+			$data['getVillageBank'] = $getVillageBank;
+			return view('village/superuserapprove/detailMember',$data);
+		}
+		public function editMemberVillage($id)
+		{
+			$getVillageDetail = $this->getVillageDetail($id);
+			$getVillageMemberDetail =  $this->getVillageMemberDetail($id);
+			$getVillageFile =  $this->getVillageFile($id);
+			$getVillageBank =  $this->getVillageBank($id);
+			$getProvince =  (new FunctionController)->getProvince();
+			$getAmphures =  (new FunctionController)->getAmphures();
+			$getTambons =  (new FunctionController)->getTambons();
+			$data['getVillageDetail'] = $getVillageDetail;
+			$data['getVillageMemberDetail'] = $getVillageMemberDetail;
+			$data['getVillageFile'] = $getVillageFile;
+			$data['getVillageBank'] = $getVillageBank;
+			$data['getProvince'] = $getProvince;
+			$data['getAmphures'] = $getAmphures;
+			$data['getTambons'] = $getTambons;
+			return view('village/superuserapprove/editMember',$data);
+		}
+		function getCountVillageMemberDetail()
+		{
+			$VillageMemberDetail = DB::table('memberVillage')
+				->leftjoin('village','village.id','memberVillage.VillageId')
+				->where('memberVillage.MemberStatusApprove',0)
+				->where('village.UserId',CRUDBooster::myId())
+				->count();
+			return $VillageMemberDetail;
 		}
 		function getVillageDetail($id)
 		{
@@ -384,6 +425,9 @@
 					'village.VillageStartDate',
 					'village.VillageEndDate',
 					'village.OrgProvinceId',
+					'village.VillageProvinceId',
+					'village.VillageDistrictId',
+					'village.VillageSubDistrictId',
 					'systemProvinces.name_th as ProvinceName',
 					'systemAmphures.name_th as AmphuresName',
 					'systemTambons.name_th as TambonsName'
@@ -452,4 +496,174 @@
 				->get();
 			return $VillageBankDetail;
 		}
+		function editDataVillage(Request $request)
+		{
+			$villageId = $request['villageId'];
+			$VillageCodeText = $request['VillageCodeText'];
+			$VillageDbd = $request['VillageDbd'];
+			$VillageBdbCode = $request['VillageBdbCode'];
+			$VillageName = $request['VillageName'];
+			$VillagePhone = $request['VillagePhone'];
+			$VillageEmail = $request['VillageEmail'];
+			$VillageDbdDate = $request['VillageDbdDate'];
+			$VillageAddress = $request['VillageAddress'];
+			$VillageMoo = $request['VillageMoo'];
+			$VillageProvinceId = $request['VillageProvinceId'];
+			$VillageDistrictId = $request['VillageDistrictId'];
+			$VillageSubDistrictId = $request['VillageSubDistrictId'];
+			$VillagePostCode = $request['VillagePostCode'];
+			DB::beginTransaction();
+			try {
+				$VillageData = DB::table('village')
+				->select(
+					'village.*'
+				)
+				->where('village.id',$villageId)
+				->first();
+				$VillageMemberData = DB::table('memberVillage')
+				->select(
+					'memberVillage.*'
+				)
+				->where('memberVillage.VillageId',$villageId)
+				->where('memberVillage.MemberStatusApprove',1)
+				->get();
+				$VillageFileData = DB::table('fileVillage')
+				->select(
+					'fileVillage.*'
+				)
+				->where('fileVillage.VillageId',$villageId)
+				->get();
+				//==================InsertVillageOld
+				$InsertDataVillageOld = [];
+				$InsertDataVillageOld['UserId'] = $VillageData->UserId;
+				$InsertDataVillageOld['VillageId'] = $villageId;
+				$InsertDataVillageOld['VillageDbd'] = $VillageData->VillageDbd;
+				$InsertDataVillageOld['VillageName'] = $VillageData->VillageName;
+				$InsertDataVillageOld['VillageAddress'] = $VillageData->VillageAddress;
+				$InsertDataVillageOld['VillageMoo'] = $VillageData->VillageMoo;
+				$InsertDataVillageOld['VillageProvinceId'] = $VillageData->VillageProvinceId;
+				$InsertDataVillageOld['VillageDistrictId'] = $VillageData->VillageDistrictId;
+				$InsertDataVillageOld['VillageSubDistrictId'] = $VillageData->VillageSubDistrictId;
+				$InsertDataVillageOld['VillagePostCode'] = $VillageData->VillagePostCode;
+				$InsertDataVillageOld['VillageCodeText'] = $VillageData->VillageCodeText;
+				$InsertDataVillageOld['VillageBdbCode'] = $VillageData->VillageBdbCode;
+				$InsertDataVillageOld['Phone'] = $VillageData->Phone;
+				$InsertDataVillageOld['Email'] = $VillageData->Email;
+				$InsertDataVillageOld['DbdDate'] = $VillageData->DbdDate;
+				$InsertDataVillageOld['VillageStartDate'] = $VillageData->VillageStartDate;
+				$InsertDataVillageOld['VillageEndDate'] = $VillageData->VillageEndDate;
+				$InsertDataVillageOld['IsActive'] = $VillageData->IsActive;
+				$InsertDataVillageOld['Status'] = $VillageData->Status;
+				$InsertDataVillageOld['OrgProvinceId'] = $VillageData->OrgProvinceId;
+				$VillageOldId = DB::table('village_old')->insertGetId($InsertDataVillageOld);
+				//==================InsertVillageOld
+
+				//==================InsertVillageNew
+				$InsertDataVillageNew = [];
+				$InsertDataVillageNew['UserId'] = $VillageData->UserId;
+				$InsertDataVillageNew['VillageId'] = $villageId;
+				$InsertDataVillageNew['VillageDbd'] = $VillageDbd;
+				$InsertDataVillageNew['VillageName'] = $VillageName;
+				$InsertDataVillageNew['VillageAddress'] = $VillageAddress;
+				$InsertDataVillageNew['VillageMoo'] = $VillageMoo;
+				$InsertDataVillageNew['VillageProvinceId'] = $VillageProvinceId;
+				$InsertDataVillageNew['VillageDistrictId'] = $VillageDistrictId;
+				$InsertDataVillageNew['VillageSubDistrictId'] = $VillageSubDistrictId;
+				$InsertDataVillageNew['VillagePostCode'] = $VillagePostCode;
+				$InsertDataVillageNew['VillageCodeText'] = $VillageCodeText;
+				$InsertDataVillageNew['VillageBdbCode'] = $VillageBdbCode;
+				$InsertDataVillageNew['Phone'] = $VillagePhone;
+				$InsertDataVillageNew['Email'] = $VillageEmail;
+				$InsertDataVillageNew['DbdDate'] = $VillageDbdDate;
+				$InsertDataVillageNew['VillageStartDate'] = $VillageData->VillageStartDate;
+				$InsertDataVillageNew['VillageEndDate'] = (new FunctionController)->calculateEndDate($InsertDataVillageNew['VillageStartDate'], 2);
+				$InsertDataVillageNew['IsActive'] = $VillageData->IsActive;
+				$InsertDataVillageNew['Status'] = $VillageData->Status;
+				$InsertDataVillageNew['OrgProvinceId'] = $VillageData->OrgProvinceId;
+				$VillageNewId = DB::table('village_new')->insertGetId($InsertDataVillageNew);
+				//==================InsertVillageNew
+				if($VillageOldId && $VillageNewId){
+					$UpdateStatusVillage = [];
+					$UpdateStatusVillage['Status'] = 2;
+					$UpdateStatusVillage['UpdatedAt'] = date('Y-m-d');
+					$UpdateStatusVillage['UpdatedBy'] = CRUDBooster::myId();
+					$UpdateStatusVillageId = DB::table('village')->where('id', $villageId)->update($UpdateStatusVillage);
+					if($UpdateStatusVillageId){
+						foreach ($VillageMemberData as $member) {
+							$insertMemberData = [
+								'VillageId' => $member->VillageId,
+								'MemberCode' => $member->MemberCode,
+								'CitizenId' => $member->CitizenId,
+								'MemberFirstName' => $member->MemberFirstName,
+								'MemberLastName' => $member->MemberLastName,
+								'GenderId' => $member->GenderId,
+								'Age' => $member->Age,
+								'Phone' => $member->Phone,
+								'MemberOccupationId' => $member->MemberOccupationId,
+								'MemberAddress' => $member->MemberAddress,
+								'MemberPositionId' => $member->MemberPositionId,
+								'MemberStatusId' => $member->MemberStatusId,
+								'MemberOffComment' => $member->MemberOffComment,
+								'MemberRenewal' => $member->MemberRenewal,
+								'Connection' => $member->Connection,
+								'MemberOccupationOther' => $member->MemberOccupationOther,
+								'NoCitizenId' => $member->NoCitizenId,
+								'NoBirthDate' => $member->NoBirthDate,
+								'UserId' => $member->UserId,
+								'IsActive' => $member->IsActive,
+								'MemberDate' => $member->MemberDate,
+								'MemberEndDate' => $member->MemberEndDate,
+								'MemberBirthDate' => $member->MemberBirthDate,
+								'CreatedAt' => $member->CreatedAt,
+								'CreatedBy' => $member->CreatedBy,
+								'UpdatedAt' => $member->UpdatedAt,
+								'UpdatedBy' => $member->UpdatedBy,
+								'MemberStatusApprove' => $member->MemberStatusApprove,
+							];
+							
+							// Insert data into village_old table
+							$villageMemberOldId = DB::table('memberVillage_new')->insertGetId($insertMemberData);
+							$villageMemberNewId = DB::table('memberVillage_old')->insertGetId($insertMemberData);
+						}
+						foreach ($VillageFileData as $file) {
+							$insertFileData = [
+								'VillageId' => $file->VillageId,
+								'TransactionYear' => $file->TransactionYear,
+								'FileName' => $file->FileName,
+								'FilePath' => $file->FilePath,
+								'CreatedAt' => $file->CreatedAt,
+								'CreatedBy' => $file->CreatedBy,
+							];
+						
+							// Insert data into village_old table 
+							$villageFileOldId = DB::table('fileVillage_new')->insertGetId($insertFileData);
+							$villageFileNewId = DB::table('fileVillage_old')->insertGetId($insertFileData);
+						}
+						DB::commit();
+						$data['api_status'] = 1;
+						$data['api_message'] = 'Success';
+						$data['id'] = $UpdateStatusVillageId;
+						return response()->json($data, 200)
+							->header("Access-Control-Allow-Origin", config('cors.allowed_origins'))
+							->header("Access-Control-Allow-Methods", config('cors.allowed_methods'));
+					}else{
+						DB::rollback();
+						$data['api_status'] = 0;
+						$data['api_message'] = 'กรุณาทำรายการใหม่อีกครั้ง';
+					}
+				}else{
+					DB::rollback();
+					$data['api_status'] = 0;
+					$data['api_message'] = 'กรุณาทำรายการใหม่อีกครั้ง';
+				}
+			} catch (\Exception $e) {
+				DB::rollback();
+				$data['api_status'] = 0;
+				$data['api_message'] = 'กรุณาทำรายการใหม่อีกครั้ง';
+				$data['api_data'] = $e;
+			}
+			response()->json($data, 200)->header("Access-Control-Allow-Origin", config('cors.allowed_origins'))
+				->header("Access-Control-Allow-Methods", config('cors.allowed_methods'))->send();
+		}
+		
 	}

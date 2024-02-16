@@ -55,6 +55,9 @@ Route::get('/editVillage/{id}', '\App\Http\Controllers\AdminTransactionReqVillag
 Route::get('/addBookBankVillage', '\App\Http\Controllers\AdminTransactionReqVillageController@addBookBankVillage');
 Route::get('/approveVillage/{id}', '\App\Http\Controllers\AdminTransactionVillageController@approveVillage');
 Route::get('/approveMemberVillage/{id}', '\App\Http\Controllers\AdminMemberVillageController@approveMemberVillage');
+Route::get('/detailMemberVillage/{id}', '\App\Http\Controllers\AdminMemberVillageController@detailMemberVillage');
+Route::get('/editMemberVillage/{id}', '\App\Http\Controllers\AdminMemberVillageController@editMemberVillage');
+Route::get('/approveEditDetail/{id}', '\App\Http\Controllers\AdminVillageNewController@approveEditDetail');
 //==========================================================================================Route
 
 
@@ -104,6 +107,8 @@ Route::post('/approveVillage', '\App\Http\Controllers\ApiRegisterVillageControll
 Route::post('/getVillageByIdProvince', '\App\Http\Controllers\FunctionController@getVillageByIdProvince');
 Route::post('/saveRegisterVillageMember', '\App\Http\Controllers\ApiRegisterVillageController@saveRegisterVillageMember');
 Route::post('/approveMemberVillage', '\App\Http\Controllers\ApiRegisterVillageController@approveMemberVillage');
+Route::post('/editDataVillage', '\App\Http\Controllers\AdminMemberVillageController@editDataVillage');
+Route::post('/approveEditVillage', '\App\Http\Controllers\AdminVillageNewController@approveEditVillage');
 //========================================================================================== API
 
 //========================================================================================== Report
