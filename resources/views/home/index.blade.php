@@ -403,6 +403,7 @@
             method: 'GET',
             dataType: 'json',
             success: function(data) {
+                console.log(data);
                 if (data.api_status == 1) {
                     buildMenuHtml(data.data);
                 }
@@ -422,7 +423,7 @@
             var menuItemHtml = '';
 
             // Use the data from each menu item
-            var linkAttribute = (item.IsLink === 1) ? `href="${item.PathLink}" data-id="${item.id}"` : 'href="/Home/Index"';
+            var linkAttribute = (item.IsLink === 1) ? `href="${item.PathLink}" data-id="${item.id}"` : `href="${item.PathLink}"`;
             var imgSrc = item.ImageMenu;
             var menuName = item.name;
             if (item.IsLink === 1) {
