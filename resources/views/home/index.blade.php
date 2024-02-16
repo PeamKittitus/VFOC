@@ -403,7 +403,6 @@
             method: 'GET',
             dataType: 'json',
             success: function(data) {
-                console.log(data);
                 if (data.api_status == 1) {
                     buildMenuHtml(data.data);
                 }
