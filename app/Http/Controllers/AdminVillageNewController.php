@@ -584,15 +584,19 @@ class AdminVillageNewController extends \crocodicstudio\crudbooster\controllers\
 				$VillageId = DB::table('village')->where('id', $VillageNewData->VillageId)->update($InsertDataVillage);
 				//=============UpdateVillageกลับ
 				if ($VillageId) {
-					$UpdateIsActive['IsActive'] = 0;
-					$VillageId = DB::table('village_old')->where('village_old.VillageId', $VillageNewData->VillageId)->update($UpdateIsActive);
-					$VillageId = DB::table('village_new')->where('village_new.VillageId', $VillageNewData->VillageId)->update($UpdateIsActive);
+					$isActiveUpdate = ['IsActive' => 0];
+					$tables = [
+						'village_old',
+						'village_new',
+						'memberVillage_new',
+						'memberVillage_old',
+						'fileVillage_new',
+						'fileVillage_old'
+					];
 
-					$VillageId = DB::table('memberVillage_new')->where('memberVillage_new.VillageId', $VillageNewData->VillageId)->update($UpdateIsActive);
-					$VillageId = DB::table('memberVillage_old')->where('memberVillage_old.VillageId', $VillageNewData->VillageId)->update($UpdateIsActive);
-
-					$VillageId = DB::table('fileVillage_new')->where('fileVillage_new.VillageId', $VillageNewData->VillageId)->update($UpdateIsActive);
-					$VillageId = DB::table('fileVillage_old')->where('fileVillage_old.VillageId', $VillageNewData->VillageId)->update($UpdateIsActive);
+					foreach ($tables as $table) {
+						$VillageId = DB::table($table)->where($table . '.VillageId', $VillageNewData->VillageId)->update($isActiveUpdate);
+					}
 					DB::commit();
 					$data['api_status'] = 1;
 					$data['api_message'] = 'Success';
@@ -654,7 +658,7 @@ class AdminVillageNewController extends \crocodicstudio\crudbooster\controllers\
 						$DataUpdateVillageComment['FileName'] = $val->getClientOriginalName();
 						$DataUpdateVillageComment['FilePath'] = "uploads/" . $val->getClientOriginalName();
 					}
-					$transactionVillageCommentId = DB::table('VillageComment')->insertGetId($DataUpdateVillageComment);
+					$transactionVillageCommentId = DB::table('villageComment')->insertGetId($DataUpdateVillageComment);
 					if ($transactionVillageCommentId) {
 						$UpdateIsActive['IsActive'] = 0;
 						$VillageId = DB::table('village_old')->where('village_old.VillageId', $VillageNewData->VillageId)->update($UpdateIsActive);

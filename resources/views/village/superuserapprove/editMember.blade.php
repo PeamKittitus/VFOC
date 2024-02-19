@@ -82,7 +82,7 @@
                             <div class="col-sm-6">
                                 <div class="form-group">
                                     <label>รหัสผู้เสียภาษี/เลขนิติบุคคล ( 13 หลัก) </label>
-                                    <input type="text" class="form-control checkNumber" placeholder="เลขนิติบุคคล" id="VillageDbd" value="{{$getVillageDetail->VillageDbd}}">
+                                    <input type="text" class="form-control checkNumber" placeholder="เลขนิติบุคคล" id="VillageDbd" value="{{$getVillageDetail->VillageDbd}}" maxlength="13">
                                 </div>
                             </div>
                         </div>
@@ -407,7 +407,7 @@
         //SubmitEditVillage
         $("form[name=editVillage]").submit(function(event) {
             event.preventDefault();
-            
+
             var villageId = $('#villageId').val();
             var VillageCodeText = $('#VillageCodeText').val();
             var VillageDbd = $('#VillageDbd').val();
@@ -481,6 +481,21 @@
                     });
                 }
             });
+        });
+        //=============CheckKey
+        function bannedKey(evt, lang) {
+            var k = event.keyCode;
+            if (lang == 1) {
+                if ((k >= 48 && k <= 57) || k == 46) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        }
+        $(".checkNumber").keypress(function() {
+            var dInput = $(this).val();
+            return bannedKey(dInput, 1);
         });
     })
 </script>

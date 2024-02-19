@@ -211,8 +211,8 @@
                         @if($getOldVillageDetail->VillageAddress != $getNewVillageDetail->VillageAddress)
                         <div class="col-sm-6">
                             <div class="form-group">
-                                <label>ที่อยู่นิติบุคคล(เก่า)</label>
-                                <input type="text" class="form-control" placeholder="ที่อยู่นิติบุคคล" id="VillageAddressOld" disabled value="{{$getOldVillageDetail->VillageAddress}}" style="background: beige;">
+                                <label>ที่อยู่นิติบุคคล(ใหม่)</label>
+                                <input type="text" class="form-control" placeholder="ที่อยู่นิติบุคคล" id="VillageAddressNew" disabled value="{{$getNewVillageDetail->VillageAddress}}" style="background: beige;">
                             </div>
                         </div>
                         @endif

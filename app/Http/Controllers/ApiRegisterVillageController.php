@@ -607,7 +607,7 @@ class ApiRegisterVillageController extends Controller
                 $cmsUserData['name'] = $Username;
                 $cmsUserData['email'] = $UserEmail;
                 $cmsUserData['orgId'] = $OrgId;
-                $cmsUserData['id_cms_privileges'] = 1;
+                $cmsUserData['id_cms_privileges'] = 3;
                 $cmsUserData['created_at'] = date('Y-m-d H:i:s');
                 $cmsUserData['status'] = 'Active';
                 $userCmsID = DB::table('cms_users')->insertGetId($cmsUserData);
