@@ -1,9 +1,9 @@
 <?php namespace App\Http\Controllers;
 
-	use Session;
-	use Request;
+	use Illuminate\Http\Request;
 	use DB;
 	use CRUDBooster;
+	use Illuminate\Support\Facades\Storage;
 
 	class AdminProjectBudgetController extends \crocodicstudio\crudbooster\controllers\CBController {
 
@@ -332,6 +332,104 @@
 
 
 	    //By the way, you can still create your own method in here... :) 
+		public function getIndex()
+		{
+			$data['getNewDetailVillage'] = 's';
+			return view('project/superuser/index', $data);
+		}
+		public function addProjectBudget()
+		{
+			$getAccountBankMaster = (new ApiBookBankController)->getAccountBankMaster();
+			$data['getAccountBankMaster'] = $getAccountBankMaster;
+			return view('project/superuser/addProject', $data);
+		}
+		function getAccountBudgetSubApi()
+		{
+			$AccountBudgetSub = DB::table('accountBudgetSub')
+				->select(
+					'accountBudgetSub.id',
+					'accountBudgetSub.AccName',
+					'accountBudgetSub.is_active',
+				)
+				->where('accountBudgetSub.is_active',1)
+				->get();
+			$data['data'] = $AccountBudgetSub;
+			$data['api_status'] = 1;
+			$data['api_message'] = 'Success';
+	
+			return response()->json($data, 200)
+				->header("Access-Control-Allow-Origin", config('cors.allowed_origins'))
+				->header("Access-Control-Allow-Methods", config('cors.allowed_methods'));
+		}
+		function getAccountBudgetDetailSubApi(Request $request)
+		{
+			$id = $request['id'];
+			$AccountBudgetDetail = DB::table('accountBudgetSub')
+				->select(
+					'accountBudgetSub.id',
+					'accountBudgetSub.Detail',
+					'accountBudgetSub.Amount',
+					'accountBudgetSub.AccStartDate',
+					'accountBudgetSub.AccEndDate',
+					'accountBudgetSub.is_active',
+				)
+				->where('accountBudgetSub.is_active',1)
+				->where('accountBudgetSub.id', $id)
+				->first();
+	
+			$data['data'] = $AccountBudgetDetail;
+			$data['api_status'] = 1;
+			$data['api_message'] = 'Success';
+	
+			return response()->json($data, 200)
+				->header("Access-Control-Allow-Origin", config('cors.allowed_origins'))
+				->header("Access-Control-Allow-Methods", config('cors.allowed_methods'));
+		}
+		function getAccountBudgetSubPeriodDetailApi(Request $request)
+		{
+			$id = $request['id'];
+			$BudgetSubPeriodDetail = DB::table('projectSubPeriod')
+				->select(
+					'projectSubPeriod.id',
+					'projectSubPeriod.account_sub_id',
+					'projectSubPeriod.PeriodNo',
+					'projectSubPeriod.PeriodPercent',
+					'projectSubPeriod.PeriodAmount',
+				)
+				->orderBy('id')
+				->where('projectSubPeriod.account_sub_id', $id)
+				->get();
+	
+			$data['data'] = $BudgetSubPeriodDetail;
+			$data['api_status'] = 1;
+			$data['api_message'] = 'Success';
+	
+			return response()->json($data, 200)
+				->header("Access-Control-Allow-Origin", config('cors.allowed_origins'))
+				->header("Access-Control-Allow-Methods", config('cors.allowed_methods'));
+		}
+		function getAccountBudgetFileApi(Request $request)
+		{
+			$id = $request['id'];
+			$BudgetSubPeriodDetail = DB::table('projectBudgetDocument')
+				->select(
+					'projectBudgetDocument.id',
+					'projectBudgetDocument.account_sub_id',
+					'projectBudgetDocument.FileName',
+					'projectBudgetDocument.FilePath',
+				)
+				->orderBy('id')
+				->where('projectBudgetDocument.account_sub_id', $id)
+				->get();
+	
+			$data['data'] = $BudgetSubPeriodDetail;
+			$data['api_status'] = 1;
+			$data['api_message'] = 'Success';
+	
+			return response()->json($data, 200)
+				->header("Access-Control-Allow-Origin", config('cors.allowed_origins'))
+				->header("Access-Control-Allow-Methods", config('cors.allowed_methods'));
+		}
 		
-
+		
 	}

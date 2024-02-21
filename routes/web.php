@@ -58,6 +58,7 @@ Route::get('/approveMemberVillage/{id}', '\App\Http\Controllers\AdminMemberVilla
 Route::get('/detailMemberVillage/{id}', '\App\Http\Controllers\AdminMemberVillageController@detailMemberVillage');
 Route::get('/editMemberVillage/{id}', '\App\Http\Controllers\AdminMemberVillageController@editMemberVillage');
 Route::get('/approveEditDetail/{id}', '\App\Http\Controllers\AdminVillageNewController@approveEditDetail');
+Route::get('/addProjectBudget', '\App\Http\Controllers\AdminProjectBudgetController@addProjectBudget');
 //==========================================================================================Route
 
 
@@ -109,6 +110,10 @@ Route::post('/saveRegisterVillageMember', '\App\Http\Controllers\ApiRegisterVill
 Route::post('/approveMemberVillage', '\App\Http\Controllers\ApiRegisterVillageController@approveMemberVillage');
 Route::post('/editDataVillage', '\App\Http\Controllers\AdminMemberVillageController@editDataVillage');
 Route::post('/approveEditVillage', '\App\Http\Controllers\AdminVillageNewController@approveEditVillage');
+Route::get('/getAccountBudgetSubApi', '\App\Http\Controllers\AdminProjectBudgetController@getAccountBudgetSubApi');
+Route::post('/getAccountBudgetSubPeriodDetailApi', '\App\Http\Controllers\AdminProjectBudgetController@getAccountBudgetSubPeriodDetailApi');
+Route::post('/getAccountBudgetDetailSubApi', '\App\Http\Controllers\AdminProjectBudgetController@getAccountBudgetDetailSubApi');
+Route::post('/getAccountBudgetFileApi', '\App\Http\Controllers\AdminProjectBudgetController@getAccountBudgetFileApi');
 
 Route::post('/addProjectBudget', '\App\Http\Controllers\AdminVillageNewController@addProjectBudget');
 //========================================================================================== API
