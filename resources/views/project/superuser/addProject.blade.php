@@ -61,7 +61,9 @@
         .select2-container .select2-selection--single {
             height: 34px !important;
         }
-        a:focus, a:hover {
+
+        a:focus,
+        a:hover {
             color: #23527c;
             text-decoration: none;
         }
@@ -241,6 +243,19 @@
                                 </div>
                             </div>
                         </div>
+                        <hr>
+                        <div class="row mt-1">
+                            <div class="col-12">
+                                <h4>เอกสารแนบ</h4>
+                            </div>
+                        </div>
+                        <div class="row mt-1">
+                            <div class="col-12">
+                                <div class="form-group">
+                                    <input type="file" class="form-control" id="file">
+                                </div>
+                            </div>
+                        </div>
                         <div class="row mt-1">
                             <div class="col-12">
                                 <div class="form-group" style="display: flex;justify-content:end;gap:1%">
@@ -314,12 +329,53 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="addAssetModalLabel">เพิ่มกิจกรรม</h5>
+                <h5 class="modal-title" id="addAssetModalLabel">เพิ่มครุภัณฑ์</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            
+            <div class="modal-body">
+                <div class="row mt-1">
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                            <label>เลขที่ครุภัณฑ์<strong style="color:red">*</strong></label>
+                            <input type="text" class="form-control" placeholder="เลขที่ครุภัณฑ์" id="AssetCode">
+                        </div>
+                    </div>
+                </div>
+                <div class="row mt-1">
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                            <label>ชื่อครุภัณฑ์<strong style="color:red">*</strong></label>
+                            <input type="text" class="form-control" placeholder="ชื่อครุภัณฑ์" id="AssetName">
+                        </div>
+                    </div>
+                </div>
+                <div class="row mt-1">
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                            <label>อายุครุภัณฑ์ (ปี)<strong style="color:red">*</strong></label>
+                            <input type="text" class="form-control" placeholder="อายุครุภัณฑ์ (ปี)" id="AssetAge">
+                        </div>
+                    </div>
+                </div>
+                <div class="row mt-1">
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                            <label>จำนวนครุภัณฑ์<strong style="color:red">*</strong></label>
+                            <input type="text" class="form-control" placeholder="จำนวนครุภัณฑ์" id="Amount">
+                        </div>
+                    </div>
+                </div>
+                <div class="row mt-1">
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                            <label>ราคาสุทธิ<strong style="color:red">*</strong></label>
+                            <input type="text" class="form-control" placeholder="ราคาสุทธิ" id="AmountUnit">
+                        </div>
+                    </div>
+                </div>
+            </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-primary" id="saveAssetBtn" style="color: white ; background-color:#1dc9b7">บันทึก</button>
                 <button type="button" class="btn btn-secondary" data-dismiss="modal" style="color: white ; background-color:red">ปิด</button>
@@ -341,19 +397,64 @@
         // เมื่อคลิกที่ปุ่ม "เพิ่มครุภัณฑ์"
         document.getElementById('addAssetBtn').addEventListener('click', function() {
             // Open Modal
-            $('#addAssetModal').modal('show'); 
+            $('#addAssetModal').modal('show');
+
+            // Clear modal inputs
+            document.getElementById('AssetCode').value = "";
+            document.getElementById('AssetName').value = "";
+            document.getElementById('AssetAge').value = "";
+            document.getElementById('Amount').value = "";
+            document.getElementById('AmountUnit').value = "";
 
             // Remove the previous event listener for the "Save" button
             $('#saveAssetBtn').off('click').on('click', function() {
                 // Close Modal
                 $('#addAssetModal').modal('hide');
+
+                // Extract data from modal inputs
+                var AssetCode = document.getElementById('AssetCode').value;
+                var AssetName = document.getElementById('AssetName').value;
+                var AssetAge = document.getElementById('AssetAge').value;
+                var Amount = document.getElementById('Amount').value;
+                var AmountUnit = document.getElementById('AmountUnit').value;
+
+                // Create an object to store the data
+                var assetData = {
+                    AssetCode: AssetCode,
+                    AssetName: AssetName,
+                    AssetAge: AssetAge,
+                    Amount: Amount,
+                    AmountUnit: AmountUnit
+                };
+
+                // Push the data object into the dataArrayActivity array
+                dataArrayAsset.push(assetData);
+                // Update the table with new data
+                updateTableProjectAsset();
             });
         });
+
+        //=============updateTableProjectActivity
+        function updateTableProjectAsset() {
+            var tableHtml = ''; // Store the HTML of the table
+            for (var i = 0; i < dataArrayAsset.length; i++) {
+                var row = dataArrayAsset[i];
+                tableHtml += '<tr>';
+                tableHtml += '<td style="text-align: center;">' + (i + 1) + '</td>';
+                tableHtml += '<td style="text-align: center;">' + row.AssetCode + '</td>';
+                tableHtml += '<td style="text-align: center;">' + row.AssetName + '</td>';
+                tableHtml += '<td style="text-align: center;">' + row.AssetAge + '</td>';
+                tableHtml += '<td style="text-align: center;">' + row.Amount + '</td>';
+                tableHtml += '<td style="text-align: center;">' + row.AmountUnit + '</td>';
+                tableHtml += '</tr>';
+            }
+            $('#datatableProjectAsset tbody').html(tableHtml); // เปลี่ยน HTML ของ tbody ให้เป็นตารางใหม่
+        }
 
         // เมื่อคลิกที่ปุ่ม "เพิ่มกิจกรรม"
         document.getElementById('addActivityBtn').addEventListener('click', function() {
             // Open Modal
-            $('#addActivityModal').modal('show'); 
+            $('#addActivityModal').modal('show');
 
             // Clear modal inputs
             document.getElementById('ActivityDetail').value = "";
@@ -393,7 +494,7 @@
             for (var i = 0; i < dataArrayActivity.length; i++) {
                 var row = dataArrayActivity[i];
                 tableHtml += '<tr>';
-                tableHtml += '<td style="text-align: center;">' + (i + 1) + '</td>'; 
+                tableHtml += '<td style="text-align: center;">' + (i + 1) + '</td>';
                 tableHtml += '<td style="text-align: center;">' + row.activityDetail + '</td>';
                 tableHtml += '<td style="text-align: center;">' + row.startActivityDate + ' - ' + row.endActivityDate + '</td>';
                 tableHtml += '</tr>';
@@ -471,7 +572,7 @@
                 contentType: false,
                 success: function(response) {
                     if (response.api_status == 1) {
-                        var data = response.data; 
+                        var data = response.data;
                         var plainText = $('<div/>').html(data.Detail).text();
                         $('#accountBudgetSubDetail').val(plainText);
                         $('#accountBudgetSubAmount').val(data.Amount);
@@ -487,7 +588,6 @@
 
         function handleAccountBudgetFileChange() {
             var selectedValue = $('#accountBudgetSub').val();
-            console.log("selectedValue",selectedValue);
             var formData = new FormData();
             formData.append('id', selectedValue);
             $.ajax({
@@ -498,12 +598,12 @@
                 contentType: false,
                 success: function(response) {
                     if (response.api_status == 1) {
-                        var data = response.data; 
+                        var data = response.data;
                         var tableHtml = ''; // เก็บ HTML ของตาราง
                         for (var i = 0; i < data.length; i++) {
                             var row = data[i];
                             tableHtml += '<tr>';
-                            tableHtml += '<td style="text-align: center;">' + (i+1) + '</td>';
+                            tableHtml += '<td style="text-align: center;">' + (i + 1) + '</td>';
                             tableHtml += '<td style="text-align: center;"><a href="' + row.FilePath + '" target="_blank">' + row.FileName + '</a></td>';
                             tableHtml += '</tr>';
                         }
@@ -515,7 +615,73 @@
                 }
             });
         }
-        
+
+        //SubmitProjectBudget
+        $("form[name=addProjectBudget]").submit(function(event) {
+            event.preventDefault();
+            var dataArrayActivityForm = dataArrayActivity;
+            var dataArrayAssetForm = dataArrayAsset;
+            var AccountBudgetSubId =  $('#accountBudgetSub').val();
+            var StartProjectDate = $('#accountBudgetSubAccStartDate').val();
+            var EndProjectDate = $('#accountBudgetSubAccEndDate').val();
+            var formData = new FormData();
+
+            formData.append('AccountBudgetSubId', AccountBudgetSubId);
+            formData.append('StartProjectDate', StartProjectDate);
+            formData.append('EndProjectDate', EndProjectDate);
+            formData.append(
+                "file[]",
+                document.getElementById("file").files[0]
+            );
+            $.each(dataArrayActivityForm, function(i, value) {
+                formData.append("dataArrayActivity[]", JSON.stringify(value));
+            });
+            $.each(dataArrayAssetForm, function(i, val) {
+                formData.append("dataArrayAsset[]",JSON.stringify(val));
+            });
+
+            Swal.fire({
+                title: "ยืนยัน",
+                text: "คุณต้องการยื่นโครงการใช่หรือไม่?",
+                icon: "question",
+                showCancelButton: true,
+                confirmButtonText: "ใช่",
+                cancelButtonText: "ไม่",
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: '/addProjectBudgetApi',
+                        method: 'POST',
+                        data: formData,
+                        contentType: false,
+                        processData: false,
+                        success: function(response) {
+                            Swal.fire({
+                                title: "สำเร็จ",
+                                text: "บันทึกข้อมูลสำเร็จ!",
+                                icon: "success",
+                                showCancelButton: false,
+                                confirmButtonText: "OK",
+                            }).then((result) => {
+                                if (result.isConfirmed) {
+                                    window.location.href =
+                                        "/admin/projectBudget";
+                                }
+                            });
+                        },
+                        error: function(xhr, status, error) {
+                            Swal.fire({
+                                title: "Error",
+                                text: "An error occurred while saving the form data.",
+                                icon: "error",
+                                showCancelButton: false,
+                                confirmButtonText: "OK",
+                            });
+                        }
+                    });
+                }
+            });
+        });
     })
 </script>
 @endsection
