@@ -109,6 +109,8 @@ Route::post('/saveRegisterVillageMember', '\App\Http\Controllers\ApiRegisterVill
 Route::post('/approveMemberVillage', '\App\Http\Controllers\ApiRegisterVillageController@approveMemberVillage');
 Route::post('/editDataVillage', '\App\Http\Controllers\AdminMemberVillageController@editDataVillage');
 Route::post('/approveEditVillage', '\App\Http\Controllers\AdminVillageNewController@approveEditVillage');
+
+Route::post('/addProjectBudget', '\App\Http\Controllers\AdminVillageNewController@addProjectBudget');
 //========================================================================================== API
 
 //========================================================================================== Report

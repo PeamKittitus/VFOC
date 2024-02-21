@@ -402,7 +402,7 @@ class AdminVillageNewController extends \crocodicstudio\crudbooster\controllers\
 			->where('village_new.Status', 1)
 			->where('village.Status', 2)
 			->get();
-		return $VillageData;
+		return $VillageData;	
 	}
 	function getOldVillageDetail($id)
 	{
@@ -719,4 +719,148 @@ class AdminVillageNewController extends \crocodicstudio\crudbooster\controllers\
 		response()->json($data, 200)->header("Access-Control-Allow-Origin", config('cors.allowed_origins'))
 			->header("Access-Control-Allow-Methods", config('cors.allowed_methods'))->send();
 	}
+
+
+	function addProjectBudget(Request $request)
+	{
+		dd( $request->all());
+		// dd(CRUDBooster::myId());
+		// $myid = CRUDBooster::myId();
+		$myid = 45;
+
+		$VillageId = DB::table('village')
+			->select("village.id")
+			->where('village.IsActive', 1)
+			->where('village.UserId', $myid)
+			->value('id');
+
+		$OrgId = DB::table('user')
+			->select("user.orgProvinceId")
+			->where('user.is_active', 1)
+			->where('user.cmsUserId', $myid)
+			->value('orgProvinceId');
+			
+		// dd($VillageId,$OrgId);
+		$DataProject = [];
+		$DataProject['VillageId'] = $VillageId;
+		$DataProject['OrgId'] = $OrgId;
+		$DataProject['AccountBudgetSubId'] = $request->AccountBudgetSubId;
+		$DataProject['ProjectCode'] = $request->ProjectCode;
+		$DataProject['TransactionYear'] = date('Y')+543;
+		$DataProject['ProjectName'] = $request->ProjectName;
+		$DataProject['Amount'] = $request->Amount;
+		$DataProject['Status'] = $request->Status;
+		$DataProject['SignProjectDate'] = $request->SignProjectDate;
+		$DataProject['StartProjectDate'] = $request->StartProjectDate;
+		$DataProject['EndProjectDate'] = $request->EndProjectDate;
+		$DataProject['CreatedAt'] = now();
+		$DataProject['CreatedBy'] = $myid;
+		$DataProject['IsActive'] = $request->IsActive;
+
+		$dataActivity = [
+			[
+				"ActivityDetail" => "1",
+				"ActivityBudget" => "2",
+				"StartActivityDate" => "2024-02-20",
+				"EndActivityDate" => "2024-02-23"
+			],
+			[
+				"ActivityDetail" => "123",
+				"ActivityBudget" => "123",
+				"StartActivityDate" => "2024-02-21",
+				"EndActivityDate" => "2024-02-24"
+			]
+		];
+
+		$dataAsset = [
+			[
+				"AssetCode" => "12211",
+				"AssetName" => "TEssttt",
+				"AssetAge" => "1",
+				"Amount" => "213",
+				"AmountUnit" => "T"
+			],
+			[
+				"AssetCode" => "23123",
+				"AssetName" => "Teesrr",
+				"AssetAge" => "2",
+				"Amount" => "123",
+				"AmountUnit" => "E"
+			]
+		];
+
+		$dataFile = [
+			[
+				"AssetCode" => "12211",
+				"AssetName" => "TEssttt",
+				"AssetAge" => "1",
+				"Amount" => "213",
+				"AmountUnit" => "T"
+			],
+			[
+				"AssetCode" => "23123",
+				"AssetName" => "Teesrr",
+				"AssetAge" => "2",
+				"Amount" => "123",
+				"AmountUnit" => "E"
+			]
+		];
+		
+		$periodCounter = 1;
+		// Iterate through each element in $dataActivity and add VillageId
+		
+		// dd($dataActivity);
+
+		DB::beginTransaction();
+		try {
+			$IDprojectBudget = DB::table('projectBudget')->insertGetId($DataProject);
+
+			foreach ($dataActivity as &$activity) {
+				$activity['ProjectBudgetId'] = $IDprojectBudget;
+				$activity['VillageId'] = $VillageId;
+				$activity['TransactionYear'] = date('Y')+543;
+				$activity['Period'] = $periodCounter;
+				$activity['Status'] = 1;
+				$activity['CreatedAt'] = now();
+				$activity['CreatedBy'] = $myid;
+				$activity['IsActive'] = 1;
+				$periodCounter++;
+			}
+
+			foreach ($dataAsset as &$Asset) {
+				$Asset['ProjectBudgetId'] = $IDprojectBudget;
+				$Asset['VillageId'] = $VillageId;
+				$Asset['Status'] = 1;
+				$Asset['CreatedAt'] = now();
+				$Asset['CreatedBy'] = $myid;
+			}
+			// dd($dataAsset);
+
+			foreach ($dataActivity as $DataProject) {
+				// dd($DataProject);
+				$IDprojectBudget = DB::table('projectActivity')->insertGetId($DataProject);	
+			}
+			foreach ($dataAsset as $DataProject2) {
+				// dd($DataProject2);
+				$IDprojectAsset = DB::table('projectAsset')->insertGetId($DataProject2);	
+			}
+			if($IDprojectBudget && $IDprojectAsset){
+				DB::commit();
+			}else{
+				DB::rollBack();
+			}		
+
+
+			// dd($IDprojectBudget);
+		} catch (\Exception $e) {
+			DB::rollback();
+			$data['api_status'] = 0;
+			$data['api_message'] = 'กรุณาทำรายการใหม่อีกครั้ง';
+			$data['api_data'] = $e;
+		}
+		// dd($DataProject);
+
+	}
+	
+
 }
