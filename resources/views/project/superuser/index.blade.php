@@ -169,12 +169,13 @@
                     <div class="panel-hdr" role="heading">
                         <h2 class="ui-sortable-handle"><i class="subheader-icon fal fa-money-bill"></i>การจัดการโครงการ</h2>
                     </div>
-                    <div class="d-flex justify-content-start flex-wrap demo" style="margin-top: 10px;">
-                        <div class="btn-group" style="border: 1px solid grey; border-radius: 10px">
-                            <a href="/addProjectBudget" class="btn btn-light waves-effect waves-themed" id="AddForm">
-                                <i class="fa fa-plus-circle" aria-hidden="true" style="font-size: 20px"></i><br>
-                                <span class="fs-nano color-primary-600">สร้างใหม่</span>
-                            </a>
+                    <div class="row" style="margin-top:10px">
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <a href="/addProjectBudget">
+                                    <button id="addActivityBtn" type="button" class="btn" style="color: white ; background-color:#1dc9b7">เพิ่มกิจกรรม</button>
+                                </a>
+                            </div>
                         </div>
                     </div>
                     <div class="panel-container show" role="content">
@@ -194,6 +195,46 @@
                                                         <th style="text-align:center">จัดการข้อมูล</th>
                                                     </tr>
                                                 </thead>
+                                                <tbody>
+                                                    @foreach($getDataProjectBudget as $index => $value)
+                                                    <tr>
+                                                        <td style="text-align:center">{{$value->ProjectCode}}</td>
+                                                        <td style="text-align:center">{{$value->ProjectName}}</td>
+                                                        <?php
+                                                            $StartAt = date('d F Y', strtotime($value->StartProjectDate));
+                                                            $StartAtThai = str_replace(
+                                                                array('January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'),
+                                                                array('มกราคม', 'กุมภาพันธ์', 'มีนาคม', 'เมษายน', 'พฤษภาคม', 'มิถุนายน', 'กรกฎาคม', 'สิงหาคม', 'กันยายน', 'ตุลาคม', 'พฤศจิกายน', 'ธันวาคม'),
+                                                                $StartAt
+                                                            );
+                                                            $yearThai = intval(date('Y', strtotime($value->StartProjectDate))) + 543; // แปลงปีเป็น พ.ศ.
+                                                            $StartAtThai = str_replace(date('Y', strtotime($value->StartProjectDate)), $yearThai, $StartAtThai);
+
+                                                            $EndAt = date('d F Y', strtotime($value->EndProjectDate));
+                                                            $EndAtThai = str_replace(
+                                                                array('January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'),
+                                                                array('มกราคม', 'กุมภาพันธ์', 'มีนาคม', 'เมษายน', 'พฤษภาคม', 'มิถุนายน', 'กรกฎาคม', 'สิงหาคม', 'กันยายน', 'ตุลาคม', 'พฤศจิกายน', 'ธันวาคม'),
+                                                                $EndAt
+                                                            );
+                                                            $yearThai = intval(date('Y', strtotime($value->EndProjectDate))) + 543; // แปลงปีเป็น พ.ศ.
+                                                            $EndAtThai = str_replace(date('Y', strtotime($value->EndProjectDate)), $yearThai, $EndAtThai);
+                                                        ?>
+                                                        <td style="text-align:center">{{$StartAtThai}} - {{$EndAtThai}}</td>
+                                                        @if($value->Status == 1)
+                                                            <td style="text-align:center;color:#1dc9b7">โครงการเปิดใช้งาน</td>
+                                                        @elseif($value->Status == 2)
+                                                            <td style="text-align:center;color:#ffc241">รอการอนุมัติโครงการเปิดใช้งาน</td>
+                                                        @endif
+                                                        <td style="text-align:center">{{$value->Amount}}</td>
+                                                        <td style="text-align:center; display: flex; gap: 1%; justify-content: center;">
+                                                            <a href="/detailProject/{{$value->id}}" class="btn" style="color: white; background-color: #09d7f7">รายละเอียดโครงการ</a>
+                                                            @if($value->Status == 1)
+                                                                <a href="/detailProject/{{$value->id}}" class="btn" style="color: white; background-color: #1dc9b7">อัพเดทกิจกรรม</a>
+                                                            @endif
+                                                        </td>
+                                                    </tr>
+                                                    @endforeach
+                                                </tbody>
                                             </table>
                                         </div>
                                     </div>

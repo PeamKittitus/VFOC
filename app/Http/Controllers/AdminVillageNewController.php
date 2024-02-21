@@ -723,142 +723,139 @@ class AdminVillageNewController extends \crocodicstudio\crudbooster\controllers\
 
 	function addProjectBudget(Request $request)
 	{
-		// dd( $request->all());
-		// dd(CRUDBooster::myId());
-		// $myid = CRUDBooster::myId();
-		$myid = 45;
-
 		$VillageId = DB::table('village')
-			->select("village.id")
+			->select('village.id')
 			->where('village.IsActive', 1)
-			->where('village.UserId', $myid)
+			->where('village.UserId', CRUDBooster::myId())
 			->value('id');
-
 		$OrgId = DB::table('user')
-			->select("user.orgProvinceId")
+			->select('user.orgProvinceId')
 			->where('user.is_active', 1)
-			->where('user.cmsUserId', $myid)
+			->where('user.cmsUserId', CRUDBooster::myId())
 			->value('orgProvinceId');
-			
-		// dd($VillageId,$OrgId);
+		$AccountBudgetSubData = DB::table('accountBudgetSub')
+			->select(
+				'accountBudgetSub.AccName',
+				'accountBudgetSub.AccCode',
+				'accountBudgetSub.Amount',
+			)
+			->where('accountBudgetSub.is_active', 1)
+			->where('accountBudgetSub.id', $request->AccountBudgetSubId)
+			->first();
+		$dataArrayActivity = $request['dataArrayActivity'];
+        $dataArrayAsset = $request['dataArrayAsset'];
+		$file = $request['file'];
+		$array_file = [];
+		
 		$DataProject = [];
 		$DataProject['VillageId'] = $VillageId;
 		$DataProject['OrgId'] = $OrgId;
 		$DataProject['AccountBudgetSubId'] = $request->AccountBudgetSubId;
-		$DataProject['ProjectCode'] = $request->ProjectCode;
+		$DataProject['ProjectCode'] = $AccountBudgetSubData->AccCode;
 		$DataProject['TransactionYear'] = date('Y')+543;
-		$DataProject['ProjectName'] = $request->ProjectName;
-		$DataProject['Amount'] = $request->Amount;
-		$DataProject['Status'] = $request->Status;
-		$DataProject['SignProjectDate'] = $request->SignProjectDate;
+		$DataProject['ProjectName'] = $AccountBudgetSubData->AccName;
+		$DataProject['Amount'] = $AccountBudgetSubData->Amount;
+		$DataProject['Status'] = 2; //รออนุมัติ
+		$DataProject['SignProjectDate'] = now();
 		$DataProject['StartProjectDate'] = $request->StartProjectDate;
 		$DataProject['EndProjectDate'] = $request->EndProjectDate;
 		$DataProject['CreatedAt'] = now();
-		$DataProject['CreatedBy'] = $myid;
-		$DataProject['IsActive'] = $request->IsActive;
-
-		$dataActivity = [
-			[
-				"ActivityDetail" => "1",
-				"ActivityBudget" => "2",
-				"StartActivityDate" => "2024-02-20",
-				"EndActivityDate" => "2024-02-23"
-			],
-			[
-				"ActivityDetail" => "123",
-				"ActivityBudget" => "123",
-				"StartActivityDate" => "2024-02-21",
-				"EndActivityDate" => "2024-02-24"
-			]
-		];
-
-		$dataAsset = [
-			[
-				"AssetCode" => "12211",
-				"AssetName" => "TEssttt",
-				"AssetAge" => "1",
-				"Amount" => "213",
-				"AmountUnit" => "T"
-			],
-			[
-				"AssetCode" => "23123",
-				"AssetName" => "Teesrr",
-				"AssetAge" => "2",
-				"Amount" => "123",
-				"AmountUnit" => "E"
-			]
-		];
-
-		$array_file = [];
-
-		// mockup file data ของ File
-		$dataFile[0] = $request->file1;
-		$dataFile[1] = $request->file2;
-		$dataFile[2] = $request->file3;
-		
-		// dd($dataFile[0]);
-
-		$periodCounter = 1;
+		$DataProject['CreatedBy'] = CRUDBooster::myId();
+		$DataProject['IsActive'] = 1;
 		DB::beginTransaction();
 		try {
-			$IDprojectBudget = DB::table('projectBudget')->insertGetId($DataProject);
+			$ProjectBudgetId = DB::table('projectBudget')->insertGetId($DataProject);
+			if($ProjectBudgetId){
 
-			foreach ($dataActivity as &$activity) {
-				$activity['ProjectBudgetId'] = $IDprojectBudget;
-				$activity['VillageId'] = $VillageId;
-				$activity['TransactionYear'] = date('Y')+543;
-				$activity['Period'] = $periodCounter;
-				$activity['Status'] = 1;
-				$activity['CreatedAt'] = now();
-				$activity['CreatedBy'] = $myid;
-				$activity['IsActive'] = 1;
-				$periodCounter++;
-			}
+				$periodCounter = 1;
+				foreach ($dataArrayActivity as $item) {
+					$decodedItem = json_decode($item, true);
 
-			foreach ($dataAsset as &$Asset) {
-				$Asset['ProjectBudgetId'] = $IDprojectBudget;
-				$Asset['VillageId'] = $VillageId;
-				$Asset['Status'] = 1;
-				$Asset['CreatedAt'] = now();
-				$Asset['CreatedBy'] = $myid;
-			}
+					$ActivityDetail = $decodedItem['activityDetail'];
+					$ActivityBudget = $decodedItem['activityBudget'];
+					$StartActivityDate = $decodedItem['startActivityDate'];
+					$EndActivityDate = $decodedItem['endActivityDate'];
 
+					$dataInsertActivity = [];
+					$dataInsertActivity['ActivityDetail'] = $ActivityDetail;
+					$dataInsertActivity['ActivityBudget'] = $ActivityBudget;
+					$dataInsertActivity['StartActivityDate'] = $StartActivityDate;
+					$dataInsertActivity['EndActivityDate'] = $EndActivityDate;
+					$dataInsertActivity['ProjectBudgetId'] = $ProjectBudgetId;
+					$dataInsertActivity['VillageId'] = $VillageId;
+					$dataInsertActivity['TransactionYear'] = date('Y')+543;
+					$dataInsertActivity['Period'] = $periodCounter;
+					$dataInsertActivity['Status'] = 1;
+					$dataInsertActivity['CreatedAt'] = now();
+					$dataInsertActivity['CreatedBy'] = CRUDBooster::myId();
+					$dataInsertActivity['IsActive'] = 1;
 
-			foreach ($dataFile as $val) {
+					$periodCounter++;
+
+					$ProjectActivityId = DB::table('projectActivity')->insertGetId($dataInsertActivity);	
+				}
+
+				foreach ($dataArrayAsset as $item) {
+					$decodedItem = json_decode($item, true);
+
+					$AssetCode = $decodedItem['AssetCode'];
+					$AssetName = $decodedItem['AssetName'];
+					$AssetAge = $decodedItem['AssetAge'];
+					$Amount = $decodedItem['Amount'];
+					$AmountUnit = $decodedItem['AmountUnit'];
+
+					$dataInsertAsset = [];
+					$dataInsertAsset['AssetCode'] = $AssetCode;
+					$dataInsertAsset['AssetName'] = $AssetName;
+					$dataInsertAsset['AssetAge'] = $AssetAge;
+					$dataInsertAsset['Amount'] = $Amount;
+					$dataInsertAsset['AmountUnit'] = $AmountUnit;
+
+					$dataInsertAsset['ProjectBudgetId'] = $ProjectBudgetId;
+					$dataInsertAsset['VillageId'] = $VillageId;
+					$dataInsertAsset['CreatedAt'] = now();
+					$dataInsertAsset['CreatedBy'] = CRUDBooster::myId();
+					$dataInsertAsset['Status'] = 1;
+					$dataInsertAsset['CreatedAt'] = now();
+					$dataInsertAsset['CreatedBy'] = CRUDBooster::myId();
+
+					$ProjectAssetId = DB::table('projectAsset')->insertGetId($dataInsertAsset);	
+				}
+
+				$dataInsertFileProject = [];
+				$dataInsertFileProject['ProjectBudgetId'] = $ProjectBudgetId;
+				$dataInsertFileProject['TransactionYear'] = date('Y')+543;
 				
-				$DataUpdateVillageComment = [
-					'ProjectBudgetId' => $IDprojectBudget,
-					'TransactionYear' => date('Y')+543,
-					'FileName' => $val->getClientOriginalName(),
-					'FilePath' => "uploads/" . $val->getClientOriginalName(),
-					'CreatedAt' => now(),
-					'CreatedBy' => $myid,
-					'IsActive' => 1,
-				];
-				$idDocumentRequest = DB::table('projectBudgetDocumentRequest')->insertGetId($DataUpdateVillageComment);			
-				// array_push($array_file, $val->getClientOriginalName() . '.' . $val->getClientOriginalExtension());
-				Storage::putFileAs('uploads/BudgetDocument', $val, $val->getClientOriginalName());
-				array_push($array_file, $val->getClientOriginalName());
-			}
-			// dd($array_file);
-
-			foreach ($dataActivity as $DataProject) {
-				$IDprojectBudget = DB::table('projectActivity')->insertGetId($DataProject);	
-			}
-			foreach ($dataAsset as $DataProject2) {
-				$IDprojectAsset = DB::table('projectAsset')->insertGetId($DataProject2);	
-			}
-			if($IDprojectBudget && $IDprojectAsset){
-				DB::commit();
-				$data['api_status'] = 1;
-				$data['api_message'] = 'ดำเนินการเสร็จสิ้น';
+				foreach ($file as $index => $val) {
+					$dataInsertFileProject['FileName'] = $val->getClientOriginalName();
+					$dataInsertFileProject['FilePath'] = "uploads/" . $val->getClientOriginalName();
+				}
+				$dataInsertFileProject['IsActive'] = 1;
+				$dataInsertFileProject['CreatedAt'] = date('Y-m-d');
+				$dataInsertFileProject['CreatedBy'] = CRUDBooster::myId();
 				
+				$FileProjectId = DB::table('projectBudgetDocumentRequest')->insertGetId($dataInsertFileProject);
+				if ($FileProjectId) {
+					DB::commit();
+					$data['api_status'] = 1;
+					$data['api_message'] = 'Success';
+					$data['id'] = $FileProjectId;
+					Storage::putFileAs('uploads/', $val, $val->getClientOriginalName());
+					array_push($array_file, $val->getClientOriginalName() . '.' . $val->getClientOriginalExtension());
+					return response()->json($data, 200)
+						->header("Access-Control-Allow-Origin", config('cors.allowed_origins'))
+						->header("Access-Control-Allow-Methods", config('cors.allowed_methods'));
+				} else {
+					DB::rollback();
+					$data['api_status'] = 0;
+					$data['api_message'] = 'กรุณาทำรายการใหม่อีกครั้ง';
+					return response()->json($data, 200);
+				}
 			}else{
 				DB::rollBack();
 				$data['api_status'] = 0;
 				$data['api_message'] = 'กรุณาทำรายการใหม่อีกครั้ง';
 			}		
-
 		} catch (\Exception $e) {
 			DB::rollback();
 			$data['api_status'] = 0;
