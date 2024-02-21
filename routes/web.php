@@ -116,6 +116,9 @@ Route::post('/getAccountBudgetDetailSubApi', '\App\Http\Controllers\AdminProject
 Route::post('/getAccountBudgetFileApi', '\App\Http\Controllers\AdminProjectBudgetController@getAccountBudgetFileApi');
 
 Route::post('/addProjectBudget', '\App\Http\Controllers\AdminVillageNewController@addProjectBudget');
+Route::post('/saveEditProjectBudget', '\App\Http\Controllers\AdminVillageNewController@saveEditProjectBudget');
+Route::post('/delProjectBudget', '\App\Http\Controllers\AdminVillageNewController@delProjectBudget');
+
 //========================================================================================== API
 
 //========================================================================================== Report
