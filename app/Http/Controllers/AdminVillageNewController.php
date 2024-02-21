@@ -723,7 +723,7 @@ class AdminVillageNewController extends \crocodicstudio\crudbooster\controllers\
 
 	function addProjectBudget(Request $request)
 	{
-		dd( $request->all());
+		// dd( $request->all());
 		// dd(CRUDBooster::myId());
 		// $myid = CRUDBooster::myId();
 		$myid = 45;
@@ -789,28 +789,16 @@ class AdminVillageNewController extends \crocodicstudio\crudbooster\controllers\
 			]
 		];
 
-		$dataFile = [
-			[
-				"AssetCode" => "12211",
-				"AssetName" => "TEssttt",
-				"AssetAge" => "1",
-				"Amount" => "213",
-				"AmountUnit" => "T"
-			],
-			[
-				"AssetCode" => "23123",
-				"AssetName" => "Teesrr",
-				"AssetAge" => "2",
-				"Amount" => "123",
-				"AmountUnit" => "E"
-			]
-		];
-		
-		$periodCounter = 1;
-		// Iterate through each element in $dataActivity and add VillageId
-		
-		// dd($dataActivity);
+		$array_file = [];
 
+		// mockup file data ของ File
+		$dataFile[0] = $request->file1;
+		$dataFile[1] = $request->file2;
+		$dataFile[2] = $request->file3;
+		
+		// dd($dataFile[0]);
+
+		$periodCounter = 1;
 		DB::beginTransaction();
 		try {
 			$IDprojectBudget = DB::table('projectBudget')->insertGetId($DataProject);
@@ -834,33 +822,239 @@ class AdminVillageNewController extends \crocodicstudio\crudbooster\controllers\
 				$Asset['CreatedAt'] = now();
 				$Asset['CreatedBy'] = $myid;
 			}
-			// dd($dataAsset);
+
+
+			foreach ($dataFile as $val) {
+				
+				$DataUpdateVillageComment = [
+					'ProjectBudgetId' => $IDprojectBudget,
+					'TransactionYear' => date('Y')+543,
+					'FileName' => $val->getClientOriginalName(),
+					'FilePath' => "uploads/" . $val->getClientOriginalName(),
+					'CreatedAt' => now(),
+					'CreatedBy' => $myid,
+					'IsActive' => 1,
+				];
+				$idDocumentRequest = DB::table('projectBudgetDocumentRequest')->insertGetId($DataUpdateVillageComment);			
+				// array_push($array_file, $val->getClientOriginalName() . '.' . $val->getClientOriginalExtension());
+				Storage::putFileAs('uploads/BudgetDocument', $val, $val->getClientOriginalName());
+				array_push($array_file, $val->getClientOriginalName());
+			}
+			// dd($array_file);
 
 			foreach ($dataActivity as $DataProject) {
-				// dd($DataProject);
 				$IDprojectBudget = DB::table('projectActivity')->insertGetId($DataProject);	
 			}
 			foreach ($dataAsset as $DataProject2) {
-				// dd($DataProject2);
 				$IDprojectAsset = DB::table('projectAsset')->insertGetId($DataProject2);	
 			}
 			if($IDprojectBudget && $IDprojectAsset){
 				DB::commit();
+				$data['api_status'] = 1;
+				$data['api_message'] = 'ดำเนินการเสร็จสิ้น';
+				
 			}else{
 				DB::rollBack();
+				$data['api_status'] = 0;
+				$data['api_message'] = 'กรุณาทำรายการใหม่อีกครั้ง';
 			}		
 
-
-			// dd($IDprojectBudget);
 		} catch (\Exception $e) {
 			DB::rollback();
 			$data['api_status'] = 0;
 			$data['api_message'] = 'กรุณาทำรายการใหม่อีกครั้ง';
 			$data['api_data'] = $e;
 		}
-		// dd($DataProject);
+
+		response()->json($data, 200)->header("Access-Control-Allow-Origin", config('cors.allowed_origins'))
+			->header("Access-Control-Allow-Methods", config('cors.allowed_methods'))->send();
 
 	}
 	
+
+	function saveEditProjectBudget(Request $request)
+	{
+		// dd( $request->all());
+		// dd(CRUDBooster::myId());
+		// $myid = CRUDBooster::myId();
+		$myid = 45;
+
+
+		$projectBudgetID = $request->projectBudget;
+		// dd($projectBudgetID);
+
+		$VillageId = DB::table('village')
+			->select("village.id")
+			->where('village.IsActive', 1)
+			->where('village.UserId', $myid)
+			->value('id');
+
+		$OrgId = DB::table('user')
+			->select("user.orgProvinceId")
+			->where('user.is_active', 1)
+			->where('user.cmsUserId', $myid)
+			->value('orgProvinceId');
+			
+		// dd($VillageId,$OrgId);
+		$DataProject = [];
+		$DataProject['VillageId'] = $VillageId;
+		$DataProject['OrgId'] = $OrgId;
+		$DataProject['AccountBudgetSubId'] = $request->AccountBudgetSubId;
+		$DataProject['ProjectCode'] = $request->ProjectCode;
+		$DataProject['TransactionYear'] = date('Y')+543;
+		$DataProject['ProjectName'] = $request->ProjectName;
+		$DataProject['Amount'] = $request->Amount;
+		$DataProject['Status'] = $request->Status;
+		$DataProject['SignProjectDate'] = $request->SignProjectDate;
+		$DataProject['StartProjectDate'] = $request->StartProjectDate;
+		$DataProject['EndProjectDate'] = $request->EndProjectDate;
+		$DataProject['UpdatedAt'] = now();
+		$DataProject['UpdatedBy'] = $myid;
+		$DataProject['IsActive'] = $request->IsActive;
+
+		$dataActivity = [
+			[
+				"id" => "1",
+				"ActivityDetail" => "Pao",
+				"ActivityBudget" => "PaoPao",
+				"StartActivityDate" => "2024-02-20",
+				"EndActivityDate" => "2024-02-23"
+			],
+			[
+				"id" => "2",
+				"ActivityDetail" => "oap",
+				"ActivityBudget" => "oap",
+				"StartActivityDate" => "2024-02-22",
+				"EndActivityDate" => "2024-02-18"
+			]
+		];
+
+		$dataAsset = [
+			[
+				"id" => "1",
+				"AssetCode" => "12211",
+				"AssetName" => "Aungpao",
+				"AssetAge" => "1",
+				"Amount" => "213",
+				"AmountUnit" => "T"
+			],
+			[
+				"id" => "2",
+				"AssetCode" => "23123",
+				"AssetName" => "Biggpao",
+				"AssetAge" => "2",
+				"Amount" => "123",
+				"AmountUnit" => "E"
+			]
+		];
+
+		$array_file = [];
+		$check_update = [];		
+		$periodCounter = 1;
+		DB::beginTransaction();
+		try {
+			$IDprojectBudget = DB::table('projectBudget')->where('id', $projectBudgetID)->update($DataProject);
+			// dd($IDprojectBudget);
+			foreach ($dataActivity as &$activity) {
+				$activity['ProjectBudgetId'] = $IDprojectBudget;
+				$activity['VillageId'] = $VillageId;
+				$activity['TransactionYear'] = date('Y')+543;
+				$activity['Period'] = $periodCounter;
+				$activity['Status'] = 1;
+				$activity['UpdatedAt'] = now();
+				$activity['UpdatedBy'] = $myid;
+				$activity['IsActive'] = 1;
+				$periodCounter++;
+			}
+
+			foreach ($dataAsset as &$Asset) {
+				$Asset['ProjectBudgetId'] = $IDprojectBudget;
+				$Asset['VillageId'] = $VillageId;
+				$Asset['Status'] = 1;
+				$Asset['UpdatedAt'] = now();
+				$Asset['UpdatedBy'] = $myid;
+			}
+			// dd($dataActivity);
+			
+			$numberOfActivities = count($dataActivity);
+			// dd($numberOfActivities );
+			for ($i = 0; $i < $numberOfActivities; $i++) {
+				$activityId = $dataActivity[$i]['id'];
+				$activity_update = DB::table('projectActivity')->where('id', $activityId)->update($dataActivity[$i]);
+			}
+			// dd($check_update);
+
+			$numberOfAssets = count($dataAsset);
+			for ($i = 0; $i < $numberOfAssets; $i++) {
+				$assetId = $dataAsset[$i]['id'];
+				// unset($dataAsset[$i]['id']);
+				$asset_update = DB::table('projectAsset')->where('id', $assetId)->update($dataAsset[$i]);
+			}		
+
+			if($IDprojectBudget){
+				DB::commit();
+				$data['api_status'] = 1;
+				$data['api_message'] = 'ดำเนินการเสร็จสิ้น';
+				
+			}else{
+				DB::rollBack();
+				$data['api_status'] = 0;
+				$data['api_message'] = 'กรุณาทำรายการใหม่อีกครั้ง';
+			}		
+
+		} catch (\Exception $e) {
+			DB::rollback();
+			$data['api_status'] = 0;
+			$data['api_message'] = 'กรุณาทำรายการใหม่อีกครั้ง';
+			$data['api_data'] = $e;
+		}
+
+		response()->json($data, 200)->header("Access-Control-Allow-Origin", config('cors.allowed_origins'))
+			->header("Access-Control-Allow-Methods", config('cors.allowed_methods'))->send();
+
+	}
+
+	function delProjectBudget(Request $request)
+	{
+		// dd( $request->all());
+		// dd(CRUDBooster::myId());
+		// $myid = CRUDBooster::myId();
+		$myid = 45;
+
+
+		$projectBudgetID = $request->id;
+		// dd($projectBudgetID);
+
+		$DataProject = [];
+		$DataProject['UpdatedAt'] = now();
+		$DataProject['UpdatedBy'] = $myid;
+		$DataProject['IsActive'] = 0;
+
+		
+		DB::beginTransaction();
+		try {
+			$IDprojectBudget = DB::table('projectBudget')->where('id', $projectBudgetID)->update($DataProject);
+			// dd($IDprojectBudget);
+			if($IDprojectBudget){
+				DB::commit();
+				$data['api_status'] = 1;
+				$data['api_message'] = 'ดำเนินการเสร็จสิ้น';			
+			}else{
+				DB::rollBack();
+				$data['api_status'] = 0;
+				$data['api_message'] = 'กรุณาทำรายการใหม่อีกครั้ง';
+			}		
+
+		} catch (\Exception $e) {
+			DB::rollback();
+			$data['api_status'] = 0;
+			$data['api_message'] = 'กรุณาทำรายการใหม่อีกครั้ง';
+			$data['api_data'] = $e;
+		}
+
+		response()->json($data, 200)->header("Access-Control-Allow-Origin", config('cors.allowed_origins'))
+			->header("Access-Control-Allow-Methods", config('cors.allowed_methods'))->send();
+
+	}
 
 }

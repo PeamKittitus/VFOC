@@ -114,6 +114,11 @@ Route::get('/getAccountBudgetSubApi', '\App\Http\Controllers\AdminProjectBudgetC
 Route::post('/getAccountBudgetSubPeriodDetailApi', '\App\Http\Controllers\AdminProjectBudgetController@getAccountBudgetSubPeriodDetailApi');
 Route::post('/getAccountBudgetDetailSubApi', '\App\Http\Controllers\AdminProjectBudgetController@getAccountBudgetDetailSubApi');
 Route::post('/getAccountBudgetFileApi', '\App\Http\Controllers\AdminProjectBudgetController@getAccountBudgetFileApi');
+
+Route::post('/addProjectBudget', '\App\Http\Controllers\AdminVillageNewController@addProjectBudget');
+Route::post('/saveEditProjectBudget', '\App\Http\Controllers\AdminVillageNewController@saveEditProjectBudget');
+Route::post('/delProjectBudget', '\App\Http\Controllers\AdminVillageNewController@delProjectBudget');
+
 Route::post('/addProjectBudgetApi', '\App\Http\Controllers\AdminVillageNewController@addProjectBudget');
 //========================================================================================== API
 
