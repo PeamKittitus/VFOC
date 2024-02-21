@@ -125,3 +125,14 @@ Route::post('/getTransactionNewsReportCreatorMostNewsBy', '\App\Http\Controllers
 Route::post('/getTransactionNewsReportTypeNewsByMonth', '\App\Http\Controllers\ApiNewsController@getTransactionNewsReportTypeNewsByMonth');
 Route::post('/getTransactionNewsReportApproveNewsByMonth', '\App\Http\Controllers\ApiNewsController@getTransactionNewsReportApproveNewsByMonth');
 //========================================================================================== Report
+
+
+
+
+
+
+
+
+//====================================================Approve
+Route::post('/approveBudget', '\App\Http\Controllers\AdminApproveProjectBudgetController@approveProjectBudget');
+
