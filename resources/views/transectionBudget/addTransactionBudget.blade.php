@@ -193,11 +193,6 @@
                                                 <div class="form-group has-feedback has-error">
                                                     <label class="form-label"> ชื่อแผนงาน/โครงการ</label>
                                                     <select class="select2" id="AccountBudgetd" name="AccountBudgetd">
-                                                        <option value="1">โครงการเทคโนโลยีการ
-                                                        </option>
-                                                        <option value="2">
-                                                            โครงการการเลี้ยงสัตว์หรือแมลงแบบครบวงจร</option>
-                                                        <option value="3">โครงการ BCG</option>
                                                     </select>
                                                     <small class="help-block" data-bv-validator="notEmpty"
                                                         data-bv-for="AccountBudgetd" data-bv-result="INVALID"
@@ -206,13 +201,6 @@
                                                 <div class="form-group has-feedback">
                                                     <label class="form-label"> ชื่อบัญชี</label>
                                                     <select class="select2" id="SenderBookBankId" name="SenderBookBankId">
-                                                        <option value="10195">
-                                                            บัญชีโครงการเทคโนโลยีการเลี้ยงสัตว์หรือแมลงแบบครบวงจรตามโมเดลเศรษฐกิจ
-                                                            BCG</option>
-                                                        <option value="10196">
-                                                            บัญชีเทคโนโลยี</option>
-                                                        <option value="10197">
-                                                            บัญชีโการเลี้ยงสัตว์หรือแมลงแบบครบวงจร</option>
                                                     </select>
                                                 </div>
 
@@ -220,23 +208,19 @@
                                                     หน่วยงานปลายทาง </label>
                                                 <hr>
 
-                                                <div class="form-group">
+                                                {{-- <div class="form-group">
                                                     <label class="form-label"> เลือกประเภทหน่วยงาน</label>
                                                     <select name="OrgType" id="OrgType" class="select2">
                                                         <option value="1" >กองทุน 1</option>
                                                         <option value="2" >กองทุน 2</option>
                                                         <option value="3" >กองทุน 3</option>
                                                     </select>
-                                                </div>
+                                                </div> --}}
 
                                                 <div id="IsHeadBrance">
                                                     <div class="form-group has-feedback">
                                                         <label class="form-label"> กองทุนหมูบ้าน</label>
                                                         <select id="Village" name="Village" class="select2">
-                                                            <option value="1">กองทุนหมูบ้าน 1</option>
-                                                            <option value="2">กองทุนหมูบ้าน 2</option>
-                                                            <option value="3">กองทุนหมูบ้าน 3</option>
-                                                            <option value="4">กองทุนหมูบ้าน 4</option>
                                                         </select>
                                                     </div>
 
@@ -245,10 +229,6 @@
                                                                 style="color:red !important">*</span></label>
                                                         <select class="select2" id="ReceiverBookBankId"
                                                             name="ReceiverBookBankId">
-                                                            <option value="1">บัญชีอังเปา 1</option>
-                                                            <option value="2">บัญชีอังเปา 2</option>
-                                                            <option value="3">บัญชีอังเปา 3</option>
-                                                            <option value="4">บัญชีอังเปา 4</option>
                                                         </select>
                                                         <small class="help-block" data-bv-validator="notEmpty"
                                                             data-bv-for="ReceiverBookBankId" data-bv-result="INVALID"
@@ -352,9 +332,60 @@
 
         });
 
-
-
         $(document).ready(function() {
+
+
+            // Get the select element
+            const AccountBudgetd = $('#AccountBudgetd');
+            const SenderBookBankId = $('#SenderBookBankId');
+            const Village = $('#Village');
+            
+
+            // fetch โครงการ
+            $.ajax({
+                url: '/getAccountBudgetSub',
+                method: 'GET',
+                dataType: 'json',
+                success: function (data) {
+                    $.each(data, function (index, option) {
+                        AccountBudgetd.append('<option value="' + option.id + '">' + option.AccName + '</option>');
+                    });
+                },
+                error: function (error) {
+                    console.error('Error fetching data:', error);
+                }
+            });
+
+             // fetch บัญชี
+             $.ajax({
+                url: '/getBookBankAdminApi',
+                method: 'GET',
+                dataType: 'json',
+                success: function (data) {
+                    $.each(data, function (index, option) {
+                        SenderBookBankId.append('<option value="' + option.id + '">' + option.BookBankName + '</option>');
+                    });
+                },
+                error: function (error) {
+                    console.error('Error fetching data:', error);
+                }
+            });
+
+            $.ajax({
+                url: '/getVillageApi',
+                method: 'GET',
+                dataType: 'json',
+                success: function (data) {
+                    Village.append('<option value="0">เลือกกองทุน</option>');
+                    $.each(data, function (index, option) {
+                        Village.append('<option value="' + option.UserId + '">' + option.VillageName + '</option>');
+                    });
+                },
+                error: function (error) {
+                    console.error('Error fetching data:', error);
+                }
+            });
+
 
             $("#submitTransectionBudget").click(function(event) {
                 // alert('asdsa');
@@ -431,6 +462,30 @@
 
 
 
+        });
+
+        $(document).on("change", "#Village", function() {
+            var villageID = $(this).val();
+            // console.log(selectedValue);
+            // alert(villageID);
+
+            $.ajax({
+                url: `/getVillageBookBankApi/`+ villageID,
+                method: 'GET',
+                dataType: 'json',
+                success: function (data) {
+                    var ReceiverBookBankId = $('#ReceiverBookBankId');
+
+                    ReceiverBookBankId.empty();
+
+                    $.each(data, function (index, option) {
+                        ReceiverBookBankId.append('<option value="' + option.id + '">' + option.BookBankName + '</option>');
+                    });
+                },
+                error: function (error) {
+                    console.error('Error fetching data:', error);
+                }
+            });
         });
     </script>
 @endsection

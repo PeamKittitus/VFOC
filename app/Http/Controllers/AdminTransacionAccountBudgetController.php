@@ -356,9 +356,11 @@ class AdminTransacionAccountBudgetController extends \crocodicstudio\crudbooster
 
 	public function saveTransectionBudget(Request $request)
 	{
-		// dd($request->all());
+		// dd($request->Village);
 
 		$myId = 45;
+		$villageID = $request->Village;
+		
 
 		$OrgId = DB::table('user')
 			->select('user.orgProvinceId')
@@ -367,11 +369,17 @@ class AdminTransacionAccountBudgetController extends \crocodicstudio\crudbooster
 			// ->where('user.cmsUserId', $myId) // mockdata 
 			->value('orgProvinceId');
 
+		$Projectname = DB::table('village')
+			->select('village.VillageName')
+			->where('village.UserId', $villageID) 
+			->value('VillageName');
+		// dd($Projectname);
+
 		$file = $request['FileUpload'];	
 
 		$dataTranBudget = [];
 		$dataTranBudget['AccountBudgetd'] = $request->AccountBudgetd;
-		$dataTranBudget['Title'] = "โอนเงินจากโครงการ"; //รู้สึกว่าเขาจะ fix ไว้
+		$dataTranBudget['Title'] = "โอนเงินไปยังโครงการ " . $Projectname;
 		$dataTranBudget['TransactionYear'] = date('Y') + 543;
 		$dataTranBudget['TransactionType'] = 0; //or something		
 		$dataTranBudget['SenderOrgId'] = $OrgId;
@@ -381,7 +389,9 @@ class AdminTransacionAccountBudgetController extends \crocodicstudio\crudbooster
 		$dataTranBudget['ReceiverDate'] = now();
 		$dataTranBudget['Amount'] = $request->Amount;
 		$dataTranBudget['SenderDate'] = now();
-		$dataTranBudget['IsAcept'] = 0; //ค่าดว่ากองทุนจะต้องกดยืนยันก่อน ค่อยจะปรับเป็น 1
+		$dataTranBudget['IsAcept'] = 0; 
+		// dd($dataTranBudget);
+		//ค่าดว่ากองทุนจะต้องกดยืนยันก่อน ค่อยจะปรับเป็น 1
 		//กองทุน กด accept จะอัพเดท reciverdata and updaatedat and IsAcept
 
 		DB::beginTransaction();
@@ -394,7 +404,7 @@ class AdminTransacionAccountBudgetController extends \crocodicstudio\crudbooster
 				$dataInsertFileProject['FileName'] = $file->getClientOriginalName();
 				$dataInsertFileProject['FilePath'] = "uploads/transactionDocument" . $file->getClientOriginalName();
 				$dataInsertFileProject['FileType'] = 1;
-				$dataInsertFileProject['created_at'] = 1;
+				$dataInsertFileProject['created_at'] = now();
 				$dataInsertFileProject['created_by'] = CRUDBooster::myId();
 				$dataInsertFileProject['is_active'] = 1;
 				// dd($dataInsertFileProject);

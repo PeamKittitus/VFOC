@@ -126,6 +126,11 @@ Route::post('/addProjectBudgetApi', '\App\Http\Controllers\AdminVillageNewContro
 Route::post('/saveTransectionBudgetApi', '\App\Http\Controllers\AdminTransacionAccountBudgetController@saveTransectionBudget');
 Route::post('/approveBudget', '\App\Http\Controllers\AdminApproveProjectBudgetController@approveProjectBudget');
 Route::post('/updatedProjectActivity', '\App\Http\Controllers\AdminApproveProjectBudgetController@updatedProjectActivity');
+
+Route::get('/getBookBankAdminApi', '\App\Http\Controllers\FunctionController@getBookBankAdminApi');
+Route::get('/getVillageApi', '\App\Http\Controllers\FunctionController@getVillageApi');
+Route::get('/getVillageBookBankApi/{id}', '\App\Http\Controllers\FunctionController@getVillageBookBankApi');
+
 //========================================================================================== API
 
 //========================================================================================== Report
