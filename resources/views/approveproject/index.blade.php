@@ -180,9 +180,9 @@
                                                 <thead>
                                                     <tr>
                                                         <th style="text-align:center">ลำดับ</th>
-                                                        <th style="text-align:center">รหัสกองทุน</th>
+                                                        <th style="text-align:center">รหัส</th>
                                                         <th style="text-align:center">ชื่อกองทุน</th>
-                                                        <th style="text-align:center">จำนวนเงิน</th>
+                                                        <th style="text-align:center">งบประมาณ</th>
                                                         <th style="text-align:center">สถานะ</th>
                                                         <th style="text-align:center">จัดการข้อมูล</th>
                                                     </tr>
@@ -190,33 +190,27 @@
                                                 <tbody>
                                                     @foreach($ProjectBudget as $index => $val)
                                                     <tr>
-                                                        <td>{{$index+1}}</td>
-                                                        <td>{{$val->ProjectCode}}</td>
-                                                        <td>{{$val->ProjectName}}</td>
-                                                        <td>{{$val->Amount}}</td>
-                                                        <td><?php if ($val->Status == 1) {
-                                                                echo "อนุมัติ";
-                                                            } elseif ($val->Status == 2) {
-                                                                echo "รออนุมัติ";
-                                                            } else {
-                                                                echo "ไม่อนุมัติ";
-                                                            }
-                                                            ?>
+                                                        <td style="text-align:center">{{$index+1}}</td>
+                                                        <td style="text-align:center">{{$val->ProjectCode}}</td>
+                                                        <td style="text-align:center">{{$val->ProjectName}}</td>
+                                                        <td style="text-align:center">{{$val->Amount}}</td>
+                                                        @if($val->Status == 1)
+                                                            <td style="text-align:center;color:#1dc9b7">อนุมัติ</td>
+                                                        @elseif($val->Status == 2)
+                                                            <td style="text-align:center;color:#ffc241">รออนุมัติ</td>
+                                                        @else
+                                                            <td style="text-align:center;color:red">ไม่อนุมัติ</td>
+                                                        @endif
                                                         </td>
-                                                        <td>
-                                                            @if ($val->Status == 2)
-                                                            <div class="flex justify-content-evenly">
-                                                                <!-- <a href="/editbookbank/{{$value->id}}"> -->
-                                                                <button type="button" class="btn btn-default btn-sm approve" data-id="{{$val->id}}" data-status="1">
-                                                                    <span class="glyphicon glyphicon-pencil">อนุมัติ</span>
-                                                                </button>
-                                                                <!-- </a> -->
-                                                                <button type="button" class="btn btn-default btn-sm del_icon reject" data-id="{{$val->id}}" data-status="3">
-                                                                    <span class="glyphicon glyphicon-trash">ไม่อนุมัติ</span>
-                                                                </button>
-                                                            </div>
-                                                            @endif
-                                                        </td>
+                                                        @if($val->Status == 2)
+                                                            <td style="text-align:center; display: flex; gap: 1%; justify-content: center;">
+                                                                <a href="/approveDetailProject/{{$val->id}}" class="btn" style="color: white; background-color: #09d7f7">อนมุัติโครงการ</a>
+                                                            </td>
+                                                        @else
+                                                            <td style="text-align:center; display: flex; gap: 1%; justify-content: center;">
+                                                            </td>
+                                                        @endif
+                                                     
                                                     </tr>
                                                     @endforeach
                                                 </tbody>
@@ -263,13 +257,6 @@
             var dataStatus = $(this).data('status');
             formData.append('budgetId', dataId);
             formData.append('budgetstatus', dataStatus);
-            // console.log(data);
-            // var data = {
-            //     budgetId: dataId,
-            //     budgetstatus:dataStatus
-            // }
-            // console.log(data);
-
             Swal.fire({
                 title: 'Are you sure?',
                 text: 'This action cannot be undone.',
@@ -281,7 +268,6 @@
                 cancelButtonText: 'No, cancel'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    // Action when confirmed
                     $.ajax({
                         url: '/approveBudget',
                         method: 'POST',
@@ -321,7 +307,6 @@
             var dataStatus = $(this).data('status');
             formData.append('budgetId', dataId);
             formData.append('budgetstatus', dataStatus)
-            // console.log(data);
             Swal.fire({
                 title: 'Are you sure?',
                 text: 'This action cannot be undone.',

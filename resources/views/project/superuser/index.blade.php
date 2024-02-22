@@ -173,7 +173,7 @@
                         <div class="col-sm-12">
                             <div class="form-group">
                                 <a href="/addProjectBudget">
-                                    <button id="addActivityBtn" type="button" class="btn" style="color: white ; background-color:#1dc9b7">เพิ่มกิจกรรม</button>
+                                    <button id="addActivityBtn" type="button" class="btn" style="color: white ; background-color:#1dc9b7">ยื่นโครงการ</button>
                                 </a>
                             </div>
                         </div>

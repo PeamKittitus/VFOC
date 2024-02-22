@@ -60,6 +60,8 @@ Route::get('/editMemberVillage/{id}', '\App\Http\Controllers\AdminMemberVillageC
 Route::get('/approveEditDetail/{id}', '\App\Http\Controllers\AdminVillageNewController@approveEditDetail');
 Route::get('/addProjectBudget', '\App\Http\Controllers\AdminProjectBudgetController@addProjectBudget');
 Route::get('/detailProject/{id}', '\App\Http\Controllers\AdminProjectBudgetController@detailProject');
+Route::get('/approveDetailProject/{id}', '\App\Http\Controllers\AdminApproveProjectBudgetController@approveDetailProject');
+
 //==========================================================================================Route
 
 
