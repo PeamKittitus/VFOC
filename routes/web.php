@@ -63,6 +63,7 @@ Route::get('/detailProject/{id}', '\App\Http\Controllers\AdminProjectBudgetContr
 Route::get('/approveDetailProject/{id}', '\App\Http\Controllers\AdminApproveProjectBudgetController@approveDetailProject');
 Route::get('/updateProjectActivity/{id}', '\App\Http\Controllers\AdminProjectBudgetController@updateProjectActivity');
 Route::get('/updateProjectActivityDetail/{id}', '\App\Http\Controllers\AdminProjectBudgetController@updateProjectActivityDetail');
+Route::get('/approveActivityProject/{id}', '\App\Http\Controllers\AdminApproveProjectBudgetController@approveActivityProject');
 //==========================================================================================Route
 
 
@@ -139,7 +140,7 @@ Route::post('/getTransactionNewsReportApproveNewsByMonth', '\App\Http\Controller
 
 
 //======================================================== All Approve
-
 Route::get('/admin/approveall','\App\Http\Controllers\AdminApproveController@Index');
 Route::post('/approveActivity', '\App\Http\Controllers\AdminApproveController@approveProjectActivity');
+
 

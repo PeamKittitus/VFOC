@@ -44,6 +44,15 @@
             margin-top: 25px !important;
         }
 
+        #datatableActivity thead th {
+            background-color: #1ab3a3;
+            color: #fff;
+        }
+
+        table.datatableActivity.dtr-inline.collapsed>tbody>tr>td.dtr-control:before {
+            background-color: #886ab5;
+        }
+
         .breadcrumb {
             background-color: #fff;
         }
@@ -225,6 +234,78 @@
                 </div>
             </div>
         </div>
+        <div class="row" id="ProjectActivity">
+            <div class="col-lg-12 sortable-grid ui-sortable" style="padding: 10px;">
+                <div class="panel panel-sortable" role="widget">
+                    <div class="panel-hdr" role="heading">
+                        <h2 class="ui-sortable-handle"><i class="subheader-icon fal fa-money-bill"></i>{{$page_title_activity}}</h2>
+                    </div>
+                    <div class="panel-container show" role="content">
+                        <div class="panel-content">
+                            <div id="JsonData">
+                                <div id="JsonTable_wrapper" class="dataTables_wrapper dt-bootstrap4 no-footer">
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <table id="datatableActivity" class="table table-striped table-bordered" cellspacing="0" width="100%" style="margin-top: 20px !important">
+                                                <thead>
+                                                    <tr>
+                                                        <th style="text-align:center">ลำดับ</th>
+                                                        <th style="text-align:center">ประเภทกิจกรรม</th>
+                                                        <th style="text-align:center">ชื่อกิจกรรม</th>
+                                                        <th style="text-align:center">งบประมาณ</th>
+                                                        <th style="text-align:center">วันเริ่มต้น - วันสิ้นสุด</th>
+                                                        <th style="text-align:center">สถานะ</th>
+                                                        <th style="text-align:center">จัดการข้อมูล</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @foreach($projectActivity as $index => $val)
+                                                    <tr>
+                                                        <td style="text-align:center">{{$index+1}}</td>
+                                                        <td style="text-align:center">{{$val->name}}</td>
+                                                        <td style="text-align:center">{{$val->ActivityDetail}}</td>
+                                                        <td style="text-align:center"><?= number_format($val->ActivityBudget, 2) ?></td>
+                                                        <td style="text-align:center">{{$val->StartActivityDate}} - {{$val->EndActivityDate}}</td>
+                                                        @if($val->Status == 5)
+                                                        <td style="text-align:center;color:#1dc9b7">อนุมัติ</td>
+                                                        @elseif($val->Status == 2)
+                                                        <td style="text-align:center;color:#ffc241">รออนุมัติ</td>
+                                                        @elseif($val->Status == 6)
+                                                        <td style="text-align:center;color:red">ไม่อนุมัติ</td>
+                                                        @else
+                                                        <td></td>
+                                                        @endif
+                                                        </td>
+                                                        @if($val->Status == 2)
+                                                            <td style="text-align:center; display: flex; gap: 1%; justify-content: center;">
+                                                                <a href="/approveActivityProject/{{$val->id}}" class="btn" style="color: white; background-color: #09d7f7">อนมุัติกิจกรรม</a>
+                                                            </td>
+                                                        @else
+                                                            <td style="text-align:center; display: flex; gap: 1%; justify-content: center;">
+                                                            </td>
+                                                        @endif
+                                                        <!-- <td style="text-align:center; display: flex; gap: 1%; justify-content: center;">
+                                                            <button type="button" class="btn btn-default btn-sm approve_activity" data-idactivity="{{$val->id}}" data-status="1" data-projectid="{{$val->ProjectBudgetId}}">
+                                                                <span class="glyphicon glyphicon-pencil">อนุมัติ</span>
+                                                            </button>
+
+                                                            <button type="button" class="btn btn-default btn-sm del_icon reject_activity" data-idactivity="{{$val->id}}" data-status="3" data-projectid="{{$val->ProjectBudgetId}}">
+                                                                <span class="glyphicon glyphicon-trash">ไม่อนุมัติ</span>
+                                                            </button>
+                                                        </td> -->
+                                                    </tr>
+                                                    @endforeach
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </body>
 <script>
@@ -250,7 +331,8 @@
             }
         });
         $('#datatable').DataTable();
-
+        $('#datatableActivity').DataTable();
+        
         $('.approve').click(function() {
             var formData = new FormData();
 
