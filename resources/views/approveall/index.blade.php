@@ -424,6 +424,8 @@
 
         $('.approve_activity').click(function() {
             var formData = new FormData();
+            var action = "ทำรายการ กิจกรรมของโครงการ";
+
             // data-idActivity="{{$val->id}}" data-status="3" data-projectId="{{$val->ProjectBudgetId}}
             var activityId = $(this).data('idactivity');
             var activityStatus = $(this).data('status');
@@ -432,6 +434,7 @@
             formData.append('activityId', activityId);
             formData.append('activityStatus', activityStatus);
             formData.append('projectId', projectId);
+            formData.append('action', action);
 
             Swal.fire({
                 title: 'Are you sure?',
@@ -477,6 +480,7 @@
             });
         });
         $('.reject_activity').click(function() {
+            var action = "ทำรายการ กิจกรรมของโครงการ";
             var formData = new FormData();
             var activityId = $(this).data('idActivity');
             var activityStatus = $(this).data('status');
@@ -485,6 +489,8 @@
             formData.append('activityId', activityId);
             formData.append('activityStatus', activityStatus);
             formData.append('projectId', projectId);
+            formData.append('action', action);
+
 
             Swal.fire({
                 title: 'Are you sure?',

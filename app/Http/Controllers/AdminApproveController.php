@@ -81,11 +81,14 @@ class AdminApproveController extends \crocodicstudio\crudbooster\controllers\CBC
         // dd($request->all());
         // projectActivity
 
-        
+
         $ProjectBudgetID = $request['projectId'];
         $activityID = $request['activityId'];
         $statusActivity = $request['activityStatus'];
         
+        $detailAction = $request['action'];
+
+
         $dataUpdate = [];
         $dataUpdate['Status'] = $statusActivity;
         $dataUpdate['IsActive'] = 1;
@@ -109,7 +112,8 @@ class AdminApproveController extends \crocodicstudio\crudbooster\controllers\CBC
             $budgetdata = DB::table('projectBudget')
                 ->where('id', $ProjectBudgetID)
                 ->update($dataBudget);
-            if ($activitydata) {
+            $LogInsert = (new FunctionController)->LogAction($ProjectBudgetID, $detailAction);
+            if ($activitydata && $LogInsert) {
                 DB::commit();
                 $data['api_status'] = 1;
                 $data['api_message'] = 'Success';
