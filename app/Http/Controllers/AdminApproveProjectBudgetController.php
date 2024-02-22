@@ -342,6 +342,10 @@ class AdminApproveProjectBudgetController extends \crocodicstudio\crudbooster\co
 		$data = [];
 		$data['page_title'] = 'พิจารณาอนุมัติโครงการ';
 		$data['ProjectBudget'] = $this->GetAllProjectBudget();
+
+		//ProjectActivity
+		$data['page_title_activity'] = 'พิจารณาอนุมัติกิจกรรมโครงการ';
+		$data['projectActivity'] = $this->GetAllprojectActivity();
 		return $this->view('approveproject/index', $data);
 	}
 	public function approveDetailProject($id)
@@ -358,6 +362,31 @@ class AdminApproveProjectBudgetController extends \crocodicstudio\crudbooster\co
 		$data['getProjectFile'] = $getProjectFile;
 		$data['budgetId'] = $id;
 		return $this->view('approveproject/approveDetailProject', $data);
+	}
+	public function approveActivityProject($id)
+	{
+		$data = [];
+		$getProjectActivityById = $this->getProjectActivityById($id);
+		
+		$data['getProjectActivityById'] = $getProjectActivityById;
+		return $this->view('approveproject/approveActivityProject', $data);
+	}
+	function getProjectActivityById($id)
+	{
+		$VillageDetail = DB::table('projectActivity')
+			->leftjoin('systemProjectType','systemProjectType.id','projectActivity.ProjectTypeActivityId')
+			->leftjoin('projectActivityDocument','projectActivityDocument.ProjectActivityId','projectActivity.id')
+			->select(
+				'projectActivity.*',
+				'systemProjectType.name',
+				'projectActivityDocument.Comment',
+				'projectActivityDocument.FileName',
+				'projectActivityDocument.FilePath',
+			)
+			->where('projectActivity.IsActive',1)
+			->where('projectActivity.id',$id)
+			->first();
+		return $VillageDetail;
 	}
 	function getVillageDetail($id)
 	{
@@ -409,6 +438,24 @@ class AdminApproveProjectBudgetController extends \crocodicstudio\crudbooster\co
 			->get();
 		return $ProjectActivityDetail;
 	}
+	public function GetAllprojectActivity()
+    {
+        $ProjectActivity = DB::table("projectActivity")
+			->leftjoin('systemProjectType','systemProjectType.id','projectActivity.ProjectTypeActivityId')
+			->select(
+				'projectActivity.id',
+				'projectActivity.ActivityDetail', 
+				'projectActivity.StartActivityDate',
+				'projectActivity.EndActivityDate',
+				'projectActivity.ActivityBudget',
+				'projectActivity.Status',
+				'projectActivity.IsActive',
+				'systemProjectType.name'
+			)
+			->where('projectActivity.IsActive', 1)
+			->get();
+        return $ProjectActivity;
+    }
 	function getProjectAsset($id)
 	{
 		$ProjectAssetDetail = DB::table('projectAsset')

@@ -97,7 +97,6 @@ class AdminApproveController extends \crocodicstudio\crudbooster\controllers\CBC
 
         // updateProjectBudget
         $dataBudget = [];
-        $dataBudget['Status'] = 2;
         $dataBudget['IsActive'] = 1;
         $dataBudget['UpdatedAt'] = date('Y-m-d');
         $dataBudget['UpdatedBy'] = CRUDBooster::myId();
