@@ -339,10 +339,6 @@ class AdminApproveProjectBudgetController extends \crocodicstudio\crudbooster\co
 
 	public function getIndex()
 	{
-		// $GetReportCreatorMost = (new ApiNewsController)->GetReportCreatorMost();
-		// $generateYearOptions = (new FunctionController)->generateYearOptions();
-		// $data['GetReportCreatorMost'] = $GetReportCreatorMost;
-		// $data['generateYearOptions'] = $generateYearOptions;
 		$data = [];
 		$data['page_title'] = 'พิจารณาอนุมัติโครงการ';
 		$data['ProjectBudget'] = $this->GetAllProjectBudget();
@@ -369,7 +365,7 @@ class AdminApproveProjectBudgetController extends \crocodicstudio\crudbooster\co
 		$dataUpdate['UpdatedBy'] = CRUDBooster::myId();
 		DB::beginTransaction();
 		try {
-			$budgetdata =DB::table('projectBudget')
+			$budgetdata = DB::table('projectBudget')
 				->where('id', $ProjectBudgetID)
 				->update($dataUpdate);
 			if ($budgetdata) {
