@@ -229,7 +229,7 @@
                                                         <td style="text-align:center; display: flex; gap: 1%; justify-content: center;">
                                                             <a href="/detailProject/{{$value->id}}" class="btn" style="color: white; background-color: #09d7f7">รายละเอียดโครงการ</a>
                                                             @if($value->Status == 1)
-                                                                <a href="/detailProject/{{$value->id}}" class="btn" style="color: white; background-color: #1dc9b7">อัพเดทกิจกรรม</a>
+                                                                <a href="/updateProjectActivity/{{$value->id}}" class="btn" style="color: white; background-color: #1dc9b7">อัพเดทกิจกรรม</a>
                                                             @endif
                                                         </td>
                                                     </tr>

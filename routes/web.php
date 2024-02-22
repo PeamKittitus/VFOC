@@ -61,7 +61,8 @@ Route::get('/approveEditDetail/{id}', '\App\Http\Controllers\AdminVillageNewCont
 Route::get('/addProjectBudget', '\App\Http\Controllers\AdminProjectBudgetController@addProjectBudget');
 Route::get('/detailProject/{id}', '\App\Http\Controllers\AdminProjectBudgetController@detailProject');
 Route::get('/approveDetailProject/{id}', '\App\Http\Controllers\AdminApproveProjectBudgetController@approveDetailProject');
-
+Route::get('/updateProjectActivity/{id}', '\App\Http\Controllers\AdminProjectBudgetController@updateProjectActivity');
+Route::get('/updateProjectActivityDetail/{id}', '\App\Http\Controllers\AdminProjectBudgetController@updateProjectActivityDetail');
 //==========================================================================================Route
 
 
@@ -120,6 +121,8 @@ Route::post('/getAccountBudgetFileApi', '\App\Http\Controllers\AdminProjectBudge
 Route::post('/saveEditProjectBudget', '\App\Http\Controllers\AdminVillageNewController@saveEditProjectBudget');
 Route::post('/delProjectBudget', '\App\Http\Controllers\AdminVillageNewController@delProjectBudget');
 Route::post('/addProjectBudgetApi', '\App\Http\Controllers\AdminVillageNewController@addProjectBudget');
+Route::post('/approveBudget', '\App\Http\Controllers\AdminApproveProjectBudgetController@approveProjectBudget');
+Route::post('/updatedProjectActivity', '\App\Http\Controllers\AdminApproveProjectBudgetController@updatedProjectActivity');
 //========================================================================================== API
 
 //========================================================================================== Report
@@ -128,13 +131,4 @@ Route::post('/getTransactionNewsReportTypeNewsByMonth', '\App\Http\Controllers\A
 Route::post('/getTransactionNewsReportApproveNewsByMonth', '\App\Http\Controllers\ApiNewsController@getTransactionNewsReportApproveNewsByMonth');
 //========================================================================================== Report
 
-
-
-
-
-
-
-
-//====================================================Approve
-Route::post('/approveBudget', '\App\Http\Controllers\AdminApproveProjectBudgetController@approveProjectBudget');
 
