@@ -394,12 +394,15 @@ class AdminApproveProjectBudgetController extends \crocodicstudio\crudbooster\co
 	function getProjectActivity($id)
 	{
 		$ProjectActivityDetail = DB::table('projectActivity')
+			->leftjoin('systemProjectType','systemProjectType.id','projectActivity.ProjectTypeActivityId')
 			->leftjoin('projectBudget','projectBudget.id','projectActivity.ProjectBudgetId')
 			->select(
 				'projectActivity.id',
 				'projectActivity.ActivityDetail', 
 				'projectActivity.StartActivityDate',
 				'projectActivity.EndActivityDate',
+				'projectActivity.Status',
+				'systemProjectType.name'
 			)
 			->where('projectBudget.IsActive',1)
 			->where('projectActivity.ProjectBudgetId',$id)

@@ -67,6 +67,9 @@
             color: #23527c;
             text-decoration: none;
         }
+        .select2-container{
+            width: 100% !important;
+        }
     </style>
 </head>
 
@@ -198,6 +201,7 @@
                                         <thead>
                                             <tr>
                                                 <th style="text-align: center;">ลำดับ</th>
+                                                <th style="text-align: center;">ประเภทกิจกรรม</th>
                                                 <th style="text-align: center;">กิจกรรม/โครงการ</th>
                                                 <th style="text-align: center;">วันที่เริ่มต้น-วันที่สิ้นสุด</th>
                                             </tr>
@@ -213,12 +217,12 @@
                         <div class="row mt-1">
                             <div class="col-sm-10">
                                 <div class="form-group">
-                                    <h4>ครุภัณฑ์</h4>
+                                    <h4>สินทรัพย์</h4>
                                 </div>
                             </div>
                             <div class="col-sm-2">
                                 <div class="form-group">
-                                    <button id="addAssetBtn" type="button" class="btn" style="color: white ; background-color:#1dc9b7">เพิ่มครุภัณฑ์</button>
+                                    <button id="addAssetBtn" type="button" class="btn" style="color: white ; background-color:#1dc9b7">เพิ่มสินทรัพย์</button>
                                 </div>
                             </div>
                         </div>
@@ -229,10 +233,10 @@
                                         <thead>
                                             <tr>
                                                 <th style="text-align: center;">ลำดับ</th>
-                                                <th style="text-align: center;">เลขที่ครุภัณฑ์</th>
-                                                <th style="text-align: center;">ชื่อครุภัณฑ์</th>
-                                                <th style="text-align: center;">อายุครุภัณฑ์ (ปี)</th>
-                                                <th style="text-align: center;">จำนวนครุภัณฑ์</th>
+                                                <th style="text-align: center;">เลขที่สินทรัพย์</th>
+                                                <th style="text-align: center;">ชื่อสินทรัพย์</th>
+                                                <th style="text-align: center;">อายุสินทรัพย์ (ปี)</th>
+                                                <th style="text-align: center;">จำนวนสินทรัพย์</th>
                                                 <th style="text-align: center;">ราคาสุทธิ</th>
                                             </tr>
                                         </thead>
@@ -286,6 +290,19 @@
                 <div class="row mt-1">
                     <div class="col-sm-12">
                         <div class="form-group">
+                            <label>ประเภทกิจกรรม<strong style="color:red">*</strong></label>
+                            <select name="ProjectTypeActivityId" id="ProjectTypeActivityId">
+                                <option value="0" selected disabled>----ประเภทกิจกรรม</option>
+                                @foreach($getDataProjectTypeActivity as $item)
+                                    <option value="{{ $item->id }}">{{ $item->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mt-1">
+                    <div class="col-sm-12">
+                        <div class="form-group">
                             <label>กิจกรรม/โครงการ<strong style="color:red">*</strong></label>
                             <input type="text" class="form-control" placeholder="กิจกรรม/โครงการ" id="ActivityDetail">
                         </div>
@@ -329,7 +346,7 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="addAssetModalLabel">เพิ่มครุภัณฑ์</h5>
+                <h5 class="modal-title" id="addAssetModalLabel">เพิ่มสินทรัพย์</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -338,32 +355,32 @@
                 <div class="row mt-1">
                     <div class="col-sm-12">
                         <div class="form-group">
-                            <label>เลขที่ครุภัณฑ์<strong style="color:red">*</strong></label>
-                            <input type="text" class="form-control" placeholder="เลขที่ครุภัณฑ์" id="AssetCode">
+                            <label>เลขที่สินทรัพย์<strong style="color:red">*</strong></label>
+                            <input type="text" class="form-control" placeholder="เลขที่สินทรัพย์" id="AssetCode">
                         </div>
                     </div>
                 </div>
                 <div class="row mt-1">
                     <div class="col-sm-12">
                         <div class="form-group">
-                            <label>ชื่อครุภัณฑ์<strong style="color:red">*</strong></label>
-                            <input type="text" class="form-control" placeholder="ชื่อครุภัณฑ์" id="AssetName">
+                            <label>ชื่อสินทรัพย์<strong style="color:red">*</strong></label>
+                            <input type="text" class="form-control" placeholder="ชื่อสินทรัพย์" id="AssetName">
                         </div>
                     </div>
                 </div>
                 <div class="row mt-1">
                     <div class="col-sm-12">
                         <div class="form-group">
-                            <label>อายุครุภัณฑ์ (ปี)<strong style="color:red">*</strong></label>
-                            <input type="text" class="form-control" placeholder="อายุครุภัณฑ์ (ปี)" id="AssetAge">
+                            <label>อายุสินทรัพย์ (ปี)<strong style="color:red">*</strong></label>
+                            <input type="text" class="form-control" placeholder="อายุสินทรัพย์ (ปี)" id="AssetAge">
                         </div>
                     </div>
                 </div>
                 <div class="row mt-1">
                     <div class="col-sm-12">
                         <div class="form-group">
-                            <label>จำนวนครุภัณฑ์<strong style="color:red">*</strong></label>
-                            <input type="text" class="form-control" placeholder="จำนวนครุภัณฑ์" id="Amount">
+                            <label>จำนวนสินทรัพย์<strong style="color:red">*</strong></label>
+                            <input type="text" class="form-control" placeholder="จำนวนสินทรัพย์" id="Amount">
                         </div>
                     </div>
                 </div>
@@ -393,8 +410,9 @@
         let dataArrayAsset = []; //store data
 
         $('#accountBudgetSub').select2();
-
-        // เมื่อคลิกที่ปุ่ม "เพิ่มครุภัณฑ์"
+        $('#ProjectTypeActivityId').select2();
+        
+        // เมื่อคลิกที่ปุ่ม "เพิ่มสินทรัพย์"
         document.getElementById('addAssetBtn').addEventListener('click', function() {
             // Open Modal
             $('#addAssetModal').modal('show');
@@ -461,7 +479,6 @@
             document.getElementById('ActivityBudget').value = "";
             document.getElementById('StartActivityDate').value = "";
             document.getElementById('EndActivityDate').value = "";
-
             // Remove the previous event listener for the "Save" button
             $('#saveActivityBtn').off('click').on('click', function() {
                 // Close Modal
@@ -472,13 +489,16 @@
                 var activityBudget = document.getElementById('ActivityBudget').value;
                 var startActivityDate = document.getElementById('StartActivityDate').value;
                 var endActivityDate = document.getElementById('EndActivityDate').value;
-
+                var ProjectTypeActivityId = document.getElementById('ProjectTypeActivityId').value;
+                var ProjectTypeActivityText = $("#ProjectTypeActivityId option:selected").text();
                 // Create an object to store the data
                 var activityData = {
                     activityDetail: activityDetail,
                     activityBudget: activityBudget,
                     startActivityDate: startActivityDate,
-                    endActivityDate: endActivityDate
+                    endActivityDate: endActivityDate,
+                    ProjectTypeActivityId: ProjectTypeActivityId,
+                    ProjectTypeActivityText: ProjectTypeActivityText
                 };
 
                 // Push the data object into the dataArrayActivity array
@@ -495,6 +515,7 @@
                 var row = dataArrayActivity[i];
                 tableHtml += '<tr>';
                 tableHtml += '<td style="text-align: center;">' + (i + 1) + '</td>';
+                tableHtml += '<td style="text-align: center;">' + row.ProjectTypeActivityText + '</td>';
                 tableHtml += '<td style="text-align: center;">' + row.activityDetail + '</td>';
                 tableHtml += '<td style="text-align: center;">' + row.startActivityDate + ' - ' + row.endActivityDate + '</td>';
                 tableHtml += '</tr>';

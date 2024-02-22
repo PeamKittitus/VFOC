@@ -775,13 +775,15 @@ class AdminVillageNewController extends \crocodicstudio\crudbooster\controllers\
 					$ActivityBudget = $decodedItem['activityBudget'];
 					$StartActivityDate = $decodedItem['startActivityDate'];
 					$EndActivityDate = $decodedItem['endActivityDate'];
-
+					$ProjectTypeActivityId = $decodedItem['ProjectTypeActivityId'];
+					
 					$dataInsertActivity = [];
 					$dataInsertActivity['ActivityDetail'] = $ActivityDetail;
 					$dataInsertActivity['ActivityBudget'] = $ActivityBudget;
 					$dataInsertActivity['StartActivityDate'] = $StartActivityDate;
 					$dataInsertActivity['EndActivityDate'] = $EndActivityDate;
 					$dataInsertActivity['ProjectBudgetId'] = $ProjectBudgetId;
+					$dataInsertActivity['ProjectTypeActivityId'] = $ProjectTypeActivityId;
 					$dataInsertActivity['VillageId'] = $VillageId;
 					$dataInsertActivity['TransactionYear'] = date('Y')+543;
 					$dataInsertActivity['Period'] = $periodCounter;

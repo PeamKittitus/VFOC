@@ -194,12 +194,13 @@
                                                         <td style="text-align:center">{{$val->ProjectCode}}</td>
                                                         <td style="text-align:center">{{$val->ProjectName}}</td>
                                                         <td style="text-align:center">{{$val->Amount}}</td>
-                                                        @if($val->Status == 1)
+                                                        @if($val->Status == 1 || $val->Status == 4)
                                                             <td style="text-align:center;color:#1dc9b7">อนุมัติ</td>
                                                         @elseif($val->Status == 2)
                                                             <td style="text-align:center;color:#ffc241">รออนุมัติ</td>
-                                                        @else
+                                                        @elseif($val->Status == 3)
                                                             <td style="text-align:center;color:red">ไม่อนุมัติ</td>
+                                                        @else
                                                         @endif
                                                         </td>
                                                         @if($val->Status == 2)

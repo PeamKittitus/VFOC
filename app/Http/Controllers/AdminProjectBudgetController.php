@@ -341,6 +341,8 @@
 		public function addProjectBudget()
 		{
 			$data['AddProjectBudget'] = 'AddProjectBudget';
+			$getDataProjectTypeActivity = $this->getDataProjectTypeActivity();
+			$data['getDataProjectTypeActivity'] = $getDataProjectTypeActivity;
 			return view('project/superuser/addProject', $data);
 		}
 		public function updateProjectActivity($id)
@@ -421,6 +423,7 @@
 		function getProjectActivity($id)
 		{
 			$ProjectActivityDetail = DB::table('projectActivity')
+				->leftjoin('systemProjectType','systemProjectType.id','projectActivity.ProjectTypeActivityId')
 				->leftjoin('projectBudget','projectBudget.id','projectActivity.ProjectBudgetId')
 				->select(
 					'projectActivity.id',
@@ -428,6 +431,7 @@
 					'projectActivity.StartActivityDate',
 					'projectActivity.EndActivityDate',
 					'projectActivity.Status',
+					'systemProjectType.name'
 				)
 				->where('projectBudget.IsActive',1)
 				->where('projectActivity.ProjectBudgetId',$id)
@@ -465,7 +469,18 @@
 				->get();
 			return $ProjectFileDetail;
 		}
-		
+		function getDataProjectTypeActivity()
+		{
+			$ProjectTypeActivityData = DB::table('systemProjectType')
+				->select(
+					'systemProjectType.id',
+					'systemProjectType.name',
+					'systemProjectType.Isactive',
+				)
+				->where('systemProjectType.Isactive', 1)
+				->get();
+			return $ProjectTypeActivityData;	
+		}
 		function getDataProjectBudget()
 		{
 			$ProjectData = DB::table('projectBudget')
