@@ -138,3 +138,10 @@ Route::post('/getTransactionNewsReportApproveNewsByMonth', '\App\Http\Controller
 //====================================================Approve
 Route::post('/approveBudget', '\App\Http\Controllers\AdminApproveProjectBudgetController@approveProjectBudget');
 
+
+
+//======================================================== All Approve
+
+Route::get('/admin/approveall','\App\Http\Controllers\AdminApproveController@Index');
+Route::post('/approveActivity', '\App\Http\Controllers\AdminApproveController@approveProjectActivity');
+
