@@ -1,6 +1,7 @@
 @extends('crudbooster::admin_template')
 @section('content')
 
+
 <head>
     <!-- <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap" rel="stylesheet"> -->
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" rel="stylesheet">
@@ -42,15 +43,6 @@
             position: relative;
             clear: both;
             margin-top: 25px !important;
-        }
-
-        #datatableActivity thead th {
-            background-color: #1ab3a3;
-            color: #fff;
-        }
-
-        table.datatableActivity.dtr-inline.collapsed>tbody>tr>td.dtr-control:before {
-            background-color: #886ab5;
         }
 
         .breadcrumb {
@@ -173,7 +165,7 @@
             <li class="breadcrumb-item"><a href="/home">หน้าหลัก</a></li>
             <li class="breadcrumb-item active">พิจารณาอนุมัติโครงการ</li>
         </ol>
-        <div class="row">
+        <div class="row" id="ProjectBudget">
             <div class="col-lg-12 sortable-grid ui-sortable" style="padding: 10px;">
                 <div class="panel panel-sortable" role="widget">
                     <div class="panel-hdr" role="heading">
@@ -203,24 +195,23 @@
                                                         <td style="text-align:center">{{$val->ProjectCode}}</td>
                                                         <td style="text-align:center">{{$val->ProjectName}}</td>
                                                         <td style="text-align:center">{{$val->Amount}}</td>
-                                                        @if($val->Status == 1 || $val->Status == 4)
-                                                            <td style="text-align:center;color:#1dc9b7">อนุมัติ</td>
+                                                        @if($val->Status == 1)
+                                                        <td style="text-align:center;color:#1dc9b7">อนุมัติ</td>
                                                         @elseif($val->Status == 2)
-                                                            <td style="text-align:center;color:#ffc241">รออนุมัติ</td>
-                                                        @elseif($val->Status == 3)
-                                                            <td style="text-align:center;color:red">ไม่อนุมัติ</td>
+                                                        <td style="text-align:center;color:#ffc241">รออนุมัติ</td>
                                                         @else
+                                                        <td style="text-align:center;color:red">ไม่อนุมัติ</td>
                                                         @endif
                                                         </td>
                                                         @if($val->Status == 2)
-                                                            <td style="text-align:center; display: flex; gap: 1%; justify-content: center;">
-                                                                <a href="/approveDetailProject/{{$val->id}}" class="btn" style="color: white; background-color: #09d7f7">อนมุัติโครงการ</a>
-                                                            </td>
+                                                        <td style="text-align:center; display: flex; gap: 1%; justify-content: center;">
+                                                            <a href="/approveDetailProject/{{$val->id}}" class="btn" style="color: white; background-color: #09d7f7">อนมุัติโครงการ</a>
+                                                        </td>
                                                         @else
-                                                            <td style="text-align:center; display: flex; gap: 1%; justify-content: center;">
-                                                            </td>
+                                                        <td style="text-align:center; display: flex; gap: 1%; justify-content: center;">
+                                                        </td>
                                                         @endif
-                                                     
+
                                                     </tr>
                                                     @endforeach
                                                 </tbody>
@@ -246,11 +237,10 @@
                                 <div id="JsonTable_wrapper" class="dataTables_wrapper dt-bootstrap4 no-footer">
                                     <div class="row">
                                         <div class="col-sm-12">
-                                            <table id="datatableActivity" class="table table-striped table-bordered" cellspacing="0" width="100%" style="margin-top: 20px !important">
+                                            <table id="datatable" class="table table-striped table-bordered" cellspacing="0" width="100%" style="margin-top: 20px !important">
                                                 <thead>
                                                     <tr>
                                                         <th style="text-align:center">ลำดับ</th>
-                                                        <th style="text-align:center">ประเภทกิจกรรม</th>
                                                         <th style="text-align:center">ชื่อกิจกรรม</th>
                                                         <th style="text-align:center">งบประมาณ</th>
                                                         <th style="text-align:center">วันเริ่มต้น - วันสิ้นสุด</th>
@@ -262,29 +252,19 @@
                                                     @foreach($projectActivity as $index => $val)
                                                     <tr>
                                                         <td style="text-align:center">{{$index+1}}</td>
-                                                        <td style="text-align:center">{{$val->name}}</td>
                                                         <td style="text-align:center">{{$val->ActivityDetail}}</td>
                                                         <td style="text-align:center"><?= number_format($val->ActivityBudget, 2) ?></td>
                                                         <td style="text-align:center">{{$val->StartActivityDate}} - {{$val->EndActivityDate}}</td>
-                                                        @if($val->Status == 5)
+                                                        @if($val->Status == 1)
                                                         <td style="text-align:center;color:#1dc9b7">อนุมัติ</td>
                                                         @elseif($val->Status == 2)
                                                         <td style="text-align:center;color:#ffc241">รออนุมัติ</td>
-                                                        @elseif($val->Status == 6)
-                                                        <td style="text-align:center;color:red">ไม่อนุมัติ</td>
                                                         @else
-                                                        <td></td>
+                                                        <td style="text-align:center;color:red">ไม่อนุมัติ</td>
                                                         @endif
                                                         </td>
-                                                        @if($val->Status == 2)
-                                                            <td style="text-align:center; display: flex; gap: 1%; justify-content: center;">
-                                                                <a href="/approveActivityProject/{{$val->id}}" class="btn" style="color: white; background-color: #09d7f7">อนมุัติกิจกรรม</a>
-                                                            </td>
-                                                        @else
-                                                            <td style="text-align:center; display: flex; gap: 1%; justify-content: center;">
-                                                            </td>
-                                                        @endif
-                                                        <!-- <td style="text-align:center; display: flex; gap: 1%; justify-content: center;">
+
+                                                        <td style="text-align:center; display: flex; gap: 1%; justify-content: center;">
                                                             <button type="button" class="btn btn-default btn-sm approve_activity" data-idactivity="{{$val->id}}" data-status="1" data-projectid="{{$val->ProjectBudgetId}}">
                                                                 <span class="glyphicon glyphicon-pencil">อนุมัติ</span>
                                                             </button>
@@ -292,11 +272,13 @@
                                                             <button type="button" class="btn btn-default btn-sm del_icon reject_activity" data-idactivity="{{$val->id}}" data-status="3" data-projectid="{{$val->ProjectBudgetId}}">
                                                                 <span class="glyphicon glyphicon-trash">ไม่อนุมัติ</span>
                                                             </button>
-                                                        </td> -->
+                                                        </td>
+
                                                     </tr>
                                                     @endforeach
                                                 </tbody>
                                             </table>
+
                                         </div>
                                     </div>
                                 </div>
@@ -331,8 +313,9 @@
             }
         });
         $('#datatable').DataTable();
-        $('#datatableActivity').DataTable();
-        
+
+
+        // --------------------------------------- Start ProjectBudget ------------------------
         $('.approve').click(function() {
             var formData = new FormData();
 
@@ -434,6 +417,131 @@
                 }
             });
         });
+
+        // ----------------------------------- End ProjectBudget --------------------------------
+
+        // ----------------------------------- Start ProjectActivity ----------------------------
+
+        $('.approve_activity').click(function() {
+            var formData = new FormData();
+            var action = "ทำรายการ กิจกรรมของโครงการ";
+
+            // data-idActivity="{{$val->id}}" data-status="3" data-projectId="{{$val->ProjectBudgetId}}
+            var activityId = $(this).data('idactivity');
+            var activityStatus = $(this).data('status');
+            var projectId = $(this).data('projectid');
+
+            formData.append('activityId', activityId);
+            formData.append('activityStatus', activityStatus);
+            formData.append('projectId', projectId);
+            formData.append('action', action);
+
+            Swal.fire({
+                title: 'Are you sure?',
+                text: 'This action cannot be undone.',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, proceed!',
+                cancelButtonText: 'No, cancel'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: '/approveActivity',
+                        method: 'POST',
+                        data: formData,
+                        contentType: false,
+                        processData: false,
+                        success: function(response) {
+                            Swal.fire({
+                                title: "สำเร็จ",
+                                text: "บันทึกข้อมูลสำเร็จ!",
+                                icon: "success",
+                                showCancelButton: false,
+                                confirmButtonText: "OK",
+                            }).then((result) => {
+                                if (result.isConfirmed) {
+                                    window.location.reload();
+                                }
+                            });
+                        },
+                        error: function(xhr, status, error) {
+                            Swal.fire({
+                                title: "Error",
+                                text: "An error occurred while saving the form data.",
+                                icon: "error",
+                                showCancelButton: false,
+                                confirmButtonText: "OK",
+                            });
+                        }
+                    });
+                }
+            });
+        });
+        $('.reject_activity').click(function() {
+            var action = "ทำรายการ กิจกรรมของโครงการ";
+            var formData = new FormData();
+            var activityId = $(this).data('idActivity');
+            var activityStatus = $(this).data('status');
+            var projectId = $(this).data('projectId');
+
+            formData.append('activityId', activityId);
+            formData.append('activityStatus', activityStatus);
+            formData.append('projectId', projectId);
+            formData.append('action', action);
+
+
+            Swal.fire({
+                title: 'Are you sure?',
+                text: 'This action cannot be undone.',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, proceed!',
+                cancelButtonText: 'No, cancel'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Action when confirmed
+                    $.ajax({
+                        url: '/approveActivity',
+                        method: 'POST',
+                        data: formData,
+                        contentType: false,
+                        processData: false,
+                        success: function(response) {
+                            Swal.fire({
+                                title: "สำเร็จ",
+                                text: "บันทึกข้อมูลสำเร็จ!",
+                                icon: "success",
+                                showCancelButton: false,
+                                confirmButtonText: "OK",
+                            }).then((result) => {
+                                if (result.isConfirmed) {
+                                    window.location.reload();
+                                }
+                            });
+                        },
+                        error: function(xhr, status, error) {
+                            Swal.fire({
+                                title: "Error",
+                                text: "An error occurred while saving the form data.",
+                                icon: "error",
+                                showCancelButton: false,
+                                confirmButtonText: "OK",
+                            });
+                        }
+                    });
+                }
+            });
+        });
+
+
+
+
+
+        // ----------------------------------- End ProjectAcitvity ------------------------------
     });
 </script>
 @endsection

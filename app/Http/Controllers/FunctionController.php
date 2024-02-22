@@ -12,6 +12,7 @@ use Firebase\JWT\JWT;
 use Carbon\Carbon;
 use DateTime;
 use DateInterval;
+
 class FunctionController extends Controller
 {
     function getCurrentBudgetYear()
@@ -94,7 +95,7 @@ class FunctionController extends Controller
         $data = "";
 
         // CRUDBooster::myId(); 
-        $currentUser =  CRUDBooster::myId(); 
+        $currentUser =  CRUDBooster::myId();
         $userData = DB::table('cms_users')
             ->leftjoin('user', 'user.cmsUserId', 'cms_users.id')
             ->select(
@@ -106,7 +107,7 @@ class FunctionController extends Controller
                 'user.firstName',
                 'user.lastName',
             )
-            ->where('cms_users.id',$currentUser)
+            ->where('cms_users.id', $currentUser)
             ->first();
         // Generate token key
         $tokenKey = $this->generateJWTToken($userData->name, $userData->id);
@@ -150,7 +151,7 @@ class FunctionController extends Controller
                 $LogId = DB::table('cms_logs')->insertGetId($dataInsertLog);
                 if ($LogId) {
                     DB::commit();
-                    $data=[];
+                    $data = [];
                     $data['valid'] = 1;
                     $data['data'] = $response;
                     return response()->json($data, 200)
@@ -260,7 +261,7 @@ class FunctionController extends Controller
         $startDateObject = new DateTime($startDate);
 
         $startDateObject->add(new DateInterval('P' . $yearsToAdd . 'Y'));
-        
+
         $endDate = $startDateObject->format('Y-m-d');
 
         return $endDate;
@@ -268,31 +269,31 @@ class FunctionController extends Controller
     function getProvince()
     {
         $provinceData = DB::table('systemProvinces')
-        ->select(
-            'systemProvinces.id',
-            'systemProvinces.name_th'
-        )
-        ->get();
+            ->select(
+                'systemProvinces.id',
+                'systemProvinces.name_th'
+            )
+            ->get();
         return $provinceData;
     }
     function getAmphures()
     {
         $AmphuresData = DB::table('systemAmphures')
-        ->select(
-            'systemAmphures.id',
-            'systemAmphures.name_th'
-        )
-        ->get();
+            ->select(
+                'systemAmphures.id',
+                'systemAmphures.name_th'
+            )
+            ->get();
         return $AmphuresData;
     }
     function getTambons()
     {
         $TambonsData = DB::table('systemTambons')
-        ->select(
-            'systemTambons.id',
-            'systemTambons.name_th'
-        )
-        ->get();
+            ->select(
+                'systemTambons.id',
+                'systemTambons.name_th'
+            )
+            ->get();
         return $TambonsData;
     }
     function getAmphuresById(Request $request)
@@ -355,7 +356,7 @@ class FunctionController extends Controller
     function getVillageByIdProvince(Request $request)
     {
         $id = $request['id'];
-        $villageData = DB::table('village')->select('village.id','village.VillageName','village.OrgProvinceId')->where('village.OrgProvinceId', $id)->get();
+        $villageData = DB::table('village')->select('village.id', 'village.VillageName', 'village.OrgProvinceId')->where('village.OrgProvinceId', $id)->get();
         try {
             if ($villageData) {
                 $data['api_status'] = 1;
@@ -370,5 +371,27 @@ class FunctionController extends Controller
             $data['api_message'] = 'กรุณาทำรายการใหม่อีกครั้ง';
         }
         return response()->json($data, 200);
+    }
+
+    function LogAction($projectBudgetId, $detail)
+    {
+        $LogData = [];
+        $LogData['ProjectBudgetId'] = $projectBudgetId;
+        $LogData['Detail'] = $detail;
+        $LogData['UpdatedAt'] = date("Y-m-d H:i:s");
+        $LogData['UpdatedBy'] = CRUDBooster::myId();
+        DB::beginTransaction();
+        try {
+            $LogInsert = DB::table('systemLogs')->insertGetId($LogData);
+            if ($LogInsert) {
+                DB::commit();
+                return 1;
+            } else {
+                DB::rollback();
+                return 0;
+            }
+        } catch (\Exception $e) {
+            return 0;
+        }
     }
 }

@@ -190,7 +190,7 @@
                                                         <th style="text-align:center">รหัส</th>
                                                         <th style="text-align:center">ชื่อโครงการ</th>
                                                         <th style="text-align:center">วันที่เริ่มต้น-สิ้นสุดของโครงการ</th>
-                                                        <th style="text-align:center">สถานะ</th>
+                                                        <th style="text-align:center">สถานะโครงการ</th>
                                                         <th style="text-align:center">งบประมาณ</th>
                                                         <th style="text-align:center">จัดการข้อมูล</th>
                                                     </tr>
@@ -224,12 +224,15 @@
                                                             <td style="text-align:center;color:#1dc9b7">โครงการเปิดใช้งาน</td>
                                                         @elseif($value->Status == 2)
                                                             <td style="text-align:center;color:#ffc241">รอการอนุมัติโครงการเปิดใช้งาน</td>
+                                                        @else
+                                                            <td></td>
                                                         @endif
                                                         <td style="text-align:center">{{$value->Amount}}</td>
                                                         <td style="text-align:center; display: flex; gap: 1%; justify-content: center;">
                                                             <a href="/detailProject/{{$value->id}}" class="btn" style="color: white; background-color: #09d7f7">รายละเอียดโครงการ</a>
                                                             @if($value->Status == 1)
-                                                                <a href="/detailProject/{{$value->id}}" class="btn" style="color: white; background-color: #1dc9b7">อัพเดทกิจกรรม</a>
+                                                                <a href="/updateProjectActivity/{{$value->id}}" class="btn" style="color: white; background-color: #1dc9b7">อัพเดทกิจกรรม</a>
+                                                            @else
                                                             @endif
                                                         </td>
                                                     </tr>

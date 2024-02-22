@@ -62,6 +62,9 @@ Route::get('/addProjectBudget', '\App\Http\Controllers\AdminProjectBudgetControl
 Route::get('/detailProject/{id}', '\App\Http\Controllers\AdminProjectBudgetController@detailProject');
 Route::get('/approveDetailProject/{id}', '\App\Http\Controllers\AdminApproveProjectBudgetController@approveDetailProject');
 Route::get('/addtransectionBudget', '\App\Http\Controllers\AdminTransacionAccountBudgetController@addtransectionBudget');
+Route::get('/updateProjectActivity/{id}', '\App\Http\Controllers\AdminProjectBudgetController@updateProjectActivity');
+Route::get('/updateProjectActivityDetail/{id}', '\App\Http\Controllers\AdminProjectBudgetController@updateProjectActivityDetail');
+Route::get('/approveActivityProject/{id}', '\App\Http\Controllers\AdminApproveProjectBudgetController@approveActivityProject');
 //==========================================================================================Route
 
 
@@ -121,6 +124,8 @@ Route::post('/saveEditProjectBudget', '\App\Http\Controllers\AdminVillageNewCont
 Route::post('/delProjectBudget', '\App\Http\Controllers\AdminVillageNewController@delProjectBudget');
 Route::post('/addProjectBudgetApi', '\App\Http\Controllers\AdminVillageNewController@addProjectBudget');
 Route::post('/saveTransectionBudgetApi', '\App\Http\Controllers\AdminTransacionAccountBudgetController@saveTransectionBudget');
+Route::post('/approveBudget', '\App\Http\Controllers\AdminApproveProjectBudgetController@approveProjectBudget');
+Route::post('/updatedProjectActivity', '\App\Http\Controllers\AdminApproveProjectBudgetController@updatedProjectActivity');
 //========================================================================================== API
 
 //========================================================================================== Report
@@ -136,6 +141,8 @@ Route::post('/getTransactionNewsReportApproveNewsByMonth', '\App\Http\Controller
 
 
 
-//====================================================Approve
-Route::post('/approveBudget', '\App\Http\Controllers\AdminApproveProjectBudgetController@approveProjectBudget');
+//======================================================== All Approve
+Route::get('/admin/approveall','\App\Http\Controllers\AdminApproveController@Index');
+Route::post('/approveActivity', '\App\Http\Controllers\AdminApproveController@approveProjectActivity');
+
 

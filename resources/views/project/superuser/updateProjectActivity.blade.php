@@ -119,13 +119,14 @@
                                                 <th style="text-align: center;">วันที่เริ่มต้น</th>
                                                 <th style="text-align: center;">วันที่สิ้นสุด</th>
                                                 <th style="text-align: center;">สถานะ</th>
+                                                <th style="text-align: center;">จัดการข้อมูล</th>
                                             </tr>
                                         </thead>
                                         <tbody style="background-color: white;">
                                             @foreach($getProjectActivity as $index => $value)
                                             <tr>
                                                 <td style="text-align:center"><?= $index + 1 ?></td>
-                                                <td style="text-align:center">{{$value->name}}</td>
+                                                <td style="text-align:center">{{$value->ActivityDetail}}</td>
                                                 <td style="text-align:center">{{$value->ActivityDetail}}</td>
                                                 <?php
                                                     $StartAt = date('d F Y', strtotime($value->StartActivityDate));
@@ -159,6 +160,9 @@
                                                 @else
                                                     <td style="text-align:center">-</td>
                                                 @endif
+                                                <td style="text-align:center; display: flex; gap: 1%; justify-content: center;">
+                                                    <a href="/updateProjectActivityDetail/{{$value->id}}" class="btn" style="color: white; background-color: #09d7f7">อัพเดทโครงการ</a>
+                                                </td>
                                             </tr>
                                             @endforeach
                                         </tbody>
