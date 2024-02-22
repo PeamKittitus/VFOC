@@ -61,7 +61,7 @@ Route::get('/approveEditDetail/{id}', '\App\Http\Controllers\AdminVillageNewCont
 Route::get('/addProjectBudget', '\App\Http\Controllers\AdminProjectBudgetController@addProjectBudget');
 Route::get('/detailProject/{id}', '\App\Http\Controllers\AdminProjectBudgetController@detailProject');
 Route::get('/approveDetailProject/{id}', '\App\Http\Controllers\AdminApproveProjectBudgetController@approveDetailProject');
-
+Route::get('/addtransectionBudget', '\App\Http\Controllers\AdminTransacionAccountBudgetController@addtransectionBudget');
 //==========================================================================================Route
 
 
@@ -120,6 +120,7 @@ Route::post('/getAccountBudgetFileApi', '\App\Http\Controllers\AdminProjectBudge
 Route::post('/saveEditProjectBudget', '\App\Http\Controllers\AdminVillageNewController@saveEditProjectBudget');
 Route::post('/delProjectBudget', '\App\Http\Controllers\AdminVillageNewController@delProjectBudget');
 Route::post('/addProjectBudgetApi', '\App\Http\Controllers\AdminVillageNewController@addProjectBudget');
+Route::post('/saveTransectionBudgetApi', '\App\Http\Controllers\AdminTransacionAccountBudgetController@saveTransectionBudget');
 //========================================================================================== API
 
 //========================================================================================== Report
