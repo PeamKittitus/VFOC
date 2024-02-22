@@ -334,14 +334,124 @@
 	    //By the way, you can still create your own method in here... :) 
 		public function getIndex()
 		{
-			$data['getNewDetailVillage'] = 's';
+			$getDataProjectBudget = $this->getDataProjectBudget();
+			$data['getDataProjectBudget'] = $getDataProjectBudget;
 			return view('project/superuser/index', $data);
 		}
 		public function addProjectBudget()
 		{
-			$getAccountBankMaster = (new ApiBookBankController)->getAccountBankMaster();
-			$data['getAccountBankMaster'] = $getAccountBankMaster;
+			$data['AddProjectBudget'] = 'AddProjectBudget';
 			return view('project/superuser/addProject', $data);
+		}
+		public function detailProject($id)
+		{
+			$getVillageDetail = $this->getVillageDetail($id);
+			$getProjectActivity = $this->getProjectActivity($id);
+			$getProjectAsset = $this->getProjectAsset($id);
+			$getProjectFile = $this->getProjectFile($id);
+			
+			$data['getVillageDetail'] = $getVillageDetail;
+			$data['getProjectActivity'] = $getProjectActivity;
+			$data['getProjectAsset'] = $getProjectAsset;
+			$data['getProjectFile'] = $getProjectFile;
+			return view('project/superuser/detailProject', $data);
+		}
+		function getVillageDetail($id)
+		{
+			$VillageDetail = DB::table('projectBudget')
+				->leftjoin('village','village.id','projectBudget.VillageId')
+				->leftjoin('systemProvinces','systemProvinces.id','village.VillageProvinceId')
+				->leftjoin('systemAmphures','systemAmphures.id','village.VillageDistrictId')
+				->leftjoin('systemTambons','systemTambons.id','village.VillageSubDistrictId')
+				->select(
+					'village.id',
+					'village.VillageName', 
+					'village.VillageAddress',
+					'village.VillageMoo',
+					'village.VillagePostCode',
+					'village.Phone as VillagePhone',
+					'village.Email as VillageEmail',
+					'village.VillageProvinceId',
+					'village.VillageDistrictId',
+					'village.VillageSubDistrictId',
+					'systemProvinces.name_th as ProvinceName',
+					'systemAmphures.name_th as AmphuresName',
+					'systemTambons.name_th as TambonsName',
+					'projectBudget.Amount',
+					'projectBudget.TransactionYear',
+					'projectBudget.ProjectName',
+					'projectBudget.ProjectCode'
+				)
+				->where('village.IsActive',1)
+				->where('projectBudget.IsActive',1)
+				->where('projectBudget.id',$id)
+				->first();
+			return $VillageDetail;
+		}
+		function getProjectActivity($id)
+		{
+			$ProjectActivityDetail = DB::table('projectActivity')
+				->leftjoin('projectBudget','projectBudget.id','projectActivity.ProjectBudgetId')
+				->select(
+					'projectActivity.id',
+					'projectActivity.ActivityDetail', 
+					'projectActivity.StartActivityDate',
+					'projectActivity.EndActivityDate',
+				)
+				->where('projectBudget.IsActive',1)
+				->where('projectActivity.ProjectBudgetId',$id)
+				->get();
+			return $ProjectActivityDetail;
+		}
+		function getProjectAsset($id)
+		{
+			$ProjectAssetDetail = DB::table('projectAsset')
+				->leftjoin('projectBudget','projectBudget.id','projectAsset.ProjectBudgetId')
+				->select(
+					'projectAsset.id',
+					'projectAsset.AssetCode', 
+					'projectAsset.AssetName',
+					'projectAsset.AssetAge',
+					'projectAsset.Amount',
+					'projectAsset.AmountUnit',
+				)
+				->where('projectBudget.IsActive',1)
+				->where('projectAsset.ProjectBudgetId',$id)
+				->get();
+			return $ProjectAssetDetail;
+		}
+		function getProjectFile($id)
+		{
+			$ProjectFileDetail = DB::table('projectBudgetDocumentRequest')
+				->leftjoin('projectBudget','projectBudget.id','projectBudgetDocumentRequest.ProjectBudgetId')
+				->select(
+					'projectBudgetDocumentRequest.id',
+					'projectBudgetDocumentRequest.FileName', 
+					'projectBudgetDocumentRequest.FilePath',
+				)
+				->where('projectBudget.IsActive',1)
+				->where('projectBudgetDocumentRequest.ProjectBudgetId',$id)
+				->get();
+			return $ProjectFileDetail;
+		}
+		
+		function getDataProjectBudget()
+		{
+			$ProjectData = DB::table('projectBudget')
+				->select(
+					'projectBudget.id',
+					'projectBudget.ProjectCode',
+					'projectBudget.ProjectName',
+					'projectBudget.Amount',
+					'projectBudget.Status',
+					'projectBudget.StartProjectDate',
+					'projectBudget.EndProjectDate',
+					'projectBudget.IsActive',
+				)
+				->where('projectBudget.IsActive', 1)
+				->where('projectBudget.CreatedBy', CRUDBooster::myId())
+				->get();
+			return $ProjectData;	
 		}
 		function getAccountBudgetSubApi()
 		{

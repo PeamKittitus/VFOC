@@ -344,18 +344,108 @@ class AdminApproveProjectBudgetController extends \crocodicstudio\crudbooster\co
 		$data['ProjectBudget'] = $this->GetAllProjectBudget();
 		return $this->view('approveproject/index', $data);
 	}
-
+	public function approveDetailProject($id)
+	{
+		$data = [];
+		$getVillageDetail = $this->getVillageDetail($id);
+		$getProjectActivity = $this->getProjectActivity($id);
+		$getProjectAsset = $this->getProjectAsset($id);
+		$getProjectFile = $this->getProjectFile($id);
+		
+		$data['getVillageDetail'] = $getVillageDetail;
+		$data['getProjectActivity'] = $getProjectActivity;
+		$data['getProjectAsset'] = $getProjectAsset;
+		$data['getProjectFile'] = $getProjectFile;
+		$data['budgetId'] = $id;
+		return $this->view('approveproject/approveDetailProject', $data);
+	}
+	function getVillageDetail($id)
+	{
+		$VillageDetail = DB::table('projectBudget')
+			->leftjoin('village','village.id','projectBudget.VillageId')
+			->leftjoin('systemProvinces','systemProvinces.id','village.VillageProvinceId')
+			->leftjoin('systemAmphures','systemAmphures.id','village.VillageDistrictId')
+			->leftjoin('systemTambons','systemTambons.id','village.VillageSubDistrictId')
+			->select(
+				'village.id',
+				'village.VillageName', 
+				'village.VillageAddress',
+				'village.VillageMoo',
+				'village.VillagePostCode',
+				'village.Phone as VillagePhone',
+				'village.Email as VillageEmail',
+				'village.VillageProvinceId',
+				'village.VillageDistrictId',
+				'village.VillageSubDistrictId',
+				'systemProvinces.name_th as ProvinceName',
+				'systemAmphures.name_th as AmphuresName',
+				'systemTambons.name_th as TambonsName',
+				'projectBudget.Amount',
+				'projectBudget.TransactionYear',
+				'projectBudget.ProjectName',
+				'projectBudget.ProjectCode'
+			)
+			->where('village.IsActive',1)
+			->where('projectBudget.IsActive',1)
+			->where('projectBudget.id',$id)
+			->first();
+		return $VillageDetail;
+	}
+	function getProjectActivity($id)
+	{
+		$ProjectActivityDetail = DB::table('projectActivity')
+			->leftjoin('projectBudget','projectBudget.id','projectActivity.ProjectBudgetId')
+			->select(
+				'projectActivity.id',
+				'projectActivity.ActivityDetail', 
+				'projectActivity.StartActivityDate',
+				'projectActivity.EndActivityDate',
+			)
+			->where('projectBudget.IsActive',1)
+			->where('projectActivity.ProjectBudgetId',$id)
+			->get();
+		return $ProjectActivityDetail;
+	}
+	function getProjectAsset($id)
+	{
+		$ProjectAssetDetail = DB::table('projectAsset')
+			->leftjoin('projectBudget','projectBudget.id','projectAsset.ProjectBudgetId')
+			->select(
+				'projectAsset.id',
+				'projectAsset.AssetCode', 
+				'projectAsset.AssetName',
+				'projectAsset.AssetAge',
+				'projectAsset.Amount',
+				'projectAsset.AmountUnit',
+			)
+			->where('projectBudget.IsActive',1)
+			->where('projectAsset.ProjectBudgetId',$id)
+			->get();
+		return $ProjectAssetDetail;
+	}
+	function getProjectFile($id)
+	{
+		$ProjectFileDetail = DB::table('projectBudgetDocumentRequest')
+			->leftjoin('projectBudget','projectBudget.id','projectBudgetDocumentRequest.ProjectBudgetId')
+			->select(
+				'projectBudgetDocumentRequest.id',
+				'projectBudgetDocumentRequest.FileName', 
+				'projectBudgetDocumentRequest.FilePath',
+			)
+			->where('projectBudget.IsActive',1)
+			->where('projectBudgetDocumentRequest.ProjectBudgetId',$id)
+			->get();
+		return $ProjectFileDetail;
+	}
 
 	public function GetAllProjectBudget()
 	{
 		$ProjectBudget = DB::table("projectBudget")->where('IsActive', 1)->get();
 		return $ProjectBudget;
-		//
 	}
 
 	public function approveProjectBudget(Request $request)
 	{
-		// dd($request->all());
 		$ProjectBudgetID = $request['budgetId'];
 		$statusBudget = $request['budgetstatus'];
 		$dataUpdate = [];
@@ -373,7 +463,6 @@ class AdminApproveProjectBudgetController extends \crocodicstudio\crudbooster\co
 				$data['api_status'] = 1;
 				$data['api_message'] = 'Success';
 				$data['id'] = $budgetdata;
-
 				return response()->json($data, 200);
 			} else {
 				DB::rollback();
@@ -389,7 +478,4 @@ class AdminApproveProjectBudgetController extends \crocodicstudio\crudbooster\co
 			return response()->json($data, 200);
 		}
 	}
-	//By the way, you can still create your own method in here... :) 
-
-
 }
