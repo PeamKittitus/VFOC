@@ -114,15 +114,18 @@
                                         <thead>
                                             <tr>
                                                 <th style="text-align: center;">ลำดับ</th>
+                                                <th style="text-align: center;">ประเภทกิจกรรม</th>
                                                 <th style="text-align: center;">กิจกรรม/โครงการ</th>
                                                 <th style="text-align: center;">วันที่เริ่มต้น</th>
                                                 <th style="text-align: center;">วันที่สิ้นสุด</th>
+                                                <th style="text-align: center;">สถานะ</th>
                                             </tr>
                                         </thead>
                                         <tbody style="background-color: white;">
                                             @foreach($getProjectActivity as $index => $value)
                                             <tr>
                                                 <td style="text-align:center"><?= $index + 1 ?></td>
+                                                <td style="text-align:center">{{$value->name}}</td>
                                                 <td style="text-align:center">{{$value->ActivityDetail}}</td>
                                                 <?php
                                                     $StartAt = date('d F Y', strtotime($value->StartActivityDate));
@@ -145,6 +148,17 @@
                                                 ?>
                                                 <td style="text-align:center;">{{$StartAtThai}}</td>
                                                 <td style="text-align:center">{{$EndAtThai}}</td>
+                                                @if($value->Status == 1)
+                                                    <td style="text-align:center">-</td>
+                                                @elseif($value->Status == 2)
+                                                    <td style="text-align:center">รอตรวจสอบ</td>
+                                                @elseif($value->Status == 5)
+                                                    <td style="text-align:center">อนุมัติ</td>
+                                                @elseif($value->Status == 6)
+                                                    <td style="text-align:center">ไม่อนุมัติ</td>
+                                                @else
+                                                    <td style="text-align:center">-</td>
+                                                @endif
                                             </tr>
                                             @endforeach
                                         </tbody>
@@ -156,7 +170,7 @@
                         <div class="row mt-1">
                             <div class="col-sm-12">
                                 <div class="form-group">
-                                    <h4>ครุภัณฑ์</h4>
+                                    <h4>สินทรัพย์</h4>
                                 </div>
                             </div>
                         </div>
@@ -167,10 +181,10 @@
                                         <thead>
                                             <tr>
                                                 <th style="text-align: center;">ลำดับ</th>
-                                                <th style="text-align: center;">เลขที่ครุภัณฑ์</th>
-                                                <th style="text-align: center;">ชื่อครุภัณฑ์</th>
-                                                <th style="text-align: center;">อายุครุภัณฑ์ (ปี)</th>
-                                                <th style="text-align: center;">จำนวนครุภัณฑ์</th>
+                                                <th style="text-align: center;">เลขที่สินทรัพย์</th>
+                                                <th style="text-align: center;">ชื่อสินทรัพย์</th>
+                                                <th style="text-align: center;">อายุสินทรัพย์ (ปี)</th>
+                                                <th style="text-align: center;">จำนวนสินทรัพย์</th>
                                                 <th style="text-align: center;">ราคาสุทธิ</th>
                                             </tr>
                                         </thead>
@@ -271,7 +285,8 @@
                                 confirmButtonText: "OK",
                             }).then((result) => {
                                 if (result.isConfirmed) {
-                                    window.location.reload();
+                                    window.location.href =
+                                        "/admin/approveprojectbudget";
                                 }
                             });
                         },
@@ -322,7 +337,8 @@
                                 confirmButtonText: "OK",
                             }).then((result) => {
                                 if (result.isConfirmed) {
-                                    window.location.reload();
+                                    window.location.href =
+                                        "/admin/approveprojectbudget";
                                 }
                             });
                         },

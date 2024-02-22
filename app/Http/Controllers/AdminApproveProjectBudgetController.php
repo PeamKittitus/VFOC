@@ -6,7 +6,7 @@ use Session;
 use Illuminate\Http\Request;
 use DB;
 use CRUDBooster;
-
+use Illuminate\Support\Facades\Storage;
 class AdminApproveProjectBudgetController extends \crocodicstudio\crudbooster\controllers\CBController
 {
 
@@ -394,12 +394,15 @@ class AdminApproveProjectBudgetController extends \crocodicstudio\crudbooster\co
 	function getProjectActivity($id)
 	{
 		$ProjectActivityDetail = DB::table('projectActivity')
+			->leftjoin('systemProjectType','systemProjectType.id','projectActivity.ProjectTypeActivityId')
 			->leftjoin('projectBudget','projectBudget.id','projectActivity.ProjectBudgetId')
 			->select(
 				'projectActivity.id',
 				'projectActivity.ActivityDetail', 
 				'projectActivity.StartActivityDate',
 				'projectActivity.EndActivityDate',
+				'projectActivity.Status',
+				'systemProjectType.name'
 			)
 			->where('projectBudget.IsActive',1)
 			->where('projectActivity.ProjectBudgetId',$id)
@@ -465,6 +468,66 @@ class AdminApproveProjectBudgetController extends \crocodicstudio\crudbooster\co
 				$data['id'] = $budgetdata;
 				return response()->json($data, 200);
 			} else {
+				DB::rollback();
+				$data['api_status'] = 0;
+				$data['api_message'] = 'กรุณาทำรายการใหม่อีกครั้ง';
+				return response()->json($data, 200);
+			}
+		} catch (\Exception $e) {
+			DB::rollback();
+			$data['api_status'] = 0;
+			$data['api_message'] = 'กรุณาทำรายการใหม่อีกครั้ง';
+			$data['api_data'] = $e;
+			return response()->json($data, 200);
+		}
+	}
+	public function updatedProjectActivity(Request $request)
+	{
+		$ProjectActivityId = $request['ProjectActivityId'];
+		$ProjectBudgetId = $request['ProjectBudgetId'];
+		$Comment = $request['Comment'];
+		$ActivityFile = $request['ActivityFile'];
+		$array_file = [];
+		DB::beginTransaction();
+		try {
+			$dataUpdateActivity = [];
+			$dataUpdateActivity['Status'] = 2;
+			$dataUpdateActivity['UpdatedAt'] = date('Y-m-d');
+			$dataUpdateActivity['UpdatedBy'] = CRUDBooster::myId();
+			$dataUpdateBudget = [];
+			$dataUpdateBudget['Status'] = 4;
+			$dataUpdateBudget['UpdatedAt'] = date('Y-m-d');
+			$dataUpdateBudget['UpdatedBy'] = CRUDBooster::myId();
+			$BudgetId = DB::table('projectBudget')->where('id', $ProjectBudgetId)->update($dataUpdateBudget);
+			$ActivityId = DB::table('projectActivity')->where('id', $ProjectActivityId)->update($dataUpdateActivity);
+			if($ActivityId && $BudgetId){
+				$dataInsertActivityDocument = [];
+				$dataInsertActivityDocument['ProjectActivityId'] = $ProjectActivityId;
+				$dataInsertActivityDocument['Comment'] = $Comment;
+				$dataInsertActivityDocument['CreatedAt'] = date('Y-m-d');
+				$dataInsertActivityDocument['CreatedBy'] = CRUDBooster::myId();
+				foreach ($ActivityFile as $index => $val) {
+					$dataInsertActivityDocument['FileName'] = $val->getClientOriginalName();
+					$dataInsertActivityDocument['FilePath'] = "uploads/" . $val->getClientOriginalName();
+				}
+				$ActivityDocumentId = DB::table('projectActivityDocument')->insertGetId($dataInsertActivityDocument);
+				if ($ActivityDocumentId) {
+					DB::commit();
+					$data['api_status'] = 1;
+					$data['api_message'] = 'Success';
+					$data['id'] = $ActivityDocumentId;
+					Storage::putFileAs('uploads/', $val, $val->getClientOriginalName());
+					array_push($array_file, $val->getClientOriginalName() . '.' . $val->getClientOriginalExtension());
+					return response()->json($data, 200)
+						->header("Access-Control-Allow-Origin", config('cors.allowed_origins'))
+						->header("Access-Control-Allow-Methods", config('cors.allowed_methods'));
+				} else {
+					DB::rollback();
+					$data['api_status'] = 0;
+					$data['api_message'] = 'กรุณาทำรายการใหม่อีกครั้ง';
+					return response()->json($data, 200);
+				}
+			}else{
 				DB::rollback();
 				$data['api_status'] = 0;
 				$data['api_message'] = 'กรุณาทำรายการใหม่อีกครั้ง';

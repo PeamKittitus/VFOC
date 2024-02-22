@@ -341,7 +341,39 @@
 		public function addProjectBudget()
 		{
 			$data['AddProjectBudget'] = 'AddProjectBudget';
+			$getDataProjectTypeActivity = $this->getDataProjectTypeActivity();
+			$data['getDataProjectTypeActivity'] = $getDataProjectTypeActivity;
 			return view('project/superuser/addProject', $data);
+		}
+		public function updateProjectActivity($id)
+		{
+			$getVillageDetail = $this->getVillageDetail($id);
+			$getProjectActivity = $this->getProjectActivity($id);
+			$getProjectAsset = $this->getProjectAsset($id);
+			$getProjectFile = $this->getProjectFile($id);
+			
+			$data['getVillageDetail'] = $getVillageDetail;
+			$data['getProjectActivity'] = $getProjectActivity;
+			$data['getProjectAsset'] = $getProjectAsset;
+			$data['getProjectFile'] = $getProjectFile;
+			return view('project/superuser/updateProjectActivity', $data);
+		}
+		public function updateProjectActivityDetail($id)
+		{
+			$getProjectActivityById = $this->getProjectActivityById($id);
+			$data['getProjectActivityById'] = $getProjectActivityById;
+			return view('project/superuser/updateProjectActivityDetail', $data);
+		}
+		function getProjectActivityById($id)
+		{
+			$VillageDetail = DB::table('projectActivity')
+				->select(
+					'projectActivity.*',
+				)
+				->where('projectActivity.IsActive',1)
+				->where('projectActivity.id',$id)
+				->first();
+			return $VillageDetail;
 		}
 		public function detailProject($id)
 		{
@@ -391,12 +423,15 @@
 		function getProjectActivity($id)
 		{
 			$ProjectActivityDetail = DB::table('projectActivity')
+				->leftjoin('systemProjectType','systemProjectType.id','projectActivity.ProjectTypeActivityId')
 				->leftjoin('projectBudget','projectBudget.id','projectActivity.ProjectBudgetId')
 				->select(
 					'projectActivity.id',
 					'projectActivity.ActivityDetail', 
 					'projectActivity.StartActivityDate',
 					'projectActivity.EndActivityDate',
+					'projectActivity.Status',
+					'systemProjectType.name'
 				)
 				->where('projectBudget.IsActive',1)
 				->where('projectActivity.ProjectBudgetId',$id)
@@ -434,7 +469,18 @@
 				->get();
 			return $ProjectFileDetail;
 		}
-		
+		function getDataProjectTypeActivity()
+		{
+			$ProjectTypeActivityData = DB::table('systemProjectType')
+				->select(
+					'systemProjectType.id',
+					'systemProjectType.name',
+					'systemProjectType.Isactive',
+				)
+				->where('systemProjectType.Isactive', 1)
+				->get();
+			return $ProjectTypeActivityData;	
+		}
 		function getDataProjectBudget()
 		{
 			$ProjectData = DB::table('projectBudget')
