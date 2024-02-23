@@ -345,21 +345,40 @@ class AdminTransacionAccountBudgetController extends \crocodicstudio\crudbooster
 
 	//By the way, you can still create your own method in here... :) 
 	public function getIndex()
-	{
-		return view('transectionBudget/index');
+	{	
+		$myID = CRUDBooster::myId();
+		$data = [];
+		$result = DB::table('transacionAccountBudget')
+			->leftjoin('accountBudgetSub', 'accountBudgetSub.account_id', 'transacionAccountBudget.AccountBudgetd')
+			->leftjoin('village', 'village.UserId', 'transacionAccountBudget.ReceiverOrgId')
+			->leftjoin('transacionAccountBudgetDocument', 'transacionAccountBudgetDocument.TransactionAccBudgetId', 'transacionAccountBudget.TransactionAccBudgeId')
+			->select('transacionAccountBudget.*','accountBudgetSub.AccName as Sendername',
+			'village.VillageName','transacionAccountBudgetDocument.FilePath')
+			->where('transacionAccountBudget.is_active', 1) 
+			->get();
+
+		$data['result'] = $result;
+		// dd($data);
+		return view('transectionBudget/index',$data);
 	}
 
 	public function addtransectionBudget()
-	{
+	{	
 		return view('transectionBudget/addTransactionBudget');
 	}
 
 	public function saveTransectionBudget(Request $request)
 	{
-		// dd($request->Village);
+		// dd($request->all());
 
-		$myId = 45;
+		// $myId = 45;
 		$villageID = $request->Village;
+		
+
+		$AccountBudgeName = DB::table('accountBudgetSub')
+		->select('accountBudgetSub.AccName')
+		->where('accountBudgetSub.id', $request->AccountBudgetd) 
+		->value('AccName');
 		
 
 		$OrgId = DB::table('user')
@@ -379,17 +398,18 @@ class AdminTransacionAccountBudgetController extends \crocodicstudio\crudbooster
 
 		$dataTranBudget = [];
 		$dataTranBudget['AccountBudgetd'] = $request->AccountBudgetd;
-		$dataTranBudget['Title'] = "โอนเงินไปยังโครงการ " . $Projectname;
+		$dataTranBudget['Title'] = "โอนเงินจากโครงการ " . $AccountBudgeName . " ไปยังกองทุน " . $Projectname;
 		$dataTranBudget['TransactionYear'] = date('Y') + 543;
 		$dataTranBudget['TransactionType'] = 0; //or something		
-		$dataTranBudget['SenderOrgId'] = $OrgId;
+		$dataTranBudget['SenderOrgId'] = $request->Village;
 		$dataTranBudget['SenderBookBankId'] = $request->SenderBookBankId;
-		$dataTranBudget['ReceiverOrgId'] = $request->OrgType;
+		$dataTranBudget['ReceiverOrgId'] = $request->Village;
 		$dataTranBudget['ReceiverBookBankId'] = $request->ReceiverBookBankId;
 		$dataTranBudget['ReceiverDate'] = now();
 		$dataTranBudget['Amount'] = $request->Amount;
 		$dataTranBudget['SenderDate'] = now();
 		$dataTranBudget['IsAcept'] = 0; 
+		$dataTranBudget['is_active'] = 1; 
 		// dd($dataTranBudget);
 		//ค่าดว่ากองทุนจะต้องกดยืนยันก่อน ค่อยจะปรับเป็น 1
 		//กองทุน กด accept จะอัพเดท reciverdata and updaatedat and IsAcept
@@ -402,7 +422,7 @@ class AdminTransacionAccountBudgetController extends \crocodicstudio\crudbooster
 				$dataInsertFileProject['TransactionAccBudgetId'] = $tranBudgetId;
 				$dataInsertFileProject['TransactionYear'] = date('Y')+543;
 				$dataInsertFileProject['FileName'] = $file->getClientOriginalName();
-				$dataInsertFileProject['FilePath'] = "uploads/transactionDocument" . $file->getClientOriginalName();
+				$dataInsertFileProject['FilePath'] = "uploads/transactionDocument/" . $file->getClientOriginalName();
 				$dataInsertFileProject['FileType'] = 1;
 				$dataInsertFileProject['created_at'] = now();
 				$dataInsertFileProject['created_by'] = CRUDBooster::myId();

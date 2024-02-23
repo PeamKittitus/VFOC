@@ -315,7 +315,7 @@ use Carbon\Carbon;
         </div>
     </div>
     <div style="width: 100%">
-        <div style="display: inline-block ; width: 30% ;margin-right: 30px" >
+        {{-- <div style="display: inline-block ; width: 30% ;margin-right: 30px" >
             <label for="">ปีงบประมาณ</label> <br>
             <select id="AccountBudgetId" class="select2" style="width: 100%">
                 <option value="1">โครงการ 1</option>
@@ -323,9 +323,9 @@ use Carbon\Carbon;
                 <option value="3">โครงการ 3</option>
                 <option value="4">โครงการ 4</option>
             </select>
-        </div>
+        </div> --}}
         <div style="display: inline-block ; width: 30%">
-            <label for="">โครงการ</label> <br>
+            <label for="">ปีงบประมาณ</label> <br>
             <select id="CurrentBudgetYear" class="select2" style="width: 100%">
                 <option selected disabled>All</option>
                 <option value="2572">2572</option>
@@ -363,87 +363,40 @@ use Carbon\Carbon;
                                                 <tr>
                                                     <th style="text-align: center">ลำดับ</th>
                                                     <th style="text-align: left">รายการ</th>
+                                                    <th style="text-align: left">โครงการ</th>
                                                     <th style="text-align: left">ผู้รับโอน</th>
-                                                    <th style="text-align: right">จำนวนเงิน</th>
-                                                    <th style="text-align: center">เมื่อวันที่</th>
+                                                    <th style="text-align: left">จำนวนเงิน</th>
+                                                    <th style="text-align: left">เมื่อวันที่</th>
                                                     <th style="text-align: center">เอกสารแนบ</th>
-                                                    <th></th>
                                                 </tr>
                                             </thead>
 
-                                            {{-- <tbody>
+                                            <tbody>
                                                 @php
                                                 $mainProjectNumber = 1;
                                                 @endphp
-                                                @foreach ($getAccountBudget as $get)
+                                                @foreach ($result as $result)
                                                 <tr>
-                                                    <td class="text-left">{{ $mainProjectNumber }}.</td>
-                                                    <td>{{ $get->AccCode }}</td>
-                                                    <td>{{ $get->AccName }}</td>
-                                                    <td>-</td>
-                                                    <td class="text-left">{{ number_format($get->Amount, 2) }}</td>
-                                                    <td class="text-left">-</td>
+                                                    <td class="text-center">{{ $mainProjectNumber }}.</td>
+                                                    <td>{{ $result->Title }}</td>
+                                                    <td>{{ $result->Sendername }}</td>
+                                                    <td>{{ $result->VillageName }}</td>
+                                                    <td class="text-left">{{ number_format($result->Amount, 2) }}</td>
+                                                    <td class="text-left">{{ \Carbon\Carbon::parse($result->SenderDate)->toDateString() }}</td>
                                                     <td class="text-center">
-                                                        <div class="checkbox-wrapper-7" style="display: flex; justify-content: center; align-items: center; height: 100%;">
-                                                            <input class="tgl tgl-ios accdel" id="cb2-7-{{ $mainProjectNumber }}" type="checkbox" data-val="{{ $get->id }}" {{ $get->is_active == 1 ? 'checked' : '' }} />
-                                                            <label class="tgl-btn" for="cb2-7-{{ $mainProjectNumber }}"></label>
-                                                        </div>
-                                                    </td>
-                                                    <td class="text-center" style="">
-                                                        <a href="/addsubproject" class="btn btn-xs btn-success addParent" title="Create" onclick="addToLocalStorage(event, {{$get->id}})">
-                                                            <i class="fa fa-plus" aria-hidden="true"></i> เพิ่มรายการ
+                                                        <a href="{{asset($result->FilePath) }}" target="_blank" rel="noopener noreferrer">
+                                                            <svg style="width:25px;height:25px" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-pdf-fill" viewBox="0 0 16 16">
+                                                                <path d="M5.523 10.424c.14-.082.293-.162.459-.238a7.878 7.878 0 0 1-.45.606c-.28.337-.498.516-.635.572a.266.266 0 0 1-.035.012.282.282 0 0 1-.026-.044c-.056-.11-.054-.216.04-.36.106-.165.319-.354.647-.548m2.455-1.647c-.119.025-.237.05-.356.078a21.035 21.035 0 0 0 .5-1.05 11.96 11.96 0 0 0 .51.858c-.217.032-.436.07-.654.114m2.525.939a3.888 3.888 0 0 1-.435-.41c.228.005.434.022.612.054.317.057.466.147.518.209a.095.095 0 0 1 .026.064.436.436 0 0 1-.06.2.307.307 0 0 1-.094.124.107.107 0 0 1-.069.015c-.09-.003-.258-.066-.498-.256M8.278 4.97c-.04.244-.108.524-.2.829a4.86 4.86 0 0 1-.089-.346c-.076-.353-.087-.63-.046-.822.038-.177.11-.248.196-.283a.517.517 0 0 1 .145-.04c.013.03.028.092.032.198.005.122-.007.277-.038.465z" />
+                                                                <path fill-rule="evenodd" d="M4 0h8a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2m.165 11.668c.09.18.23.343.438.419.207.075.412.04.58-.03.318-.13.635-.436.926-.786.333-.401.683-.927 1.021-1.51a11.64 11.64 0 0 1 1.997-.406c.3.383.61.713.91.95.28.22.603.403.934.417a.856.856 0 0 0 .51-.138c.155-.101.27-.247.354-.416.09-.181.145-.37.138-.563a.844.844 0 0 0-.2-.518c-.226-.27-.596-.4-.96-.465a5.76 5.76 0 0 0-1.335-.05 10.954 10.954 0 0 1-.98-1.686c.25-.66.437-1.284.52-1.794.036-.218.055-.426.048-.614a1.238 1.238 0 0 0-.127-.538.7.7 0 0 0-.477-.365c-.202-.043-.41 0-.601.077-.377.15-.576.47-.651.823-.073.34-.04.736.046 1.136.088.406.238.848.43 1.295a19.707 19.707 0 0 1-1.062 2.227 7.662 7.662 0 0 0-1.482.645c-.37.22-.699.48-.897.787-.21.326-.275.714-.08 1.103z" />
+                                                            </svg>
                                                         </a>
-                                                        <a href="/editproject/{{$get->id}}" data-parent="MAIN" data-val="10241" class="btn btn-xs btn-warning edit" title="Edit"><i class="fa fa-edit" aria-hidden="true"></i> แก้ไข </a>
-                                                        <button class="btn btn-xs btn-danger  delete del_icon" title="Delete" data-id="{{$get->id}}"><i class="fa fa-times" aria-hidden="true"></i> ลบ </button>
-                                                    </td>
+                                                    </td>                             
                                                 </tr>
-                                                @php
-                                                $subProjectNumber = 1; // Reset sub-project number for each main project
-                                                @endphp
-                                                @foreach ($getAccountBudgetSub as $get2)
-                                                @if ($get2->account_id == $get->id)
-                                                <tr>
-                                                    <td class="text-center" style="text-align: center">
-                                                        {{ $mainProjectNumber }}.{{ $subProjectNumber }}
-                                                    </td>
-                                                    <td style="text-align: center"> {{ $get2->AccCode }}
-                                                    </td>
-                                                    <td style="text-align: center"> {{ $get2->AccName }}
-                                                    </td>
-                                                    <td style="text-align: center">
-                                                        {{ \Carbon\Carbon::parse($get2->AccStartDate)->locale('th')->addYears(543)->isoFormat('DD MMMM YYYY') }}
-                                                        ถึง <br>
-                                                        {{ \Carbon\Carbon::parse($get2->AccEndDate)->locale('th')->addYears(543)->isoFormat('DD MMMM YYYY') }}
-                                                    </td>
-                                                    <td class="text-right" style="text-align: center">
-                                                        {{ number_format($get2->Amount, 2) }}
-                                                    </td>
-                                                    <td class="text-right" style="text-align: center">
-                                                        {{ number_format($get2->SubAmount, 2) }}
-                                                    </td>
-                                                    <td class="text-center">
-                                                        <div class="checkbox-wrapper-7" style="display: flex; justify-content: center; align-items: center; height: 100%;">
-                                                            <input class="tgl tgl-ios subaccdel" id="cb2-7-{{ $mainProjectNumber }}-{{ $subProjectNumber }}" type="checkbox" data-val="{{ $get2->id }}" {{ $get2->is_active == 1 ? 'checked' : '' }} />
-                                                            <label class="tgl-btn" for="cb2-7-{{ $mainProjectNumber }}-{{ $subProjectNumber }}"></label>
-                                                        </div>
-                                                    </td>
-                                                    <td class="text-center">
-
-                                                        <a href="/editsubproject/{{$get2->id}}" data-parent="PARENT" data-val="10242" class="btn btn-xs btn-warning edit" title="Edit"><i class="fa fa-edit" aria-hidden="true"></i> แก้ไข </a>
-                                                        <button class="btn btn-xs btn-danger  delete del_iconSub" data-id="{{$get2->id}}" title="Delete"><i class="fa fa-times" aria-hidden="true"></i> ลบ </button>
-
-                                                    </td>
-                                                </tr>
-                                                @php
-                                                $subProjectNumber++;
-                                                @endphp
-                                                @endif
-                                                @endforeach
                                                 @php
                                                 $mainProjectNumber++;
                                                 @endphp
                                                 @endforeach
-                                            </tbody> --}}
+                                            </tbody>
 
                                         </table>
 

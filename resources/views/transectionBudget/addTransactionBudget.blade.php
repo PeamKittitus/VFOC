@@ -2,28 +2,30 @@
 @section('content')
 
     <head>
-        <!-- Include Kanit font from Google Fonts -->
         <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
         <link href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" rel="stylesheet">
-        <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.15.1/moment.min.js"></script>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.0.0/css/font-awesome.min.css">
-
-        <!-- DataTables -->
+        <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css">
         <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.css">
         <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.js"></script>
-        <link rel="stylesheet" type="text/css"
-            href="https://cdn.datatables.net/responsive/2.2.9/css/responsive.dataTables.min.css">
-        <script type="text/javascript" charset="utf8"
-            src="https://cdn.datatables.net/responsive/2.2.9/js/dataTables.responsive.min.js"></script>
-
+        <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;700&display=swap" rel="stylesheet">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.8/js/select2.min.js" defer></script>
         <!-- Select2 -->
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css">
         <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
-
+        <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;700&display=swap" rel="stylesheet">
         <style>
             body {
-                font-family: 'Kanit', sans-serif;
+                /* font-family: 'Kanit', sans-serif; */
+                font-family: 'Sarabun', sans-serif !important;
+                -webkit-user-select: none;
+                /* Safari */
+                -ms-user-select: none;
+                /* IE 10 and IE 11 */
+                user-select: none;
+                background-color: #9ed8e1;
             }
 
             #example thead th {
@@ -140,6 +142,16 @@
                 width: 100%
             }
 
+            .select2 {
+                min-width: 100%;
+                max-width: 100%;
+            }
+
+            .select2-container .select2-selection--single {
+                height: 34px !important;
+            }
+
+
             input {
                 width: 100%
             }
@@ -162,134 +174,125 @@
             </ol>
         </div>
 
-
-        <div class="flex-1 bg-pattern" style="background: #8dcde1">
-            <div class="card p-4 rounded-plus bg-faded">
-                <form id="addaccountbudget" name="addaccountbudget" method="post" enctype="multipart/form-data">
-
-                    <div class="card-body pb-1">
-                        <div class="section-title">
-                            <h4 class='font'><strong style="font-weight: 400;"><i class="fa fa-file-text-o"
-                                        aria-hidden="true" style='margin-right: 10px'></i>เบิกจ่าย</strong></h4>
-                        </div>
-                        <hr />
-
-                        <div class="panel-content">
-                            <div class="row">
-                                <div class="col-lg-2"></div>
-                                <div class="col-lg-8">
-                                    <form id="addtransectionBudget" enctype="multipart/form-data" novalidate="novalidate"
-                                        data-bv-message="This value is not valid"
-                                        data-bv-feedbackicons-valid="glyphicon glyphicon-ok"
-                                        data-bv-feedbackicons-invalid="glyphicon glyphicon-remove"
-                                        data-bv-feedbackicons-validating="glyphicon glyphicon-refresh"
-                                        action="/EAccount/FormAddTransaction?BudgetYear=0" method="post" class="bv-form">
-                                        <button type="submit" class="bv-hidden-submit"
-                                            style="display: none; width: 0px; height: 0px;" disabled="disabled"></button>
-                                        <div class="panel-content">
-                                            <div class="col-lg-12">
-                                                <label style="color:red !important;font-size:1.2rem"> หน่วยงานต้นทาง</label>
-                                                <hr>
-                                                <div class="form-group has-feedback has-error">
-                                                    <label class="form-label"> ชื่อแผนงาน/โครงการ</label>
-                                                    <select class="select2" id="AccountBudgetd" name="AccountBudgetd">
-                                                    </select>
-                                                    <small class="help-block" data-bv-validator="notEmpty"
-                                                        data-bv-for="AccountBudgetd" data-bv-result="INVALID"
-                                                        style="">กรุณากรอกข้อมูล</small>
-                                                </div>
-                                                <div class="form-group has-feedback">
-                                                    <label class="form-label"> ชื่อบัญชี</label>
-                                                    <select class="select2" id="SenderBookBankId" name="SenderBookBankId">
-                                                    </select>
-                                                </div>
-
-                                                <label style="color: red !important; margin-top: 2rem; font-size: 1.2rem">
-                                                    หน่วยงานปลายทาง </label>
-                                                <hr>
-
-                                                {{-- <div class="form-group">
-                                                    <label class="form-label"> เลือกประเภทหน่วยงาน</label>
-                                                    <select name="OrgType" id="OrgType" class="select2">
-                                                        <option value="1" >กองทุน 1</option>
-                                                        <option value="2" >กองทุน 2</option>
-                                                        <option value="3" >กองทุน 3</option>
-                                                    </select>
-                                                </div> --}}
-
-                                                <div id="IsHeadBrance">
-                                                    <div class="form-group has-feedback">
-                                                        <label class="form-label"> กองทุนหมูบ้าน</label>
-                                                        <select id="Village" name="Village" class="select2">
-                                                        </select>
-                                                    </div>
-
-                                                    <div class="form-group mt-4">
-                                                        <label class="form-label"> ชื่อบัญชี <span
-                                                                style="color:red !important">*</span></label>
-                                                        <select class="select2" id="ReceiverBookBankId"
-                                                            name="ReceiverBookBankId">
-                                                        </select>
-                                                        <small class="help-block" data-bv-validator="notEmpty"
-                                                            data-bv-for="ReceiverBookBankId" data-bv-result="INVALID"
-                                                            style="">กรุณาเลือกข้อมูลข้อมูล</small>
-                                                    </div>
-
-                                                    <div class="form-group mt-3">
-                                                        <label class="form-label"> กองทุนละไม่เกิน (บาท) <span
-                                                                style="color:red">*</span></label>
-                                                        <input type="number" id="Amount" name="Amount"></i>
-                                                        <small class="help-block" data-bv-validator="notEmpty"
-                                                            data-bv-for="Amount" data-bv-result="NOT_VALIDATED"
-                                                            style="display: none;">กรุณากรอกข้อมูล</small>
-                                                    </div>
-                                                    <div class="form-group has-feedback">
-                                                        <label class="form-label"> เอกสารแนบ <span style="color:red"> *
-                                                            </span><label style="color:red">
-                                                                (ขนาดไฟล์ของเอกสารแนบรวมไม่เกิน 50MB/1ครั้ง)
-                                                            </label></label>
-                                                        <input type="file" name="FileUpload" id="FileUpload"
-                                                            class="col-lg-12 col-md-12 col-sm-12 form-control"
-                                                            multiple="" data-bv-notempty="true"
-                                                            data-bv-notempty-message="กรุณากรอกข้อมูล"
-                                                            accept=".pdf,.docx,.xlsx"
-                                                            pattern="^.*\.(docx|DOCX|pdf|PDF|xlsx|XLSX)$"
-                                                            data-bv-message="รองรับนามสกุลไฟล์ (xlsx,docx,pdf) เท่านั้น"
-                                                            data-bv-field="FileUpload"><i class="form-control-feedback"
-                                                            data-bv-icon-for="FileUpload" style="display: none;"></i>
-                                                        <small class="help-block" data-bv-validator="notEmpty"
-                                                            data-bv-for="FileUpload" data-bv-result="NOT_VALIDATED"
-                                                            style="display: none;">กรุณากรอกข้อมูล</small><small
-                                                            class="help-block" data-bv-validator="regexp"
-                                                            data-bv-for="FileUpload" data-bv-result="NOT_VALIDATED"
-                                                            style="display: none;">รองรับนามสกุลไฟล์ (xlsx,docx,pdf)
-                                                            เท่านั้น</small>
-                                                    </div>
-                                                </div>
-
-                                                <div class="form-button-group" style="">
-                                                    <button type="button" class="btn btn-success btn-block"
-                                                        id='submitTransectionBudget'
-                                                        style='background-color: #1ab3a3;width: 150px ; float: right; margin-top: 15px;'>
-                                                        <i class="fa fa-save"
-                                                            style='padding-right:10px'></i>บันทึก</button>
-                                                </div>
-
+        <div class="w-box" style="margin: auto !important; padding: 10px">
+            
+            <form id="addaccountbudget" name="addaccountbudget" method="post" enctype="multipart/form-data">
+                <div class="card-body pb-1">
+                    <div class="section-title">
+                        <h4 class='font'><strong style="font-weight: 400;"><i class="fa fa-file-text-o"
+                                    aria-hidden="true" style='margin-right: 10px'></i>เบิกจ่าย</strong></h4>
+                    </div>
+                    <hr />
+                    <div class="panel-content">
+                        <div class="row">
+                            <div class="col-lg-2"></div>
+                            <div class="col-lg-8">
+                                <form id="addtransectionBudget" enctype="multipart/form-data">
+                                    <button type="submit" class="bv-hidden-submit"
+                                        style="display: none; width: 0px; height: 0px;" disabled="disabled"></button>
+                                    <div class="panel-content">
+                                        <div class="col-lg-12">
+                                            <label style="color:red !important;font-size:1.2rem"> หน่วยงานต้นทาง</label>
+                                            <hr>
+                                            
+                                            <div class="form-group mt-4">
+                                                <label class="form-label"> ชื่อแผนงาน/โครงการ</label>
+                                                <select class="select2 form-control" id="AccountBudgetd" name="AccountBudgetd">
+                                                </select>
+                                                {{-- <small class="help-block" data-bv-validator="notEmpty"
+                                                    data-bv-for="AccountBudgetd" data-bv-result="INVALID"
+                                                    style="">กรุณากรอกข้อมูล</small> --}}
+                                            </div>
+                                            <div class="form-group mt-4">
+                                                <label class="form-label"> ชื่อบัญชี</label>
+                                                <select class="select2" id="SenderBookBankId" name="SenderBookBankId">
+                                                </select>
                                             </div>
 
-                                    </form>
-                                </div>
-                                <div class="col-lg-2"></div>
+                                            <label style="color: red !important; margin-top: 2rem; font-size: 1.2rem">
+                                                หน่วยงานปลายทาง </label>
+                                            <hr>
+
+                                            {{-- <div class="form-group">
+                                                <label class="form-label"> เลือกประเภทหน่วยงาน</label>
+                                                <select name="OrgType" id="OrgType" class="select2">
+                                                    <option value="1" >กองทุน 1</option>
+                                                    <option value="2" >กองทุน 2</option>
+                                                    <option value="3" >กองทุน 3</option>
+                                                </select>
+                                            </div> --}}
+
+                                            <div id="IsHeadBrance">
+                                                <div class="form-group mt-4">
+                                                    <label class="form-label"> กองทุนหมูบ้าน</label>
+                                                    <select id="Village" name="Village" class="select2">
+                                                    </select>
+                                                </div>
+
+                                                <div class="form-group mt-4">
+                                                    <label class="form-label"> ชื่อบัญชี <span
+                                                            style="color:red !important">*</span></label>
+                                                    <select class="select2" id="ReceiverBookBankId"
+                                                        name="ReceiverBookBankId">
+                                                    </select>
+                                                    {{-- <small class="help-block" data-bv-validator="notEmpty"
+                                                        data-bv-for="ReceiverBookBankId" data-bv-result="INVALID"
+                                                        style="">กรุณาเลือกข้อมูลข้อมูล</small> --}}
+                                                </div>
+
+                                                <div class="form-group mt-3">
+                                                    <label class="form-label"> กองทุนละไม่เกิน (บาท) <span
+                                                            style="color:red">*</span></label>
+                                                    <input class="form-control" type="number" id="Amount" name="Amount"></i>
+                                                    <small class="help-block" data-bv-validator="notEmpty"
+                                                        data-bv-for="Amount" data-bv-result="NOT_VALIDATED"
+                                                        style="display: none;">กรุณากรอกข้อมูล</small>
+                                                </div>
+                                                <div class="form-group" style="padding-top: 13px">
+                                                    <label class="form-label"> เอกสารแนบ <span style="color:red"> *
+                                                        </span><small style="color:red !important ;">
+                                                            (ขนาดไฟล์ของเอกสารแนบรวมไม่เกิน 50MB/1ครั้ง)
+                                                        </small></label>
+                                                    <input type="file" name="FileUpload" id="FileUpload"
+                                                        class="col-lg-12 col-md-12 col-sm-12 form-control"
+                                                        multiple="" data-bv-notempty="true"
+                                                        data-bv-notempty-message="กรุณากรอกข้อมูล"
+                                                        accept=".pdf,.docx,.xlsx"
+                                                        pattern="^.*\.(docx|DOCX|pdf|PDF|xlsx|XLSX)$"
+                                                        data-bv-message="รองรับนามสกุลไฟล์ (xlsx,docx,pdf) เท่านั้น"
+                                                        data-bv-field="FileUpload"><i class="form-control-feedback"
+                                                        data-bv-icon-for="FileUpload" style="display: none;"></i>
+                                                    {{-- <small class="help-block" data-bv-validator="notEmpty"
+                                                        data-bv-for="FileUpload" data-bv-result="NOT_VALIDATED"
+                                                        style="display: none;">กรุณากรอกข้อมูล</small><small
+                                                        class="help-block" data-bv-validator="regexp"
+                                                        data-bv-for="FileUpload" data-bv-result="NOT_VALIDATED"
+                                                        style="display: none;">รองรับนามสกุลไฟล์ (xlsx,docx,pdf)
+                                                        เท่านั้น</small> --}}
+                                                </div>
+                                            </div>
+
+                                            <div class="form-button-group" style="">
+                                                <button type="button" class="btn btn-success btn-block"
+                                                    id='submitTransectionBudget'
+                                                    style='background-color: #1ab3a3;width: 150px ; float: right; margin-top: 15px;'>
+                                                    <i class="fa fa-save"
+                                                        style='padding-right:10px'></i>บันทึก</button>
+                                            </div>
+                                        </div>
+                                </form>
                             </div>
-
+                            <div class="col-lg-2"></div>
                         </div>
-
-
 
                     </div>
 
-                </form>
-            </div>
+
+
+                </div>
+
+            </form>
+
         </div>
 
 
@@ -397,7 +400,42 @@
                 var Village = $('#Village').val();
                 var ReceiverBookBankId = $('#ReceiverBookBankId').val();
                 var Amount = $('#Amount').val();
-                // Create FormData object and append values
+                var fileInput = $('#FileUpload')[0].files[0];
+
+                if (Village == 0) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'กรุณาเลือกกองทุน',
+                    });
+                    return; 
+                }
+                if (!ReceiverBookBankId) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'กรุณาเลือกบัญชี ปลายทาง',
+                    });
+                    return; 
+                }
+                if (!Amount) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'กรุณากรอก จำนวนเงิน',
+                    });
+                    return; 
+                }
+
+                if (!fileInput) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'กรุณาเลือกเอกสารแนบ',
+                    });
+                    return; 
+                }
+
                 var formData = new FormData();
                 formData.append('AccountBudgetd', AccountBudgetd);
                 formData.append('SenderBookBankId', SenderBookBankId);
@@ -407,7 +445,7 @@
                 formData.append('Amount', Amount);
 
                 // Append the file input
-                var fileInput = $('#FileUpload')[0].files[0];
+               
                 formData.append('FileUpload', fileInput);
 
                 for (var pair of formData.entries()) {
