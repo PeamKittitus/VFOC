@@ -78,8 +78,8 @@
 <body>
 
     <div class="w-box" style="margin: auto !important; padding: 10px">
-        <h4 style="text-align: center;color:black">สร้างแผนงานโครงการย่อย</h4>
-        <form id="addAccountBudgetSubCenter" name="addAccountBudgetSubCenter" method="post" enctype="multipart/form-data">
+        <h4 style="text-align: center;color:black">รายละเอียดแผนงานโครงการย่อย</h4>
+        <form id="editAccountBudgetSubCenter" name="editAccountBudgetSubCenter" method="post" enctype="multipart/form-data">
             <div class="row">
                 <div class="col-12 col-sm-12 box-right">
                     <div class="box-right-d">
@@ -88,8 +88,13 @@
                                 <div class="form-group">
                                     <label>ปีงบประมาณ</label>
                                     <select class="form-control" id="BudgetYear" disabled>
-                                        <option value="0" disabled selected>----เลือกปีงบประมาณ----</option>
-                                        {!! $generateYearOptions !!}
+                                        <option value="0" disabled>----เลือกปีงบประมาณ----</option>
+                                        <option value="2569" {{ $getAccountBudgetCenterSubById->BudgetYear == '2569' ? 'selected' : '' }}>2569</option>
+                                        <option value="2568" {{ $getAccountBudgetCenterSubById->BudgetYear == '2568' ? 'selected' : '' }}>2568</option>
+                                        <option value="2567" {{ $getAccountBudgetCenterSubById->BudgetYear == '2567' ? 'selected' : '' }}>2567</option>
+                                        <option value="2566" {{ $getAccountBudgetCenterSubById->BudgetYear == '2566' ? 'selected' : '' }}>2566</option>
+                                        <option value="2565" {{ $getAccountBudgetCenterSubById->BudgetYear == '2565' ? 'selected' : '' }}>2565</option>
+                                        <option value="2564" {{ $getAccountBudgetCenterSubById->BudgetYear == '2564' ? 'selected' : '' }}>2564</option>
                                     </select>
                                 </div>
                             </div>
@@ -98,7 +103,7 @@
                             <div class="col-sm-12">
                                 <div class="form-group">
                                     <label>ชื่อแผนงาน/โครงการ <span style="color: red;">*</span></label>
-                                    <input type="text" class="form-control" placeholder="ชื่อแผนงาน/โครงการ" id="AccName">
+                                    <input type="text" class="form-control" placeholder="ชื่อแผนงาน/โครงการ" id="AccName" value="{{$getAccountBudgetCenterSubById->AccName}}" disabled>
                                 </div>
                             </div>
                         </div>
@@ -106,10 +111,11 @@
                             <div class="col-sm-12">
                                 <div class="form-group">
                                     <label>ฝ่าย <span style="color: red;">*</span></label>
-                                    <select class="form-control" id="DivisionId">
-                                        <option value="0" disabled selected>----เลือกฝ่าย----</option>
+                                    <select class="form-control" id="DivisionId" disabled>
+                                        <option value="0" disabled>----เลือกฝ่าย----</option>
                                         <?php foreach ($getDivision as $division) : ?>
-                                            <option value="<?= $division->id ?>"><?= $division->name . '(' . $division->short_name . ')' ?></option>
+                                            <option value="<?= $division->id ?>" <?= ($getAccountBudgetCenterSubById->DivisionId == $division->id) ? 'selected' : '' ?>><?= $division->name . '(' . $division->short_name . ')' ?>
+                                            </option>
                                         <?php endforeach; ?>
                                     </select>
                                 </div>
@@ -119,7 +125,7 @@
                             <div class="col-sm-12">
                                 <div class="form-group">
                                     <label>งบประมาณ (บาท) <span style="color: red;">*</span></label>
-                                    <input type="text" class="form-control check_number" placeholder="งบประมาณ (บาท)" id="SubAmount">
+                                    <input type="text" class="form-control check_number" placeholder="งบประมาณ (บาท)" id="SubAmount" value="{{$getAccountBudgetCenterSubById->SubAmount}}" disabled>
                                 </div>
                             </div>
                         </div>
@@ -127,21 +133,35 @@
                             <div class="col-sm-6">
                                 <div class="form-group">
                                     <label>วันที่เริ่มโครงการ<span style="color: red;">*</span></label>
-                                    <input type="date" class="form-control" id="AccStartDate">
+                                    <input type="date" class="form-control" id="AccStartDate" value="{{$getAccountBudgetCenterSubById->AccStartDate}}" disabled>
                                 </div>
                             </div>
                             <div class="col-sm-6">
                                 <div class="form-group">
                                     <label>วันที่สิ้นสุดโครงการ<span style="color: red;">*</span></label>
-                                    <input type="date" class="form-control" id="AccEndDate">
+                                    <input type="date" class="form-control" id="AccEndDate" value="{{$getAccountBudgetCenterSubById->AccEndDate}}" disabled>
                                 </div>
                             </div>
                         </div>
                         <div class="row mt-1">
                             <div class="col-sm-12">
                                 <div class="form-group">
-                                    <label>เอกสารแนบ<span style="color: red;">(ขนาดไฟล์ของเอกสารแนบรวมไม่เกิน 50MB/1ครั้ง)</span></label>
-                                    <input type="file" class="form-control" id="file">
+                                    <table id="datatableProjectActivity" class="table table-striped table-bordered" cellspacing="0" width="100%" style="background-color: #1dc9b7;">
+                                        <thead>
+                                            <tr>
+                                                <th style="text-align: center;">ลำดับ</th>
+                                                <th style="text-align: center;">ชื่อเอกสาร</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody style="background-color: white;">
+                                            @foreach($getAccountBudgetCenterSubFileById as $index => $value)
+                                            <tr>
+                                                <td style="text-align:center"><?= $index + 1 ?></td>
+                                                <td style="text-align:center"><a href="{{ asset($value->FilePath) }}" target="_blank">{{ $value->FileName }}</a></td>
+                                            </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
                                 </div>
                             </div>
                         </div>
@@ -154,10 +174,37 @@
                             </div>
                         </div>
                         <hr>
+                        <h4 style="text-align: center;color:black">รายละเอียดแผนงานกิจกรรม</h4>
+                        <div class="row mt-1">
+                            <div class="col-sm-12">
+                                <div class="form-group">
+                                    <table id="datatableProjectActivity" class="table table-striped table-bordered" cellspacing="0" width="100%" style="background-color: #1dc9b7;">
+                                        <thead>
+                                            <tr>
+                                                <th style="text-align: center;">ลำดับ</th>
+                                                <th style="text-align: center;">กิจกรรม</th>
+                                                <th style="text-align: center;">รายละเอียด</th>
+                                                <th style="text-align: center;">งบประมาณ (บาท)</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody style="background-color: white;">
+                                            @foreach($getAccountBudgetCenterActivityById as $index => $value)
+                                            <tr>
+                                                <td style="text-align:center"><?= $index + 1 ?></td>
+                                                <td style="text-align:center">{{ $value->ActivityName}}</td>
+                                                <td style="text-align:center">{{ $value->ActivityDetail}}</td>
+                                                <td style="text-align:center">{{ $value->ActivityAmount}}</td>
+                                            </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <input type="hidden" id="DetailSub" name="DetailSub" value="{{$getAccountBudgetCenterSubById->Detail}}">
                         <div class="row mt-1">
                             <div class="col-12">
                                 <div class="form-group" style="display: flex;justify-content:end;gap:1%">
-                                    <button type="submit" class="btn" style="color: white ; background-color:#1dc9b7">บันทึก</button>
                                     <a href="/admin/accountBudgetCenter">
                                         <button type="button" class="btn" style="color: white ; background-color:red">ย้อนกลับ</button>
                                     </a>
@@ -178,25 +225,32 @@
         $('#DivisionId').select2();
 
         let editor;
+        var DetailSub = $('#DetailSub').val();
         ClassicEditor
-            .create(document.querySelector('#Detail'))
-            .then(newEditor => {
-                editor = newEditor;
-            })
-            .catch(error => {
-                console.error(error);
-            });
+        .create(document.querySelector('#Detail'), {
+            readOnly: true,
+            
+        })
+        .then(editor => {
+            editor.enableReadOnlyMode("editor");
+            var DetailSub = $('#DetailSub').val();
+            const initialContent = DetailSub;
+            editor.setData(initialContent);
+        })
+        .catch(error => {
+            console.error(error);
+        });
 
-        $("form[name=addAccountBudgetSubCenter]").submit(function(event) {
+        $("form[name=editAccountBudgetSubCenter]").submit(function(event) {
             event.preventDefault();
-            var AccId = localStorage.getItem('AccountBudgetCenterId');
+            var AccId = $('#AccId').val();
+            var AccSubId = $('#AccSubId').val();
             var BudgetYear = $('#BudgetYear').val();
             var AccName = $('#AccName').val();
             var DivisionId = $('#DivisionId').val();
             var SubAmount = $('#SubAmount').val();
             var AccStartDate = $('#AccStartDate').val();
             var AccEndDate = $('#AccEndDate').val();
-            var totalfiles = document.getElementById("file").files.length;
             var editorData = editor.getData();
             var Detail = editorData;
 
@@ -219,19 +273,7 @@
             if (!Detail) {
                 showError('กรุณากรอกแหล่งที่มา/วัตถุประสงค์');
                 return;
-            }     
-            if (!AccStartDate) {
-                showError('กรุณากรอกวันที่เริ่มโครงการ');
-                return;
-            }     
-            if (!AccEndDate) {
-                showError('กรุณากรอกวันที่สิ้นสุดโครงการ');
-                return;
-            }     
-            if (totalfiles === 0) {
-                showError('กรุณาเลือกไฟล์');
-                return;
-            }     
+            }
             var startDate = new Date(AccStartDate);
             var endDate = new Date(AccEndDate);
 
@@ -242,23 +284,17 @@
             var formData = new FormData();
 
             formData.append('AccId', AccId);
+            formData.append('AccSubId', AccSubId);
             formData.append('BudgetYear', BudgetYear);
             formData.append('AccName', AccName);
             formData.append('DivisionId', DivisionId);
             formData.append('SubAmount', SubAmount);
             formData.append('AccStartDate', AccStartDate);
             formData.append('AccEndDate', AccEndDate);
-            formData.append('totalfiles', totalfiles);
             formData.append('Detail', Detail);
-            for (var index = 0; index < totalfiles; ++index) {
-              formData.append(
-                "file[]",
-                document.getElementById("file").files[index]
-              );
-            }
 
             for (var pair of formData.entries()) {
-                console.log(pair[0]+ ', ' + pair[1]); 
+                console.log(pair[0] + ', ' + pair[1]);
             }
 
             confirmAction(formData);
@@ -268,7 +304,7 @@
         function confirmAction(formData) {
             Swal.fire({
                 title: "ยืนยัน",
-                text: "คุณต้องการสร้างแผนงานโครงการย่อย",
+                text: "คุณต้องการแก้ไขแผนงานโครงการย่อย",
                 icon: "question",
                 showCancelButton: true,
                 confirmButtonText: "ใช่",
@@ -283,16 +319,16 @@
         // Function to handle form submission
         function submitFormData(formData) {
             $.ajax({
-                url: '/addAccountBudgetSubCenterApi',
+                url: '/editAccountBudgetCenterSubApi',
                 method: 'POST',
                 data: formData,
                 contentType: false,
                 processData: false,
                 success: function(response) {
                     handleSuccess();
-                    if(response.api_message == 'Success'){
+                    if (response.api_message == 'Success') {
                         handleSuccess()
-                    }else{
+                    } else {
                         Swal.fire({
                             title: "Error",
                             text: response.api_message,
@@ -338,7 +374,7 @@
         function showError(message) {
             Swal.fire({
                 icon: 'error',
-                title: 'กรุณากรอกข้อมูลให้ครบ',
+                title: 'Invalid Input',
                 text: message
             });
         }

@@ -381,6 +381,32 @@ class AdminAccountBudgetCenterController extends \crocodicstudio\crudbooster\con
 		$data['getDivision'] = $getDivision;
 		return view('accountCenter/accountSubCenter/editAccountBudgetCenterSub', $data);
 	}
+	public function addAccountBudgetCenterActivity($id)
+	{
+		$getAccountBudgetCenterSubById = $this->getAccountBudgetCenterSubById($id);
+		$data['getAccountBudgetCenterSubById'] = $getAccountBudgetCenterSubById;
+		$getAccountBudgetCenterSubFileById = $this->getAccountBudgetCenterSubFileById($id);
+		$data['getAccountBudgetCenterSubFileById'] = $getAccountBudgetCenterSubFileById;
+		$getDivision = (new FunctionController)->getDivision();
+		$data['getDivision'] = $getDivision;
+		$data['accSubId'] = $id;
+		$getAccountBudgetCenterActivityById = $this->getAccountBudgetCenterActivityById($id);
+		$data['getAccountBudgetCenterActivityById'] = $getAccountBudgetCenterActivityById;
+		return view('accountCenter/accountSubCenter/addAccountBudgetCenterActivity', $data);
+	}
+	public function viewAccountBudgetCenterSub($id)
+	{
+		$getAccountBudgetCenterSubById = $this->getAccountBudgetCenterSubById($id);
+		$data['getAccountBudgetCenterSubById'] = $getAccountBudgetCenterSubById;
+		$getAccountBudgetCenterSubFileById = $this->getAccountBudgetCenterSubFileById($id);
+		$data['getAccountBudgetCenterSubFileById'] = $getAccountBudgetCenterSubFileById;
+		$getDivision = (new FunctionController)->getDivision();
+		$data['getDivision'] = $getDivision;
+		$getAccountBudgetCenterActivityById = $this->getAccountBudgetCenterActivityById($id);
+		$data['getAccountBudgetCenterActivityById'] = $getAccountBudgetCenterActivityById;
+		return view('accountCenter/accountSubCenter/viewAccountBudgetCenterSub', $data);
+	}
+	
 	function addAccountBudgetCenterApi(Request $request)
 	{
 		$data = [];
@@ -553,6 +579,38 @@ class AdminAccountBudgetCenterController extends \crocodicstudio\crudbooster\con
 			->where('transactionFileAccountBudgetCenter.AccBudgetCenterSubId', $id)
 			->get();
 		return $getAccountBudgetCenterSubFileById;
+	}
+	function getAccountBudgetCenterActivityById($id)
+	{
+		$getAccountBudgetCenterActivityById = DB::table('accountBudgetCenterActivity')
+			->select(
+				'accountBudgetCenterActivity.id',
+				'accountBudgetCenterActivity.ActivityName',
+				'accountBudgetCenterActivity.ActivityDetail',
+				'accountBudgetCenterActivity.ActivityAmount'
+			)
+			->where('accountBudgetCenterActivity.IsActive', 1)
+			->where('accountBudgetCenterActivity.AccBudgetCenterId', $id)
+			->orderBy('accountBudgetCenterActivity.id')
+			->get();
+		return $getAccountBudgetCenterActivityById;
+	}
+	function getAccountBudgetCenterActivityByIdApi(Request $request)
+	{
+		$ActivityId = $request['ActivityId'];
+		$getAccountBudgetCenterActivityById = DB::table('accountBudgetCenterActivity')
+			->select(
+				'accountBudgetCenterActivity.id',
+				'accountBudgetCenterActivity.AccBudgetCenterId',
+				'accountBudgetCenterActivity.ActivityName',
+				'accountBudgetCenterActivity.ActivityDetail',
+				'accountBudgetCenterActivity.ActivityAmount'
+			)
+			->where('accountBudgetCenterActivity.IsActive', 1)
+			->where('accountBudgetCenterActivity.id', $ActivityId)
+			->first();
+			response()->json($getAccountBudgetCenterActivityById, 200)->header("Access-Control-Allow-Origin", config('cors.allowed_origins'))
+				->header("Access-Control-Allow-Methods", config('cors.allowed_methods'))->send();
 	}
 	function delAccountBudgetCenter(Request $request)
 	{
@@ -789,4 +847,123 @@ class AdminAccountBudgetCenterController extends \crocodicstudio\crudbooster\con
 				->header("Access-Control-Allow-Methods", config('cors.allowed_methods'));
 		}
 	}
+	function addAccountBudgetCenterActivityApi(Request $request)
+	{
+		$data = [];
+		$accSubId = $request->input('accSubId');
+		$ActivityName = $request->input('ActivityName');
+		$ActivityDetail = $request->input('ActivityDetail');
+		$ActivityAmount = $request->input('ActivityAmount');
+
+		// Get data from database
+		$DataAccBudgetCenterSub = DB::table('accountBudgetCenterSub')->where('id', $accSubId)->first();
+		$AccBudgetCenterSubAmount = $DataAccBudgetCenterSub->SubAmount; //1000000
+		$DataAccBudgetSubCenterActivitySumAmount = DB::table('accountBudgetCenterActivity')->where('AccBudgetCenterId', $accSubId)->where('IsActive', 1)->get();
+
+		// Check if sub amount exceeds budget center amount
+		if ($DataAccBudgetSubCenterActivitySumAmount->isEmpty()) {
+			if ($ActivityAmount > $AccBudgetCenterSubAmount) {
+				return response()->json(['api_status' => 0, 'api_message' => 'กรุณาตรวจสอบข้อมูลวงเงินในโครงการ'], 200);
+			}
+		} else {
+			$sumAmount = $DataAccBudgetSubCenterActivitySumAmount->sum('SubAmount') + $ActivityAmount;
+			if ($sumAmount > $AccBudgetCenterSubAmount) {
+				return response()->json(['api_status' => 0, 'api_message' => 'กรุณาตรวจสอบข้อมูลวงเงินในโครงการ'], 200);
+			}
+		}
+		
+		DB::beginTransaction();
+		try {
+			$dataInsert = [
+				'AccBudgetCenterId' => $accSubId,
+				'ActivityName' => $ActivityName,
+				'ActivityDetail' => $ActivityDetail,
+				'ActivityAmount' => $ActivityAmount,
+				'IsActive' => 1,
+				'UserId'  => CRUDBooster::myId(),
+				'CreatedAt' => now(),
+				'CreatedBy' => CRUDBooster::myId()
+			];
+
+			$AccountBudgetCenterActivityId = DB::table('accountBudgetCenterActivity')->insertGetId($dataInsert);
+
+			if ($AccountBudgetCenterActivityId) {
+				DB::commit();
+				$data = [
+					'api_status' => 1,
+					'api_message' => 'Success',
+					'id' => $AccountBudgetCenterActivityId
+				];
+			} else {
+				DB::rollback();
+				$data = [
+					'api_status' => 0,
+					'api_message' => 'กรุณาทำรายการใหม่อีกครั้ง'
+				];
+			}
+		} catch (\Exception $e) {
+			DB::rollback();
+			$data = [
+				'api_status' => 0,
+				'api_message' => 'กรุณาทำรายการใหม่อีกครั้ง',
+				'api_data' => $e
+			];
+		}
+		return response()->json($data, 200)
+			->header("Access-Control-Allow-Origin", config('cors.allowed_origins'))
+			->header("Access-Control-Allow-Methods", config('cors.allowed_methods'));
+	}
+	function editAccountBudgetCenterActivity(Request $request)
+	{
+		$ActivityModalId = $request['ActivityModalId'];
+		$AccBudgetCenterId = $request['AccBudgetCenterId'];
+		$ActivityModalName = $request['ActivityModalName'];
+		$ActivityModalDetail = $request['ActivityModalDetail'];
+		$ActivityModalAmount = $request['ActivityModalAmount'];
+		
+		// Get data from database
+		$AccBudgetCenterAmount = DB::table('accountBudgetCenterSub')->where('id', $AccBudgetCenterId)->value('SubAmount');
+
+		// Get filtered data
+		$filteredData = DB::table('accountBudgetCenterActivity')
+			->select('ActivityAmount')
+			->where('AccBudgetCenterId', $AccBudgetCenterId)
+			->where('IsActive', 1)
+			->where('id', '!=', $ActivityModalId)
+			->get();
+		// Check if sub amount exceeds budget center amount
+		$sumAmount = $filteredData->sum('ActivityAmount') + $ActivityModalAmount;
+		if ($sumAmount > $AccBudgetCenterAmount) {
+			return response()->json(['api_status' => 0, 'api_message' => 'กรุณาตรวจสอบข้อมูลวงเงินในโครงการ'], 200);
+		}
+
+		// Update the database
+		DB::beginTransaction();
+		try {
+			$dataUpdate = [
+				'ActivityName' => $ActivityModalName,
+				'ActivityDetail' => $ActivityModalDetail,
+				'ActivityAmount' => $ActivityModalAmount,
+				'UpdatedAt' => now(),
+				'UpdatedBy' => CRUDBooster::myId()
+			];
+			$updatedRows = DB::table('accountBudgetCenterActivity')->where('id', $ActivityModalId)->update($dataUpdate);
+
+			if ($updatedRows) {
+				DB::commit();
+				return response()->json(['api_status' => 1, 'api_message' => 'Success', 'id' => $updatedRows], 200)
+					->header("Access-Control-Allow-Origin", config('cors.allowed_origins'))
+					->header("Access-Control-Allow-Methods", config('cors.allowed_methods'));
+			} else {
+				DB::rollback();
+				return response()->json(['api_status' => 0, 'api_message' => 'กรุณาทำรายการใหม่อีกครั้ง'], 200);
+			}
+		} catch (\Exception $e) {
+			DB::rollback();
+			return response()->json(['api_status' => 0, 'api_message' => 'กรุณาทำรายการใหม่อีกครั้ง', 'api_data' => $e], 200)
+				->header("Access-Control-Allow-Origin", config('cors.allowed_origins'))
+				->header("Access-Control-Allow-Methods", config('cors.allowed_methods'));
+		}
+	}
+	
 }

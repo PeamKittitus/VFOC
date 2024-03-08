@@ -69,6 +69,8 @@ Route::get('/addAccountBudgetCenter', '\App\Http\Controllers\AdminAccountBudgetC
 Route::get('/editAccountBudgetCenter/{id}', '\App\Http\Controllers\AdminAccountBudgetCenterController@editAccountBudgetCenter');
 Route::get('/addAccountBudgetSubCenter', '\App\Http\Controllers\AdminAccountBudgetCenterController@addAccountBudgetSubCenter');
 Route::get('/editAccountBudgetCenterSub/{id}', '\App\Http\Controllers\AdminAccountBudgetCenterController@editAccountBudgetCenterSub');
+Route::get('/addAccountBudgetCenterActivity/{id}', '\App\Http\Controllers\AdminAccountBudgetCenterController@addAccountBudgetCenterActivity');
+Route::get('/viewAccountBudgetCenterSub/{id}', '\App\Http\Controllers\AdminAccountBudgetCenterController@viewAccountBudgetCenterSub');
 //==========================================================================================Route
 
 
@@ -139,6 +141,9 @@ Route::post('/delAccountBudgetCenter', '\App\Http\Controllers\AdminAccountBudget
 Route::post('/addAccountBudgetSubCenterApi', '\App\Http\Controllers\AdminAccountBudgetCenterController@addAccountBudgetSubCenterApi');
 Route::post('/delSubAccountBudgetCenter', '\App\Http\Controllers\AdminAccountBudgetCenterController@delSubAccountBudgetCenter');
 Route::post('/editAccountBudgetCenterSubApi', '\App\Http\Controllers\AdminAccountBudgetCenterController@editAccountBudgetCenterSubApi');
+Route::post('/addAccountBudgetCenterActivityApi', '\App\Http\Controllers\AdminAccountBudgetCenterController@addAccountBudgetCenterActivityApi');
+Route::post('/getAccountBudgetCenterActivityByIdApi', '\App\Http\Controllers\AdminAccountBudgetCenterController@getAccountBudgetCenterActivityByIdApi');
+Route::post('/editAccountBudgetCenterActivity', '\App\Http\Controllers\AdminAccountBudgetCenterController@editAccountBudgetCenterActivity');
 //========================================================================================== API
 
 //========================================================================================== Report

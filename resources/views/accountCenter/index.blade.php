@@ -252,6 +252,8 @@
                                                         <td class="text-right" style="text-align: center">-</td>
                                                         <td class="text-right" style="text-align: center">{{ number_format($centerSub->SubAmount, 2) }}</td>
                                                         <td style="text-align:center; display: flex; gap: 1%; justify-content: center;">
+                                                            <a href="/viewAccountBudgetCenterSub/{{$centerSub->id}}" class="btn" style="color: white; background-color: #09d7f7">ดูข้อมูล</a>
+                                                            <a href="/addAccountBudgetCenterActivity/{{$centerSub->id}}" class="btn" style="color: white; background-color: #449d44">อัพเดทกิจกรรม</a>
                                                             <a href="/editAccountBudgetCenterSub/{{$centerSub->id}}" class="btn" style="color: white; background-color: orange">แก้ไข</a>
                                                             <button data-id="{{$centerSub->id}}" class="btn deleteAccountCenterSub" style="color: white; background-color: red">ลบ</button>
                                                         </td>
