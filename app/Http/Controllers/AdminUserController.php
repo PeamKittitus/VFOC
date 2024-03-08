@@ -231,6 +231,7 @@
 			$getSystemOrg = DB::table('systemOrgStructure')->get();
 			$data['getDataUser'] = $getDataUser;
 			$data['getSystemOrg'] = $getSystemOrg;
+			$data['getRoles'] =  CRUDBooster::myPrivilegeName();
 			return view('user/edituser',$data);
 		}
 	}

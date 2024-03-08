@@ -296,6 +296,18 @@ class FunctionController extends Controller
             ->get();
         return $TambonsData;
     }
+    function getDivision()
+    {
+        $DivisionData = DB::table('systemDivision')
+            ->select(
+                'systemDivision.id',
+                'systemDivision.name',
+                'systemDivision.short_name'
+            )
+            ->where('systemDivision.is_active',1)
+            ->get();
+        return $DivisionData;
+    }
     function getAmphuresById(Request $request)
     {
         $VillageProvinceId = $request['VillageProvinceId'];
@@ -406,22 +418,18 @@ class FunctionController extends Controller
 			->header("Access-Control-Allow-Methods", config('cors.allowed_methods'))->send();    
 
     }
-
-
-    function getVillageApi(){
-
+    function getVillageApi()
+    {
         $Village = DB::table('village')
         ->select('village.*')
         ->where('village.IsActive', 1)
         ->get();
-
         response()->json($Village, 200)->header("Access-Control-Allow-Origin", config('cors.allowed_origins'))
         ->header("Access-Control-Allow-Methods", config('cors.allowed_methods'))->send();
 
     }
-
-    function getVillageBookBankApi($id){
-
+    function getVillageBookBankApi($id)
+    {
         $BookBank = DB::table('accountBookBank')
             ->select('accountBookBank.*')
             ->where('accountBookBank.created_by', $id)
@@ -429,9 +437,5 @@ class FunctionController extends Controller
 
         response()->json($BookBank, 200)->header("Access-Control-Allow-Origin", config('cors.allowed_origins'))
         ->header("Access-Control-Allow-Methods", config('cors.allowed_methods'))->send();
-
     }
-
-    
-
 }

@@ -65,6 +65,10 @@ Route::get('/addtransectionBudget', '\App\Http\Controllers\AdminTransacionAccoun
 Route::get('/updateProjectActivity/{id}', '\App\Http\Controllers\AdminProjectBudgetController@updateProjectActivity');
 Route::get('/updateProjectActivityDetail/{id}', '\App\Http\Controllers\AdminProjectBudgetController@updateProjectActivityDetail');
 Route::get('/approveActivityProject/{id}', '\App\Http\Controllers\AdminApproveProjectBudgetController@approveActivityProject');
+Route::get('/addAccountBudgetCenter', '\App\Http\Controllers\AdminAccountBudgetCenterController@addAccountBudgetCenter');
+Route::get('/editAccountBudgetCenter/{id}', '\App\Http\Controllers\AdminAccountBudgetCenterController@editAccountBudgetCenter');
+Route::get('/addAccountBudgetSubCenter', '\App\Http\Controllers\AdminAccountBudgetCenterController@addAccountBudgetSubCenter');
+Route::get('/editAccountBudgetCenterSub/{id}', '\App\Http\Controllers\AdminAccountBudgetCenterController@editAccountBudgetCenterSub');
 //==========================================================================================Route
 
 
@@ -126,11 +130,15 @@ Route::post('/addProjectBudgetApi', '\App\Http\Controllers\AdminVillageNewContro
 Route::post('/saveTransectionBudgetApi', '\App\Http\Controllers\AdminTransacionAccountBudgetController@saveTransectionBudget');
 Route::post('/approveBudget', '\App\Http\Controllers\AdminApproveProjectBudgetController@approveProjectBudget');
 Route::post('/updatedProjectActivity', '\App\Http\Controllers\AdminApproveProjectBudgetController@updatedProjectActivity');
-
 Route::get('/getBookBankAdminApi', '\App\Http\Controllers\FunctionController@getBookBankAdminApi');
 Route::get('/getVillageApi', '\App\Http\Controllers\FunctionController@getVillageApi');
 Route::get('/getVillageBookBankApi/{id}', '\App\Http\Controllers\FunctionController@getVillageBookBankApi');
-
+Route::post('/addAccountBudgetCenterApi', '\App\Http\Controllers\AdminAccountBudgetCenterController@addAccountBudgetCenterApi');
+Route::post('/editAccountBudgetCenterApi', '\App\Http\Controllers\AdminAccountBudgetCenterController@editAccountBudgetCenterApi');
+Route::post('/delAccountBudgetCenter', '\App\Http\Controllers\AdminAccountBudgetCenterController@delAccountBudgetCenter');
+Route::post('/addAccountBudgetSubCenterApi', '\App\Http\Controllers\AdminAccountBudgetCenterController@addAccountBudgetSubCenterApi');
+Route::post('/delSubAccountBudgetCenter', '\App\Http\Controllers\AdminAccountBudgetCenterController@delSubAccountBudgetCenter');
+Route::post('/editAccountBudgetCenterSubApi', '\App\Http\Controllers\AdminAccountBudgetCenterController@editAccountBudgetCenterSubApi');
 //========================================================================================== API
 
 //========================================================================================== Report
