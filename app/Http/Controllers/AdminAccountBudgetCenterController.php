@@ -870,14 +870,13 @@ class AdminAccountBudgetCenterController extends \crocodicstudio\crudbooster\con
 		$DataAccBudgetCenterSub = DB::table('accountBudgetCenterSub')->where('id', $accSubId)->first();
 		$AccBudgetCenterSubAmount = $DataAccBudgetCenterSub->SubAmount; //1000000
 		$DataAccBudgetSubCenterActivitySumAmount = DB::table('accountBudgetCenterActivity')->where('AccBudgetCenterId', $accSubId)->where('IsActive', 1)->get();
-
 		// Check if sub amount exceeds budget center amount
 		if ($DataAccBudgetSubCenterActivitySumAmount->isEmpty()) {
 			if ($ActivityAmount > $AccBudgetCenterSubAmount) {
 				return response()->json(['api_status' => 0, 'api_message' => 'กรุณาตรวจสอบข้อมูลวงเงินในโครงการ'], 200);
 			}
 		} else {
-			$sumAmount = $DataAccBudgetSubCenterActivitySumAmount->sum('SubAmount') + $ActivityAmount;
+			$sumAmount = $DataAccBudgetSubCenterActivitySumAmount->sum('ActivityAmount') + $ActivityAmount;
 			if ($sumAmount > $AccBudgetCenterSubAmount) {
 				return response()->json(['api_status' => 0, 'api_message' => 'กรุณาตรวจสอบข้อมูลวงเงินในโครงการ'], 200);
 			}

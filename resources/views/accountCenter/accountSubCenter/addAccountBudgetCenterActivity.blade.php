@@ -473,6 +473,17 @@
                 processData: false,
                 success: function(response) {
                     handleSuccess();
+                    if(response.api_message == 'Success'){
+                        handleSuccess()
+                    }else{
+                        Swal.fire({
+                            title: "Error",
+                            text: response.api_message,
+                            icon: "error",
+                            showCancelButton: false,
+                            confirmButtonText: "OK",
+                        });
+                    }
                 },
                 error: function(xhr, status, error) {
                     handleError();
@@ -575,17 +586,18 @@
                                 contentType: false,
                                 processData: false,
                                 success: function(response) {
-                                    Swal.fire({
-                                        title: "สำเร็จ",
-                                        text: "แก้ไขข้อมูลเรียบร้อยแล้ว!",
-                                        icon: "success",
-                                        showCancelButton: false,
-                                        confirmButtonText: "ตกลง",
-                                    }).then((result) => {
-                                        if (result.isConfirmed) {
-                                            window.location.reload();
-                                        }
-                                    });
+                                    handleSuccess();
+                                    if(response.api_message == 'Success'){
+                                        handleSuccess()
+                                    }else{
+                                        Swal.fire({
+                                            title: "Error",
+                                            text: response.api_message,
+                                            icon: "error",
+                                            showCancelButton: false,
+                                            confirmButtonText: "OK",
+                                        });
+                                    }
                                 },
                                 error: function(xhr, status, error) {
                                     // จัดการข้อผิดพลาดตามที่ต้องการ
