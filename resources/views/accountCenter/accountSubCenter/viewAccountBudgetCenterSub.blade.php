@@ -102,6 +102,30 @@
                         <div class="row mt-1">
                             <div class="col-sm-12">
                                 <div class="form-group">
+                                    <label>ชื่อยุทธศาสตร์</label>
+                                    <input type="text" class="form-control" value="{{$getAccountBudgetCenterById->AccName}}" disabled>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mt-1">
+                            <div class="col-sm-12">
+                                <div class="form-group">
+                                    <label>กลยุทธ์</label>
+                                    {!! $getAccountBudgetCenterById->AccDetail !!}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mt-1">
+                            <div class="col-sm-12">
+                                <div class="form-group">
+                                    <label>กรอบวงเงินงบประมาณ</label>
+                                    <input type="text" class="form-control" id="AccAmount" value="{{$getAccountBudgetCenterById->Amount}}" disabled oninput="formatCurrencyData(this)">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mt-1">
+                            <div class="col-sm-12">
+                                <div class="form-group">
                                     <label>ชื่อแผนงาน/โครงการ <span style="color: red;">*</span></label>
                                     <input type="text" class="form-control" placeholder="ชื่อแผนงาน/โครงการ" id="AccName" value="{{$getAccountBudgetCenterSubById->AccName}}" disabled>
                                 </div>
@@ -193,7 +217,7 @@
                                                 <td style="text-align:center"><?= $index + 1 ?></td>
                                                 <td style="text-align:center">{{ $value->ActivityName}}</td>
                                                 <td style="text-align:center">{{ $value->ActivityDetail}}</td>
-                                                <td style="text-align:center">{{ $value->ActivityAmount}}</td>
+                                                <td style="text-align:center">{{ number_format($value->ActivityAmount, 2)}}</td>
                                             </tr>
                                             @endforeach
                                         </tbody>
@@ -220,6 +244,16 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 <script type="text/javascript">
+    window.onload = function() {
+        formatCurrencyData(document.getElementById("AccAmount"));
+        formatCurrency(document.getElementById("SubAmount"));
+    };
+    function formatCurrencyData(input) {
+        input.value = input.value.replace(/[^\d]/g, '').replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    }
+    function formatCurrency(input) {
+        input.value = input.value.replace(/[^\d]/g, '').replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    }
     $(document).ready(function() {
         $('#BudgetYear').select2();
         $('#DivisionId').select2();
@@ -292,10 +326,6 @@
             formData.append('AccStartDate', AccStartDate);
             formData.append('AccEndDate', AccEndDate);
             formData.append('Detail', Detail);
-
-            for (var pair of formData.entries()) {
-                console.log(pair[0] + ', ' + pair[1]);
-            }
 
             confirmAction(formData);
         });

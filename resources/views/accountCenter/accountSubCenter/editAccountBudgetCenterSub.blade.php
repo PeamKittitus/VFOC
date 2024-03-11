@@ -102,6 +102,30 @@
                         <div class="row mt-1">
                             <div class="col-sm-12">
                                 <div class="form-group">
+                                    <label>ชื่อยุทธศาสตร์</label>
+                                    <input type="text" class="form-control" value="{{$getAccountBudgetCenterById->AccName}}" disabled>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mt-1">
+                            <div class="col-sm-12">
+                                <div class="form-group">
+                                    <label>กลยุทธ์</label>
+                                    {!! $getAccountBudgetCenterById->AccDetail !!}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mt-1">
+                            <div class="col-sm-12">
+                                <div class="form-group">
+                                    <label>กรอบวงเงินงบประมาณ</label>
+                                    <input type="text" class="form-control" id="AccAmount" value="{{$getAccountBudgetCenterById->Amount}}" disabled oninput="formatCurrencyData(this)">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mt-1">
+                            <div class="col-sm-12">
+                                <div class="form-group">
                                     <label>ชื่อแผนงาน/โครงการ <span style="color: red;">*</span></label>
                                     <input type="text" class="form-control" placeholder="ชื่อแผนงาน/โครงการ" id="AccName" value="{{$getAccountBudgetCenterSubById->AccName}}">
                                 </div>
@@ -125,7 +149,7 @@
                             <div class="col-sm-12">
                                 <div class="form-group">
                                     <label>งบประมาณ (บาท) <span style="color: red;">*</span></label>
-                                    <input type="text" class="form-control check_number" placeholder="งบประมาณ (บาท)" id="SubAmount" value="{{$getAccountBudgetCenterSubById->SubAmount}}">
+                                    <input type="text" class="form-control check_number" placeholder="งบประมาณ (บาท)" id="SubAmount" value="{{$getAccountBudgetCenterSubById->SubAmount}}" oninput="formatCurrency(this);">
                                 </div>
                             </div>
                         </div>
@@ -197,6 +221,16 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 <script type="text/javascript">
+    window.onload = function() {
+        formatCurrencyData(document.getElementById("AccAmount"));
+        formatCurrency(document.getElementById("SubAmount"));
+    };
+    function formatCurrencyData(input) {
+        input.value = input.value.replace(/[^\d]/g, '').replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    }
+    function formatCurrency(input) {
+        input.value = input.value.replace(/[^\d]/g, '').replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    }
     $(document).ready(function() {
         $('#BudgetYear').select2();
         $('#DivisionId').select2();
@@ -222,6 +256,10 @@
             var AccName = $('#AccName').val();
             var DivisionId = $('#DivisionId').val();
             var SubAmount = $('#SubAmount').val();
+            SubAmount = SubAmount.replace(/[^\d]/g, '');
+            // แปลงเป็น integer
+            SubAmount = parseInt(SubAmount);
+
             var AccStartDate = $('#AccStartDate').val();
             var AccEndDate = $('#AccEndDate').val();
             var editorData = editor.getData();

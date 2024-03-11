@@ -363,18 +363,22 @@ class AdminAccountBudgetCenterController extends \crocodicstudio\crudbooster\con
 		$data['getAccountBudgetCenterById'] = $getAccountBudgetCenterById;
 		return view('accountCenter/editAccountBudgetCenter', $data);
 	}
-	public function addAccountBudgetSubCenter()
+	public function addAccountBudgetSubCenter($id)
 	{
 		$generateYearOptions = (new FunctionController)->generateYearOptions();
 		$data['generateYearOptions'] = $generateYearOptions;
 		$getDivision = (new FunctionController)->getDivision();
 		$data['getDivision'] = $getDivision;
+		$getAccountBudgetCenterById = $this->getAccountBudgetCenterById($id);
+		$data['getAccountBudgetCenterById'] = $getAccountBudgetCenterById;
 		return view('accountCenter/accountSubCenter/addAccountSubBudgetCenter', $data);
 	}
 	public function editAccountBudgetCenterSub($id)
 	{
 		$getAccountBudgetCenterSubById = $this->getAccountBudgetCenterSubById($id);
 		$data['getAccountBudgetCenterSubById'] = $getAccountBudgetCenterSubById;
+		$getAccountBudgetCenterById = $this->getAccountBudgetCenterById($getAccountBudgetCenterSubById->AccBudgetCenterId);
+		$data['getAccountBudgetCenterById'] = $getAccountBudgetCenterById;
 		$getAccountBudgetCenterSubFileById = $this->getAccountBudgetCenterSubFileById($id);
 		$data['getAccountBudgetCenterSubFileById'] = $getAccountBudgetCenterSubFileById;
 		$getDivision = (new FunctionController)->getDivision();
@@ -385,6 +389,8 @@ class AdminAccountBudgetCenterController extends \crocodicstudio\crudbooster\con
 	{
 		$getAccountBudgetCenterSubById = $this->getAccountBudgetCenterSubById($id);
 		$data['getAccountBudgetCenterSubById'] = $getAccountBudgetCenterSubById;
+		$getAccountBudgetCenterById = $this->getAccountBudgetCenterById($getAccountBudgetCenterSubById->AccBudgetCenterId);
+		$data['getAccountBudgetCenterById'] = $getAccountBudgetCenterById;
 		$getAccountBudgetCenterSubFileById = $this->getAccountBudgetCenterSubFileById($id);
 		$data['getAccountBudgetCenterSubFileById'] = $getAccountBudgetCenterSubFileById;
 		$getDivision = (new FunctionController)->getDivision();
@@ -404,6 +410,8 @@ class AdminAccountBudgetCenterController extends \crocodicstudio\crudbooster\con
 		$data['getDivision'] = $getDivision;
 		$getAccountBudgetCenterActivityById = $this->getAccountBudgetCenterActivityById($id);
 		$data['getAccountBudgetCenterActivityById'] = $getAccountBudgetCenterActivityById;
+		$getAccountBudgetCenterById = $this->getAccountBudgetCenterById($getAccountBudgetCenterSubById->AccBudgetCenterId);
+		$data['getAccountBudgetCenterById'] = $getAccountBudgetCenterById;
 		return view('accountCenter/accountSubCenter/viewAccountBudgetCenterSub', $data);
 	}
 	
@@ -413,7 +421,7 @@ class AdminAccountBudgetCenterController extends \crocodicstudio\crudbooster\con
 		$AccName = $request->input('AccName');
 		$BudgetYear = $request->input('BudgetYear');
 		$Amount = $request->input('Amount');
-
+		$AccDetail = $request->input('AccDetail');
 		// Count existing data
 		$countData = DB::table('accountBudgetCenter')->count();
 		$AccCode = $BudgetYear . '-' . sprintf('%03d', $countData + 1);
@@ -425,6 +433,7 @@ class AdminAccountBudgetCenterController extends \crocodicstudio\crudbooster\con
 				'BudgetYear' => $BudgetYear,
 				'Amount' => $Amount,
 				'AccCode' => $AccCode,
+				'AccDetail' => $AccDetail,
 				'IsActive' => 1,
 				'CreatedAt' => now(),
 				'CreatedBy' => CRUDBooster::myId()
@@ -465,11 +474,13 @@ class AdminAccountBudgetCenterController extends \crocodicstudio\crudbooster\con
 		$AccName = $request->input('AccName');
 		$BudgetYear = $request->input('BudgetYear');
 		$Amount = $request->input('Amount');
+		$AccDetail = $request->input('AccDetail');
 		DB::beginTransaction();
 		try {
 			$dataUpdate = [
 				'AccName' => $AccName,
 				'BudgetYear' => $BudgetYear,
+				'AccDetail' => $AccDetail,
 				'Amount' => $Amount,
 				'UpdatedAt' => now(),
 				'UpdatedBy' => CRUDBooster::myId()
@@ -536,7 +547,7 @@ class AdminAccountBudgetCenterController extends \crocodicstudio\crudbooster\con
 	function getAccountBudgetCenterById($id)
 	{
 		$dataAccBudgetCenterById = DB::table('accountBudgetCenter')
-			->select('accountBudgetCenter.id', 'accountBudgetCenter.AccName', 'accountBudgetCenter.AccCode', 'accountBudgetCenter.Amount', 'accountBudgetCenter.IsActive', 'accountBudgetCenter.BudgetYear')
+			->select('accountBudgetCenter.id', 'accountBudgetCenter.AccName', 'accountBudgetCenter.AccCode', 'accountBudgetCenter.Amount', 'accountBudgetCenter.IsActive', 'accountBudgetCenter.BudgetYear', 'accountBudgetCenter.AccDetail')
 			->where('accountBudgetCenter.IsActive', 1)
 			->where('accountBudgetCenter.id', $id)
 			->first();
@@ -859,14 +870,13 @@ class AdminAccountBudgetCenterController extends \crocodicstudio\crudbooster\con
 		$DataAccBudgetCenterSub = DB::table('accountBudgetCenterSub')->where('id', $accSubId)->first();
 		$AccBudgetCenterSubAmount = $DataAccBudgetCenterSub->SubAmount; //1000000
 		$DataAccBudgetSubCenterActivitySumAmount = DB::table('accountBudgetCenterActivity')->where('AccBudgetCenterId', $accSubId)->where('IsActive', 1)->get();
-
 		// Check if sub amount exceeds budget center amount
 		if ($DataAccBudgetSubCenterActivitySumAmount->isEmpty()) {
 			if ($ActivityAmount > $AccBudgetCenterSubAmount) {
 				return response()->json(['api_status' => 0, 'api_message' => 'กรุณาตรวจสอบข้อมูลวงเงินในโครงการ'], 200);
 			}
 		} else {
-			$sumAmount = $DataAccBudgetSubCenterActivitySumAmount->sum('SubAmount') + $ActivityAmount;
+			$sumAmount = $DataAccBudgetSubCenterActivitySumAmount->sum('ActivityAmount') + $ActivityAmount;
 			if ($sumAmount > $AccBudgetCenterSubAmount) {
 				return response()->json(['api_status' => 0, 'api_message' => 'กรุณาตรวจสอบข้อมูลวงเงินในโครงการ'], 200);
 			}

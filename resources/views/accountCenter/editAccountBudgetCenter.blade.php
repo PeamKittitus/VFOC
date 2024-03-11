@@ -12,6 +12,7 @@
     <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;700&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.8/js/select2.min.js" defer></script>
+    <script src="https://cdn.ckeditor.com/ckeditor5/40.2.0/classic/ckeditor.js"></script>
     <style>
         body {
             font-family: 'Sarabun', sans-serif !important;
@@ -110,12 +111,21 @@
                             <div class="col-sm-12">
                                 <div class="form-group">
                                     <label>กรอบวงเงินงบประมาณ (บาท) <span style="color: red;">*</span></label>
-                                    <input type="text" class="form-control check_number" placeholder="กรอบวงเงินงบประมาณ (บาท)" id="Amount" value="{{$getAccountBudgetCenterById->Amount}}">
+                                    <input type="text" class="form-control check_number" placeholder="กรอบวงเงินงบประมาณ (บาท)" id="Amount" value="{{$getAccountBudgetCenterById->Amount}}" oninput="formatCurrency(this);">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mt-1">
+                            <div class="col-sm-12">
+                                <div class="form-group">
+                                    <label>กลยุทธ์<span style="color: red;">*</span></label>
+                                    <textarea id="AccDetail"></textarea>
                                 </div>
                             </div>
                         </div>
                         <hr>
                         <input type="hidden" id="AccId" value="{{$getAccountBudgetCenterById->id}}">
+                        <input type="hidden" id="AccDetailEditor" name="AccDetailEditor" value="{{$getAccountBudgetCenterById->AccDetail}}">
                         <div class="row mt-1">
                             <div class="col-12">
                                 <div class="form-group" style="display: flex;justify-content:end;gap:1%">
@@ -134,16 +144,44 @@
 </body>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
-<script type="text/javascript">
-    $(document).ready(function() {
-        $('#BudgetYear').select2();
+<script>
 
+
+</script>
+<script type="text/javascript">
+    window.onload = function() {
+        formatCurrency(document.getElementById("Amount"));
+    };
+    function formatCurrency(input) {
+        input.value = input.value.replace(/[^\d]/g, '').replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    }
+    $(document).ready(function() {
+        let editor;
+        var AccDetailEditor = $('#AccDetailEditor').val();
+        ClassicEditor
+            .create(document.querySelector('#AccDetail'))
+            .then(createdEditor => {
+                editor = createdEditor;
+                const initialContent = AccDetailEditor;
+                editor.setData(initialContent);
+            })
+            .catch(error => {
+                console.error(error);
+            });
+            
+        $('#BudgetYear').select2();
         $("form[name=editAccountBudgetCenter]").submit(function(event) {
             event.preventDefault();
             var AccId = $('#AccId').val();
             var BudgetYear = $('#BudgetYear').val();
             var AccName = $('#AccName').val();
             var Amount = $('#Amount').val();
+            Amount = Amount.replace(/[^\d]/g, '');
+            // แปลงเป็น integer
+            Amount = parseInt(Amount);
+
+            var editorData = editor.getData();
+            var AccDetail = editorData;
 
             if (!BudgetYear) {
                 showError('กรุณาเลือกปีงบประมาณ');
@@ -157,6 +195,10 @@
                 showError('กรุณากรอกวงเงินงบประมาณ');
                 return;
             }
+            if(!AccDetail){
+                showError('กรุณากรอกกลยุทธ์');
+                return;
+            }
 
             var formData = new FormData();
 
@@ -164,6 +206,7 @@
             formData.append('BudgetYear', BudgetYear);
             formData.append('AccName', AccName);
             formData.append('Amount', Amount);
+            formData.append('AccDetail', AccDetail);
 
             confirmAction(formData);
         });
@@ -172,7 +215,7 @@
         function confirmAction(formData) {
             Swal.fire({
                 title: "ยืนยัน",
-                text: "คุณต้องการสร้างแผนงานโครงการ",
+                text: "คุณต้องการแก้ไขแผนงานโครงการ",
                 icon: "question",
                 showCancelButton: true,
                 confirmButtonText: "ใช่",
@@ -231,7 +274,7 @@
         function showError(message) {
             Swal.fire({
                 icon: 'error',
-                title: 'Invalid Input',
+                title: 'ข้อมูลไม่ถูกต้อง',
                 text: message
             });
         }

@@ -141,6 +141,30 @@
                         <div class="row mt-1">
                             <div class="col-sm-12">
                                 <div class="form-group">
+                                    <label>ชื่อยุทธศาสตร์</label>
+                                    <input type="text" class="form-control" value="{{$getAccountBudgetCenterById->AccName}}" disabled>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mt-1">
+                            <div class="col-sm-12">
+                                <div class="form-group">
+                                    <label>กลยุทธ์</label>
+                                    {!! $getAccountBudgetCenterById->AccDetail !!}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mt-1">
+                            <div class="col-sm-12">
+                                <div class="form-group">
+                                    <label>กรอบวงเงินงบประมาณ</label>
+                                    <input type="text" class="form-control" id="AccAmount" value="{{$getAccountBudgetCenterById->Amount}}" disabled oninput="formatCurrencyData(this)">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mt-1">
+                            <div class="col-sm-12">
+                                <div class="form-group">
                                     <label>ชื่อแผนงาน/โครงการ <span style="color: red;">*</span></label>
                                     <input type="text" class="form-control" placeholder="ชื่อแผนงาน/โครงการ" id="AccName" value="{{$getAccountBudgetCenterSubById->AccName}}" disabled>
                                 </div>
@@ -233,7 +257,7 @@
                                                 <td style="text-align:center"><?= $index + 1 ?></td>
                                                 <td style="text-align:center">{{ $value->ActivityName}}</td>
                                                 <td style="text-align:center">{{ $value->ActivityDetail}}</td>
-                                                <td style="text-align:center">{{ $value->ActivityAmount}}</td>
+                                                <td style="text-align:center">{{ number_format($value->ActivityAmount, 2)}}</td>
                                                 <td style="text-align:center; display: flex; gap: 1%; justify-content: center;">
                                                     <button type="button" data-id="{{$value->id}}" class="btn editActivityBtn" style="color: white; background-color: orange">แก้ไข</button>
                                                 </td>
@@ -265,7 +289,7 @@
                                 <div class="col-sm-12">
                                     <div class="form-group">
                                         <label>งบประมาณ (บาท)<span style="color: red;">*</span></label>
-                                        <input type="text" class="form-control check_number" placeholder="งบประมาณ (บาท)" id="ActivityAmount">
+                                        <input type="text" class="form-control check_number" placeholder="งบประมาณ (บาท)" id="ActivityAmount" oninput="formatCurrencyInput(this)">
                                     </div>
                                 </div>
                             </div>
@@ -321,7 +345,7 @@
                         <div class="col-sm-12">
                             <div class="form-group">
                                 <label>งบประมาณ (บาท)<strong style="color:red">*</strong></label>
-                                <input type="text" class="form-control" placeholder="งบประมาณ (บาท)" id="ActivityModalAmount">
+                                <input type="text" class="form-control" placeholder="งบประมาณ (บาท)" id="ActivityModalAmount" oninput="formatCurrencyDataModal(this)">
                             </div>
                         </div>
                     </div>
@@ -340,6 +364,27 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 <script type="text/javascript">
+    window.onload = function() {
+        formatCurrencyData(document.getElementById("AccAmount"));
+        formatCurrency(document.getElementById("SubAmount"));
+    };
+    function formatCurrencyData(input) {
+        input.value = input.value.replace(/[^\d]/g, '').replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    }
+    function formatCurrency(input) {
+        input.value = input.value.replace(/[^\d]/g, '').replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    }
+    function formatCurrencyInput(input) {
+        // Check if input value is not empty
+        if (input.value.trim() !== "") {
+            // Remove non-numeric characters
+            let value = input.value.replace(/[^0-9]/g, "");
+            // Format the number to have commas every three digits
+            value = new Intl.NumberFormat('th-TH').format(value);
+            // Set the formatted value back to the input
+            input.value = value;
+        }
+    }
     $(document).ready(function() {
 
         let editor;
@@ -376,7 +421,9 @@
             var ActivityName = $('#ActivityName').val();
             var ActivityDetail = $('#ActivityDetail').val();
             var ActivityAmount = $('#ActivityAmount').val();
-
+            ActivityAmount = ActivityAmount.replace(/[^\d]/g, '');
+            // แปลงเป็น integer
+            ActivityAmount = parseInt(ActivityAmount);
             if (!ActivityName) {
                 showError('กรุณากรอกกิจกรรม');
                 return;
@@ -426,6 +473,17 @@
                 processData: false,
                 success: function(response) {
                     handleSuccess();
+                    if(response.api_message == 'Success'){
+                        handleSuccess()
+                    }else{
+                        Swal.fire({
+                            title: "Error",
+                            text: response.api_message,
+                            icon: "error",
+                            showCancelButton: false,
+                            confirmButtonText: "OK",
+                        });
+                    }
                 },
                 error: function(xhr, status, error) {
                     handleError();
@@ -528,17 +586,18 @@
                                 contentType: false,
                                 processData: false,
                                 success: function(response) {
-                                    Swal.fire({
-                                        title: "สำเร็จ",
-                                        text: "แก้ไขข้อมูลเรียบร้อยแล้ว!",
-                                        icon: "success",
-                                        showCancelButton: false,
-                                        confirmButtonText: "ตกลง",
-                                    }).then((result) => {
-                                        if (result.isConfirmed) {
-                                            window.location.reload();
-                                        }
-                                    });
+                                    handleSuccess();
+                                    if(response.api_message == 'Success'){
+                                        handleSuccess()
+                                    }else{
+                                        Swal.fire({
+                                            title: "Error",
+                                            text: response.api_message,
+                                            icon: "error",
+                                            showCancelButton: false,
+                                            confirmButtonText: "OK",
+                                        });
+                                    }
                                 },
                                 error: function(xhr, status, error) {
                                     // จัดการข้อผิดพลาดตามที่ต้องการ
