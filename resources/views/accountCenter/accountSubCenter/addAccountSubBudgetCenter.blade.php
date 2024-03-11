@@ -164,7 +164,7 @@
                         <div class="row mt-1">
                             <div class="col-sm-12">
                                 <div class="form-group">
-                                    <label>เอกสารแนบ<span style="color: red;">(ขนาดไฟล์ของเอกสารแนบรวมไม่เกิน 50MB/1ครั้ง)</span></label>
+                                    <label>เอกสารแนบ<span style="color: red;">*(ขนาดไฟล์ของเอกสารแนบรวมไม่เกิน 50MB/1ครั้ง)</span></label>
                                     <input type="file" class="form-control" id="file">
                                 </div>
                             </div>
