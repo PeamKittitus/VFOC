@@ -17,6 +17,7 @@ class AdminApproveController extends \crocodicstudio\crudbooster\controllers\CBC
         // ProjectBudget
         $data['page_title'] = 'พิจารณาอนุมัติโครงการ';
         $data['ProjectBudget'] = $this->GetAllProjectBudget();
+
         //ProjectActivity
         $data['page_title_activity'] = 'พิจารณาอนุมัติกิจกรรมโครงการ';
         $data['projectActivity'] = $this->GetAllprojectActivity();
@@ -28,6 +29,18 @@ class AdminApproveController extends \crocodicstudio\crudbooster\controllers\CBC
     public function GetAllProjectBudget()
     {
         $ProjectBudget = DB::table("projectBudget")->where('IsActive', 1)->get();
+        foreach ($ProjectBudget as $key => $val) {
+            $total_activity = DB::table('projectActivity')
+                ->where('ProjectBudgetId', $val->id)
+                ->count();
+            $Approve_activity = DB::table('projectActivity')
+                ->where('ProjectBudgetId', $val->id)
+                ->where('Status', 5)
+                ->count();
+            $percentage = ($total_activity == 0 ? 0 : ($Approve_activity / $total_activity) * 100);
+            $val->percentage = $percentage;
+        }
+
         return $ProjectBudget;
     }
 
@@ -85,7 +98,7 @@ class AdminApproveController extends \crocodicstudio\crudbooster\controllers\CBC
         $ProjectBudgetID = $request['projectId'];
         $activityID = $request['activityId'];
         $statusActivity = $request['activityStatus'];
-        
+
         $detailAction = $request['action'];
 
 

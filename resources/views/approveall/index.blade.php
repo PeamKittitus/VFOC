@@ -184,6 +184,7 @@
                                                         <th style="text-align:center">รหัส</th>
                                                         <th style="text-align:center">ชื่อกองทุน</th>
                                                         <th style="text-align:center">งบประมาณ</th>
+                                                        <th style="text-align:center">ความคืบหน้า</th>
                                                         <th style="text-align:center">สถานะ</th>
                                                         <th style="text-align:center">จัดการข้อมูล</th>
                                                     </tr>
@@ -195,14 +196,15 @@
                                                         <td style="text-align:center">{{$val->ProjectCode}}</td>
                                                         <td style="text-align:center">{{$val->ProjectName}}</td>
                                                         <td style="text-align:center">{{$val->Amount}}</td>
-                                                        @if($val->Status == 1)
-                                                        <td style="text-align:center;color:#1dc9b7">อนุมัติ</td>
-                                                        @elseif($val->Status == 2)
-                                                        <td style="text-align:center;color:#ffc241">รออนุมัติ</td>
-                                                        @else
-                                                        <td style="text-align:center;color:red">ไม่อนุมัติ</td>
-                                                        @endif
+                                                        <td style="text-align:center">
+                                                            <div class="progress progress-xs">
+                                                                <div class="progress-bar progress-bar-striped" role="progressbar" aria-valuenow="<?=$val->percentage ?>" aria-valuemin="0" aria-valuemax="100" style="width:<?=$val->percentage?>%; background-color: #1ab3a3; ">
+                                                                </div>
+                                                            </div>
+                                                            {{$val->percentage}}% Complete
                                                         </td>
+                                                        <td style="text-align:center;color:red">{{$val->Status}}</td>
+
                                                         @if($val->Status == 2)
                                                         <td style="text-align:center; display: flex; gap: 1%; justify-content: center;">
                                                             <a href="/approveDetailProject/{{$val->id}}" class="btn" style="color: white; background-color: #09d7f7">อนมุัติโครงการ</a>
@@ -255,14 +257,9 @@
                                                         <td style="text-align:center">{{$val->ActivityDetail}}</td>
                                                         <td style="text-align:center"><?= number_format($val->ActivityBudget, 2) ?></td>
                                                         <td style="text-align:center">{{$val->StartActivityDate}} - {{$val->EndActivityDate}}</td>
-                                                        @if($val->Status == 1)
-                                                        <td style="text-align:center;color:#1dc9b7">อนุมัติ</td>
-                                                        @elseif($val->Status == 2)
-                                                        <td style="text-align:center;color:#ffc241">รออนุมัติ</td>
-                                                        @else
-                                                        <td style="text-align:center;color:red">ไม่อนุมัติ</td>
-                                                        @endif
-                                                        </td>
+
+                                                        <td style="text-align:center;color:red">{{$val->Status}}</td>
+
 
                                                         <td style="text-align:center; display: flex; gap: 1%; justify-content: center;">
                                                             <button type="button" class="btn btn-default btn-sm approve_activity" data-idactivity="{{$val->id}}" data-status="1" data-projectid="{{$val->ProjectBudgetId}}">
