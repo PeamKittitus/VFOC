@@ -78,7 +78,7 @@
         <div class="w-box" style="margin: auto !important; padding: 10px">
             <h4 style="text-align: center;color:white">ลงทะเบียนใช้งานระบบ</h4>
             <div class="row">
-                <div class="col-12 col-sm-12 box-right">
+                <div class="col-12 col-sm-12 box-right">checkNumber
                     <div class="box-right-d">
                         <form id="register" name="register" method="post" enctype="multipart/form-data">
                             <div class="row">
@@ -99,7 +99,7 @@
                                 <div class="col-12">
                                     <div class="form-group">
                                         <label>ชื่อ (ภาษาไทย)<strong style="color:red">*</strong></label>
-                                        <input type="text" class="form-control" placeholder="ชื่อ" id="FirstName">
+                                        <input type="text" class="form-control check_thai" placeholder="ชื่อ" id="FirstName">
                                     </div>
                                 </div>
                             </div>
@@ -107,7 +107,7 @@
                                 <div class="col-12">
                                     <div class="form-group">
                                         <label>นามสกุล (ภาษาไทย)<strong style="color:red">*</strong></label>
-                                        <input type="text" class="form-control" placeholder="นามสกุล" id="LastName">
+                                        <input type="text" class="form-control check_thai" placeholder="นามสกุล" id="LastName">
                                     </div>
                                 </div>
                             </div>
@@ -121,7 +121,7 @@
                                 <div class="col-12">
                                     <div class="form-group">
                                         <label>ชื่อผู้ใช้งาน (ภาษาอังกฤษ)<strong style="color:red">*</strong></label>
-                                        <input type="text" class="form-control" placeholder="ชื่อผู้ใช้งาน" id="Username">
+                                        <input type="text" class="form-control check_eng" placeholder="ชื่อผู้ใช้งาน" id="Username">
                                     </div>
                                 </div>
                             </div>
@@ -129,7 +129,7 @@
                                 <div class="col-12">
                                     <div class="form-group">
                                         <label>อีเมล<strong style="color:red">*</strong></label>
-                                        <input type="text" class="form-control" placeholder="อีเมล" id="UserEmail">
+                                        <input type="email" class="form-control " placeholder="อีเมล" id="UserEmail">
                                     </div>
                                 </div>
                             </div>
@@ -195,7 +195,7 @@
                                 <div class="col-12">
                                     <div class="form-group">
                                         <label>เบอร์โทรศัพท์ <strong style="color:red">*</strong></label>
-                                        <input type="text" class="form-control checkNumber" placeholder="เบอร์โทรศัพท์" id="VillagePhone">
+                                        <input type="tel" class="form-control checkNumber" placeholder="เบอร์โทรศัพท์" id="VillagePhone" maxlength="10">
                                     </div>
                                 </div>
                             </div>
@@ -203,7 +203,7 @@
                                 <div class="col-12">
                                     <div class="form-group">
                                         <label>อีเมล (e-mail) <strong style="color:red">*</strong></label>
-                                        <input type="text" class="form-control" placeholder="เบอร์โทรศัพท์" id="VillageEmail">
+                                        <input type="email" class="form-control check_email" placeholder="Email" id="VillageEmail">
                                     </div>
                                 </div>
                             </div>
@@ -573,7 +573,7 @@
             $('#VillageSubDistrictId').select2();
             $('#OrgStructure').select2();
             $('#OrgStructureProvince').select2();
-            
+
             let dataArray = []; //store data
             let dataArrayMember = [];
 
@@ -838,18 +838,80 @@
 
             //=============CheckKey
             function bannedKey(evt, lang) {
-                var k = event.keyCode;
+                var k = event.keyCode; /* เช็คตัวเลข 0-9 */
                 if (lang == 1) {
                     if ((k >= 48 && k <= 57) || k == 46) {
                         return true;
                     } else {
                         return false;
                     }
+                } else if (lang == 2) {
+                    /* เช็คคีย์อังกฤษ a-z, A-Z */
+                    if ((k >= 65 && k <= 90) || (k >= 97 && k <= 122)) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                } else if (lang == 3) {
+                    /* เช็คคีย์ไทย ทั้งแบบ non-unicode และ unicode */
+                    if ((k >= 161 && k <= 255) || (k >= 3585 && k <= 3675)) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                } else if (lang == 4) {
+                    //EMAIll
+                    if ((k >= 65 && k <= 90) || (k >= 97 && k <= 122) || (k >= 48 && k <= 57) || k == 46 || k == 64 || k == 51 || k == 95) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                } else if (lang == 5) {
+                    // thai add number
+                    if ((k >= 161 && k <= 255) || (k >= 3585 && k <= 3675) || (k >= 48 && k <= 57) || k == 45 || k == 47) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                } else if (lang == 6) {
+                    if ((k >= 47 && k <= 57) || k == 45) {
+                        return true;
+                    } else {
+                        return false;
+                    }
                 }
             }
+
+
+            $(".check_thai").keypress(function() {
+                var dInput = $(this).val();
+                return bannedKey(dInput, 3);
+
+            });
+            $(".check_eng").keypress(function() {
+                var dInput = $(this).val();
+                return bannedKey(dInput, 2);
+
+            });
             $(".checkNumber").keypress(function() {
                 var dInput = $(this).val();
                 return bannedKey(dInput, 1);
+
+            });
+            $(".check_email").keypress(function() {
+                var dInput = $(this).val();
+                return bannedKey(dInput, 4);
+
+            });
+            $(".check_thai_and_number").keypress(function() {
+                var dInput = $(this).val();
+                return bannedKey(dInput, 5);
+
+            });
+            $(".check_slash_number").keypress(function() {
+                var dInput = $(this).val();
+                return bannedKey(dInput, 6);
+
             });
 
             //=============addBookBank
@@ -1073,7 +1135,7 @@
                 var VillageDistrictId = $('#VillageDistrictId').val();
                 var VillageSubDistrictId = $('#VillageSubDistrictId').val();
                 var VillagePostCode = $('#VillagePostCode').val();
-                
+
                 var formData = new FormData();
 
                 formData.append('IDCard', IDCard);
