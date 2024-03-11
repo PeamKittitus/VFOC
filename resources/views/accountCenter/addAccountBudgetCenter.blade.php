@@ -12,6 +12,7 @@
     <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;700&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.8/js/select2.min.js" defer></script>
+    <script src="https://cdn.ckeditor.com/ckeditor5/40.2.0/classic/ckeditor.js"></script>
     <style>
         body {
             font-family: 'Sarabun', sans-serif !important;
@@ -105,7 +106,15 @@
                             <div class="col-sm-12">
                                 <div class="form-group">
                                     <label>กรอบวงเงินงบประมาณ (บาท) <span style="color: red;">*</span></label>
-                                    <input type="text" class="form-control check_number" placeholder="กรอบวงเงินงบประมาณ (บาท)" id="Amount">
+                                    <input type="text" class="form-control check_number" placeholder="กรอบวงเงินงบประมาณ (บาท)" id="Amount" oninput="formatCurrency(this)">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mt-1">
+                            <div class="col-sm-12">
+                                <div class="form-group">
+                                    <label>กลยุทธ์<span style="color: red;">*</span></label>
+                                    <textarea id="AccDetail"></textarea>
                                 </div>
                             </div>
                         </div>
@@ -128,16 +137,51 @@
 </body>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
-<script type="text/javascript">
-    $(document).ready(function() {
-        $('#BudgetYear').select2();
+<script>
 
+</script>
+<script type="text/javascript">
+    //ลูกน้ำ
+    function formatCurrency(input) {
+        // Check if input value is not empty
+        if (input.value.trim() !== "") {
+            // Remove non-numeric characters
+            let value = input.value.replace(/[^0-9]/g, "");
+            // Format the number to have commas every three digits
+            value = new Intl.NumberFormat('th-TH').format(value);
+            // Set the formatted value back to the input
+            input.value = value;
+        }
+    }
+
+    $(document).ready(function() {
+
+        $('#BudgetYear').select2();
+        let editor;
+        ClassicEditor
+            .create(document.querySelector('#AccDetail'))
+            .then(newEditor => {
+                editor = newEditor;
+            })
+            .catch(error => {
+                console.error(error);
+            });
+        
         $("form[name=addAccountBudgetCenter]").submit(function(event) {
             event.preventDefault();
             var BudgetYear = $('#BudgetYear').val();
             var AccName = $('#AccName').val();
             var Amount = $('#Amount').val();
+            Amount = Amount.replace(/[^\d]/g, '');
+            // แปลงเป็น integer
+            Amount = parseInt(Amount);
+            var editorData = editor.getData();
+            var AccDetail = editorData;
 
+            if(!AccDetail){
+                showError('กรุณากรอกกลยุทธ์');
+                return;
+            }
             if (!BudgetYear) {
                 showError('กรุณาเลือกปีงบประมาณ');
                 return;
@@ -156,6 +200,7 @@
             formData.append('BudgetYear', BudgetYear);
             formData.append('AccName', AccName);
             formData.append('Amount', Amount);
+            formData.append('AccDetail', AccDetail);
 
             confirmAction(formData);
         });
@@ -223,7 +268,7 @@
         function showError(message) {
             Swal.fire({
                 icon: 'error',
-                title: 'Invalid Input',
+                title: 'ข้อมูลไม่ถูกต้อง',
                 text: message
             });
         }

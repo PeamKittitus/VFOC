@@ -212,7 +212,7 @@
                                                         <td style="text-align:center">{{ number_format($center->Amount, 2)}}</td>
                                                         <td style="text-align:center">-</td>
                                                         <td style="text-align:center; display: flex; gap: 1%; justify-content: center;">
-                                                            <a href="/addAccountBudgetSubCenter" id="addAccountBudgetSubCenterBtn" data-id="{{$center->id}}" class="btn" style="color: white; background-color: #449d44">เพิ่มโครงการย่อย</a>
+                                                            <a href="/addAccountBudgetSubCenter/{{$center->id}}" id="addAccountBudgetSubCenterBtn" data-id="{{$center->id}}" class="btn" style="color: white; background-color: #449d44">เพิ่มโครงการย่อย</a>
                                                             <a href="/editAccountBudgetCenter/{{$center->id}}" class="btn" style="color: white; background-color: orange">แก้ไข</a>
                                                             <button data-id="{{$center->id}}" class="btn deleteAccountCenter" style="color: white; background-color: red">ลบ</button>
                                                         </td>

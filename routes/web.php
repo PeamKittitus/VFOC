@@ -67,7 +67,7 @@ Route::get('/updateProjectActivityDetail/{id}', '\App\Http\Controllers\AdminProj
 Route::get('/approveActivityProject/{id}', '\App\Http\Controllers\AdminApproveProjectBudgetController@approveActivityProject');
 Route::get('/addAccountBudgetCenter', '\App\Http\Controllers\AdminAccountBudgetCenterController@addAccountBudgetCenter');
 Route::get('/editAccountBudgetCenter/{id}', '\App\Http\Controllers\AdminAccountBudgetCenterController@editAccountBudgetCenter');
-Route::get('/addAccountBudgetSubCenter', '\App\Http\Controllers\AdminAccountBudgetCenterController@addAccountBudgetSubCenter');
+Route::get('/addAccountBudgetSubCenter/{id}', '\App\Http\Controllers\AdminAccountBudgetCenterController@addAccountBudgetSubCenter');
 Route::get('/editAccountBudgetCenterSub/{id}', '\App\Http\Controllers\AdminAccountBudgetCenterController@editAccountBudgetCenterSub');
 Route::get('/addAccountBudgetCenterActivity/{id}', '\App\Http\Controllers\AdminAccountBudgetCenterController@addAccountBudgetCenterActivity');
 Route::get('/viewAccountBudgetCenterSub/{id}', '\App\Http\Controllers\AdminAccountBudgetCenterController@viewAccountBudgetCenterSub');
