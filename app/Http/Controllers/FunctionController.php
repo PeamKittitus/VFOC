@@ -411,7 +411,7 @@ class FunctionController extends Controller
         
         $BookBank = DB::table('accountBookBank')
 			->select('accountBookBank.*')
-			->where('accountBookBank.created_by', 1)
+			->where('accountBookBank.created_by', CRUDBooster::myId())
 			->get();
 
         response()->json($BookBank, 200)->header("Access-Control-Allow-Origin", config('cors.allowed_origins'))
