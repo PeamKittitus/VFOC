@@ -211,21 +211,21 @@
                                                         <td style="text-align:center">{{ number_format($Tran->Amount, 2) }}</td>
                                                         <td style="text-align:center">{{ number_format($Tran->TotalAmount, 2) }}</td>
                                                         <?php
-                                                            $StartAt = date('d F Y', strtotime($Tran->CreatedAt));
-                                                            $StartAtThai = str_replace(
-                                                                array('January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'),
-                                                                array('มกราคม', 'กุมภาพันธ์', 'มีนาคม', 'เมษายน', 'พฤษภาคม', 'มิถุนายน', 'กรกฎาคม', 'สิงหาคม', 'กันยายน', 'ตุลาคม', 'พฤศจิกายน', 'ธันวาคม'),
-                                                                $StartAt
-                                                            );
-                                                            $yearThai = intval(date('Y', strtotime($Tran->CreatedAt))) + 543; // แปลงปีเป็น พ.ศ.
-                                                            $StartAtThai = str_replace(date('Y', strtotime($Tran->CreatedAt)), $yearThai, $StartAtThai);
+                                                        $StartAt = date('d F Y', strtotime($Tran->CreatedAt));
+                                                        $StartAtThai = str_replace(
+                                                            array('January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'),
+                                                            array('มกราคม', 'กุมภาพันธ์', 'มีนาคม', 'เมษายน', 'พฤษภาคม', 'มิถุนายน', 'กรกฎาคม', 'สิงหาคม', 'กันยายน', 'ตุลาคม', 'พฤศจิกายน', 'ธันวาคม'),
+                                                            $StartAt
+                                                        );
+                                                        $yearThai = intval(date('Y', strtotime($Tran->CreatedAt))) + 543; // แปลงปีเป็น พ.ศ.
+                                                        $StartAtThai = str_replace(date('Y', strtotime($Tran->CreatedAt)), $yearThai, $StartAtThai);
                                                         ?>
                                                         <td style="text-align:center">{{$StartAtThai}}</td>
                                                         <td style="text-align:center">
-                                                            <?php if ($Tran->Status == 1): ?>
-                                                                กำลังดำเนินการ
-                                                            <?php else: ?>
-                                                                เสร็จสิ้น
+                                                            <?php if ($Tran->Status == 1) : ?>
+                                                                <span style="color: orange">กำลังดำเนินการ</span>
+                                                            <?php else : ?>
+                                                                <span style="color: #449d44">เสร็จสิ้น</span>
                                                             <?php endif; ?>
                                                         </td>
                                                     </tr>
