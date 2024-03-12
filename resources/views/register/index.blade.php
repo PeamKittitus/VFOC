@@ -78,7 +78,7 @@
         <div class="w-box" style="margin: auto !important; padding: 10px">
             <h4 style="text-align: center;color:white">ลงทะเบียนใช้งานระบบ</h4>
             <div class="row">
-                <div class="col-12 col-sm-12 box-right">checkNumber
+                <div class="col-12 col-sm-12 box-right">
                     <div class="box-right-d">
                         <form id="register" name="register" method="post" enctype="multipart/form-data">
                             <div class="row">
@@ -121,7 +121,7 @@
                                 <div class="col-12">
                                     <div class="form-group">
                                         <label>ชื่อผู้ใช้งาน (ภาษาอังกฤษ)<strong style="color:red">*</strong></label>
-                                        <input type="text" class="form-control check_eng" placeholder="ชื่อผู้ใช้งาน" id="Username">
+                                        <input type="text" class="form-control check_user_and_number" placeholder="ชื่อผู้ใช้งาน" id="Username">
                                     </div>
                                 </div>
                             </div>
@@ -264,11 +264,87 @@
                                 </div>
                             </div>
                             <div class="row mt-1">
-                                <div class="col-12" style="display: flex;justify-content:space-between">
-                                    <h4 style="color: red;">บัญชีธนาคารตั้งต้น</h4>
-                                    <p class="btn" style="color: white ; background-color:#1dc9b7" data-toggle="modal" data-target="#addBankModal"><i class="fa fa-plus" aria-hidden="true"></i> เพิ่มธนาคาร </p>
+                                <!-- <div class="col-12" style="display: flex;justify-content:space-between"> -->
+                                <h4 style="color: red;">บัญชีธนาคารตั้งต้น</h4>
+                                <p class="btn" style="color: white ; background-color:#1dc9b7" data-toggle="modal" data-target="#addBankModal"><i class="fa fa-plus" aria-hidden="true"></i> เพิ่มธนาคาร </p>
+                                <!-- <form id="addBookBank" name="addBookBank" method="post" enctype="multipart/form-data"> -->
+                                <div class="row mt-1">
+                                    <div class="form-group">
+                                        <label>ธนาคาร</label>
+                                        <select class="form-control" id="BankMasterId">
+                                            <option value="0" disabled selected>----ธนาคาร----</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-12">
+                                        <div class="form-group">
+                                            <label>ชื่อบัญชี<strong style="color:red">*</strong></label>
+                                            <input type="text" class="form-control" placeholder="ชื่อบัญชี" id="BookBankName">
+                                        </div>
+                                    </div>
                                 </div>
-                                <hr>
+                                <div class="row mt-1">
+                                    <div class="col-12">
+                                        <div class="form-group">
+                                            <label>หมายเลขบัญชี<strong style="color:red">*</strong></label>
+                                            <input type="text" class="form-control" placeholder="หมายเลขบัญชี" id="BookBankNumber">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row mt-1">
+                                    <div class="col-12">
+                                        <div class="form-group">
+                                            <label>ผู้มีอำนาจเบิกถอนเงินในบัญชีคนที่ 1<strong style="color:red">*</strong></label>
+                                            <input type="text" class="form-control" placeholder="ผู้มีอำนาจเบิกถอนเงินในบัญชีคนที่ 1" id="WithdrawName">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row mt-1">
+                                    <div class="col-12">
+                                        <div class="form-group">
+                                            <label>ผู้มีอำนาจเบิกถอนเงินในบัญชีคนที่ 2<strong style="color:red">*</strong></label>
+                                            <input type="text" class="form-control" placeholder="ผู้มีอำนาจเบิกถอนเงินในบัญชีคนที่ 2" id="WithdrawName2">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row mt-1">
+                                    <div class="col-12">
+                                        <div class="form-group">
+                                            <label>ผู้มีอำนาจเบิกถอนเงินในบัญชีคนที่ 3<strong style="color:red">*</strong></label>
+                                            <input type="text" class="form-control" placeholder="ผู้มีอำนาจเบิกถอนเงินในบัญชีคนที่ 3" id="WithdrawName3">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row mt-1">
+                                    <div class="col-12">
+                                        <div class="form-group">
+                                            <label>ผู้มีอำนาจเบิกถอนเงินในบัญชีคนที่ 4 (ถ้ามี)</label>
+                                            <input type="text" class="form-control" placeholder="ผู้มีอำนาจเบิกถอนเงินในบัญชีคนที่ 4 (ถ้ามี)" id="WithdrawName4">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row mt-1">
+                                    <div class="col-12">
+                                        <div class="form-group">
+                                            <label>ผู้มีอำนาจเบิกถอนเงินในบัญชีคนที่ 5 (ถ้ามี)</label>
+                                            <input type="text" class="form-control" placeholder="ผู้มีอำนาจเบิกถอนเงินในบัญชีคนที่ 5 (ถ้ามี)" id="WithdrawName5">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row mt-1">
+                                    <div class="col-12">
+                                        <div class="form-group">
+                                            <label>แนบไฟล์หน้าสมุดบัญชี<strong style="color:red">*</strong></label>
+                                            <input type="file" class="form-control" placeholder="แนบไฟล์หน้าสมุดบัญชี" id="file">
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- <div class="mt-1" style="display: flex;justify-content:end;gap:1%">
+                                            <button type="submit" id="saveBookbankModal" class="btn" style="color: white ; background-color:#1dc9b7">บันทึก</button>
+                                            <button type="button" data-dismiss="modal" aria-label="Close" class="btn btn-danger">ยกเลิก</button>
+                                        </div> -->
+                                <!-- </form> -->
+                                <!-- </div> -->
+
                             </div>
                             <div class="row mt-1">
                                 <div class="col-12">
@@ -340,7 +416,7 @@
                     <h5 class="modal-title" id="addBankModalLabel">เพิ่มธนาคาร</h5>
                 </div>
                 <div class="modal-body">
-                    <form id="addBookBank" name="addBookBank" method="post" enctype="multipart/form-data">
+                    <!-- <form id="addBookBank" name="addBookBank" method="post" enctype="multipart/form-data">
                         <div class="form-group">
                             <label>ธนาคาร</label>
                             <select class="form-control" id="BankMasterId">
@@ -415,7 +491,7 @@
                             <button type="submit" id="saveBookbankModal" class="btn" style="color: white ; background-color:#1dc9b7">บันทึก</button>
                             <button type="button" data-dismiss="modal" aria-label="Close" class="btn btn-danger">ยกเลิก</button>
                         </div>
-                    </form>
+                    </form> -->
                 </div>
             </div>
         </div>
@@ -908,6 +984,11 @@
                 return bannedKey(dInput, 5);
 
             });
+            $(".check_user_and_number").keypress(function() {
+                var dInput = $(this).val();
+                return bannedKey(dInput, 7);
+
+            });
             $(".check_slash_number").keypress(function() {
                 var dInput = $(this).val();
                 return bannedKey(dInput, 6);
@@ -915,65 +996,65 @@
             });
 
             //=============addBookBank
-            $("form[name=addBookBank]").submit(function(event) {
-                event.preventDefault();
+            // $("form[name=addBookBank]").submit(function(event) {
+            //     event.preventDefault();
 
-                var BankMasterId = $('#BankMasterId').val();
-                if (!(BankMasterId)) {
-                    showError('Invalid BankMasterId');
-                    return;
-                }
+            //     var BankMasterId = $('#BankMasterId').val();
+            //     if (!(BankMasterId)) {
+            //         showError('Invalid BankMasterId');
+            //         return;
+            //     }
 
-                var BookBankName = $('#BookBankName').val();
-                if (!(BookBankName)) {
-                    showError('Invalid BookBankName');
-                    return;
-                }
+            //     var BookBankName = $('#BookBankName').val();
+            //     if (!(BookBankName)) {
+            //         showError('Invalid BookBankName');
+            //         return;
+            //     }
 
-                var BookBankNumber = $('#BookBankNumber').val();
-                if (!(BookBankNumber)) {
-                    showError('Invalid BookBankNumber');
-                    return;
-                }
+            //     var BookBankNumber = $('#BookBankNumber').val();
+            //     if (!(BookBankNumber)) {
+            //         showError('Invalid BookBankNumber');
+            //         return;
+            //     }
 
-                var WithdrawName = $('#WithdrawName').val();
-                if (!(WithdrawName)) {
-                    showError('Invalid WithdrawName');
-                    return;
-                }
+            //     var WithdrawName = $('#WithdrawName').val();
+            //     if (!(WithdrawName)) {
+            //         showError('Invalid WithdrawName');
+            //         return;
+            //     }
 
-                var WithdrawName2 = $('#WithdrawName2').val();
-                if (!(WithdrawName2)) {
-                    showError('Invalid WithdrawName2');
-                    return;
-                }
+            //     var WithdrawName2 = $('#WithdrawName2').val();
+            //     if (!(WithdrawName2)) {
+            //         showError('Invalid WithdrawName2');
+            //         return;
+            //     }
 
-                var WithdrawName3 = $('#WithdrawName3').val();
-                if (!(WithdrawName3)) {
-                    showError('Invalid WithdrawName3');
-                    return;
-                }
+            //     var WithdrawName3 = $('#WithdrawName3').val();
+            //     if (!(WithdrawName3)) {
+            //         showError('Invalid WithdrawName3');
+            //         return;
+            //     }
 
-                var WithdrawName4 = $('#WithdrawName4').val();
+            //     var WithdrawName4 = $('#WithdrawName4').val();
 
-                var WithdrawName5 = $('#WithdrawName5').val();
-                var Files = document.getElementById("file").files[0]
-                var dataObject = {
-                    IdObject: generateUniqueId(),
-                    BankMasterId: BankMasterId,
-                    BookBankName: BookBankName,
-                    BookBankNumber: BookBankNumber,
-                    WithdrawName: WithdrawName,
-                    WithdrawName2: WithdrawName2,
-                    WithdrawName3: WithdrawName3,
-                    WithdrawName4: WithdrawName4,
-                    WithdrawName5: WithdrawName5,
-                    Files: Files
-                };
-                // Add the object to the array
-                dataArray.push(dataObject);
-                populateTable(dataArray);
-            });
+            //     var WithdrawName5 = $('#WithdrawName5').val();
+            //     var Files = document.getElementById("file").files[0]
+            //     var dataObject = {
+            //         IdObject: generateUniqueId(),
+            //         BankMasterId: BankMasterId,
+            //         BookBankName: BookBankName,
+            //         BookBankNumber: BookBankNumber,
+            //         WithdrawName: WithdrawName,
+            //         WithdrawName2: WithdrawName2,
+            //         WithdrawName3: WithdrawName3,
+            //         WithdrawName4: WithdrawName4,
+            //         WithdrawName5: WithdrawName5,
+            //         Files: Files
+            //     };
+            //     // Add the object to the array
+            //     dataArray.push(dataObject);
+            //     populateTable(dataArray);
+            // });
 
             function populateTable(dataArray) {
                 // Assuming the table body has an id 'bankTableBody'
@@ -1136,6 +1217,46 @@
                 var VillageSubDistrictId = $('#VillageSubDistrictId').val();
                 var VillagePostCode = $('#VillagePostCode').val();
 
+                var BankMasterId = $('#BankMasterId').val();
+                if (!(BankMasterId)) {
+                    showError('Invalid BankMasterId');
+                    return;
+                }
+
+                var BookBankName = $('#BookBankName').val();
+                if (!(BookBankName)) {
+                    showError('Invalid BookBankName');
+                    return;
+                }
+
+                var BookBankNumber = $('#BookBankNumber').val();
+                if (!(BookBankNumber)) {
+                    showError('Invalid BookBankNumber');
+                    return;
+                }
+
+                var WithdrawName = $('#WithdrawName').val();
+                if (!(WithdrawName)) {
+                    showError('Invalid WithdrawName');
+                    return;
+                }
+
+                var WithdrawName2 = $('#WithdrawName2').val();
+                if (!(WithdrawName2)) {
+                    showError('Invalid WithdrawName2');
+                    return;
+                }
+
+                var WithdrawName3 = $('#WithdrawName3').val();
+                if (!(WithdrawName3)) {
+                    showError('Invalid WithdrawName3');
+                    return;
+                }
+
+                var WithdrawName4 = $('#WithdrawName4').val();
+
+                var WithdrawName5 = $('#WithdrawName5').val();
+
                 var formData = new FormData();
 
                 formData.append('IDCard', IDCard);
@@ -1163,9 +1284,21 @@
                     "VillageFile[]",
                     document.getElementById("VillageFile").files[0]
                 );
-                $.each(ArrayBookbank, function(i, value) {
-                    formData.append("ArrayBookbank[]", JSON.stringify(value));
-                });
+                formData.append('BankMasterId', BankMasterId);
+                formData.append('BookBankName', BookBankName);
+                formData.append('BookBankNumber', BookBankNumber);
+                formData.append('WithdrawName', WithdrawName);
+                formData.append('WithdrawName2', WithdrawName2);
+                formData.append('WithdrawName3', WithdrawName3);
+                formData.append('WithdrawName4', WithdrawName4);
+                formData.append('WithdrawName5', WithdrawName5);
+                formData.append(
+                    "Files[]",
+                    document.getElementById("file").files[0]
+                );
+                // $.each(ArrayBookbank, function(i, value) {
+                //     formData.append("ArrayBookbank[]", JSON.stringify(value));
+                // });
                 $.each(ArrayMember, function(i, val) {
                     formData.append("ArrayMember[]", JSON.stringify(val));
                 });

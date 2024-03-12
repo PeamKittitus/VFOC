@@ -595,6 +595,16 @@ class ApiRegisterVillageController extends Controller
         $ArrayBookbank = $request['ArrayBookbank'];
         $ArrayMember = $request['ArrayMember'];
         $VillageFile = $request['VillageFile'];
+        
+        $BankMasterId = $request['BankMasterId'];
+        $BookBankName = $request['BookBankName'];
+        $BookBankNumber = $request['BookBankNumber'];
+        $WithdrawName = $request['WithdrawName'];
+        $WithdrawName2 = $request['WithdrawName2'];
+        $WithdrawName3 = $request['WithdrawName3'];
+        $WithdrawName4 = $request['WithdrawName4'];
+        $WithdrawName5 = $request['WithdrawName5'];
+        $Files = $request['Files'];
         $OrgData = DB::table('systemOrgStructureProvince')->where('id', $OrgStructureProvince)->first();
         $OrgId = $OrgData->orgId;
         $array_file = [];
@@ -663,18 +673,18 @@ class ApiRegisterVillageController extends Controller
                             $DataTransVillageId = DB::table('transactionVillage')->insertGetId($DataTransVillage);
                             if ($DataTransVillageId) {
 
-                                foreach ($ArrayBookbank as $item) {
-                                    $decodedItem = json_decode($item, true);
+                                // foreach ($ArrayBookbank as $item) {
+                                //     $decodedItem = json_decode($item, true);
 
-                                    $BankMasterId = $decodedItem['BankMasterId'];
-                                    $BookBankName = $decodedItem['BookBankName'];
-                                    $BookBankNumber = $decodedItem['BookBankNumber'];
-                                    $WithdrawName = $decodedItem['WithdrawName'];
-                                    $WithdrawName2 = $decodedItem['WithdrawName2'];
-                                    $WithdrawName3 = $decodedItem['WithdrawName3'];
-                                    $WithdrawName4 = $decodedItem['WithdrawName4'];
-                                    $WithdrawName5 = $decodedItem['WithdrawName5'];
-                                    $Files = $decodedItem['Files'];
+                                    // $BankMasterId = $decodedItem['BankMasterId'];
+                                    // $BookBankName = $decodedItem['BookBankName'];
+                                    // $BookBankNumber = $decodedItem['BookBankNumber'];
+                                    // $WithdrawName = $decodedItem['WithdrawName'];
+                                    // $WithdrawName2 = $decodedItem['WithdrawName2'];
+                                    // $WithdrawName3 = $decodedItem['WithdrawName3'];
+                                    // $WithdrawName4 = $decodedItem['WithdrawName4'];
+                                    // $WithdrawName5 = $decodedItem['WithdrawName5'];
+                                    // $Files = $decodedItem['Files'];
 
                                     $dataInsertBankMaster = [];
                                     $dataInsertBankMaster['OrgId'] = $OrgStructure;
@@ -705,7 +715,7 @@ class ApiRegisterVillageController extends Controller
                                         $data['api_message'] = 'กรุณาทำรายการใหม่อีกครั้ง';
                                         return response()->json($data, 200);
                                     }
-                                }
+                                // }
 
                                 $sequenceNumber = 1;
                                 foreach ($ArrayMember as $member) {
