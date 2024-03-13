@@ -368,7 +368,7 @@ class FunctionController extends Controller
     function getVillageByIdProvince(Request $request)
     {
         $id = $request['id'];
-        $villageData = DB::table('village')->select('village.id', 'village.VillageName', 'village.OrgProvinceId')->where('village.OrgProvinceId', $id)->get();
+        $villageData = DB::table('village')->select('village.id', 'village.VillageName', 'village.OrgProvinceId')->where('village.VillageProvinceId', $id)->get();
         try {
             if ($villageData) {
                 $data['api_status'] = 1;
