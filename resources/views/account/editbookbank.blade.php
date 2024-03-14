@@ -2,7 +2,12 @@
 @section("content")
 <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;700&display=swap" rel="stylesheet">
 <style>
+    body {
+        font-family: 'Sarabun', sans-serif !important;
+    }
+
     .card {
         box-shadow: 0 0 1px rgba(0, 0, 0, .125), 0 1px 3px rgba(0, 0, 0, .2);
         margin-bottom: 1rem;
@@ -84,61 +89,104 @@
         width: 100% !important;
     }
 </style>
-<div class="card card-info">
-    <div class="card-header">
-        <h3 class="card-title">ตั้งค่าธนาคาร</h3>
-    </div>
-
-
+<div class="w-box" style="margin: auto !important; padding: 10px">
+    <h4 style="text-align: center;color:black">ตั้งค่าธนาคาร</h4>
     <form id="editBookBank" name="editBookBank" method="post" enctype="multipart/form-data">
-        <div class="box-body">
-            <div class="form-group">
-                <label>ธนาคาร</label>
-                <select name="BankMasterId" id="BankMasterId">
-                    <option value="" disabled selected>กรุณาเลือกธนาคาร</option>
-                    @foreach($getAccountBankMaster as $value)
-                    <option value="{{$value->id}}" @if($getAccountBookById->BankMasterId == $value->id) selected @endif>{{$value->BankName}}</option>
-                    @endforeach
-                </select>
-            </div>
-            <div class="form-group">
-                <label>ชื่อบัญชี <span style="color:red">*</span></label>
-                <input type="text" class="form-control" id="BookBankName" value="{{$getAccountBookById->BookBankName}}">
-            </div>
-            <div class="form-group">
-                <label>หมายเลขบัญชี <span style="color:red">*</span></label>
-                <input type="text" class="form-control checkNumber" id="BookBankNumber" value="{{$getAccountBookById->BookBankNumber}}">
-            </div>
-            <div class="form-group">
-                <label>ผู้มีอำนาจเบิกถอนเงินในบัญชีคนที่ 1 <span style="color:red">*</span></label>
-                <input type="text" class="form-control" id="WithdrawName" value="{{$getAccountBookById->WithdrawName}}">
-            </div>
-            <div class="form-group">
-                <label>ผู้มีอำนาจเบิกถอนเงินในบัญชีคนที่ 2 <span style="color:red">*</span></label>
-                <input type="text" class="form-control" id="WithdrawName2" value="{{$getAccountBookById->WithdrawName2}}">
-            </div>
-            <div class="form-group">
-                <label>ผู้มีอำนาจเบิกถอนเงินในบัญชีคนที่ 3 <span style="color:red">*</span></label>
-                <input type="text" class="form-control" id="WithdrawName3" value="{{$getAccountBookById->WithdrawName3}}">
-            </div>
-            <div class="form-group">
-                <label>ผู้มีอำนาจเบิกถอนเงินในบัญชีคนที่ 4 (ถ้ามี)</label>
-                <input type="text" class="form-control" id="WithdrawName4" value="{{$getAccountBookById->WithdrawName4}}">
-            </div>
-            <div class="form-group">
-                <label>ผู้มีอำนาจเบิกถอนเงินในบัญชีคนที่ 5 (ถ้ามี)</label>
-                <input type="text" class="form-control" id="WithdrawName5" value="{{$getAccountBookById->WithdrawName5}}">
-            </div>
-            <div class="form-group">
-                <label>แนบไฟล์หน้าสมุดบัญชี <span style="color:red">*</span></label>
-                <input type="file" class="form-control" id="file">
+        <div class="row">
+            <div class="col-12 col-sm-12 box-right">
+                <div class="box-right-d">
+                    <div class="row mt-1">
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <label>ธนาคาร<span style="color: red;">*</span></label>
+                                <select name="BankMasterId" id="BankMasterId">
+                                    <option value="" disabled selected>กรุณาเลือกธนาคาร</option>
+                                    @foreach($getAccountBankMaster as $value)
+                                    <option value="{{$value->id}}" @if($getAccountBookById->BankMasterId == $value->id) selected @endif>{{$value->BankName}}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mt-1">
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <label>ชื่อบัญชี <span style="color: red;">*</span></label>
+                                <input type="text" class="form-control" id="BookBankName" value="{{$getAccountBookById->BookBankName}}">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mt-1">
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <label>หมายเลขบัญชี<span style="color: red;">*</span></label>
+                                <input type="text" class="form-control checkNumber" id="BookBankNumber" value="{{$getAccountBookById->BookBankNumber}}">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mt-1">
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <label>ผู้มีอำนาจเบิกถอนเงินในบัญชีคนที่ 1 <span style="color: red;">*</span></label>
+                                <input type="text" class="form-control" id="WithdrawName" value="{{$getAccountBookById->WithdrawName}}">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mt-1">
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <label>ผู้มีอำนาจเบิกถอนเงินในบัญชีคนที่ 2 <span style="color: red;">*</span></label>
+                                <input type="text" class="form-control" id="WithdrawName2" value="{{$getAccountBookById->WithdrawName2}}">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mt-1">
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <label>ผู้มีอำนาจเบิกถอนเงินในบัญชีคนที่ 3 <span style="color: red;">*</span></label>
+                                <input type="text" class="form-control" id="WithdrawName3" value="{{$getAccountBookById->WithdrawName3}}">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mt-1">
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <label>ผู้มีอำนาจเบิกถอนเงินในบัญชีคนที่ 4 (ถ้ามี)</label>
+                                <input type="text" class="form-control" id="WithdrawName4" value="{{$getAccountBookById->WithdrawName4}}">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mt-1">
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <label>ผู้มีอำนาจเบิกถอนเงินในบัญชีคนที่ 5 (ถ้ามี)</label>
+                                <input type="text" class="form-control" id="WithdrawName5" value="{{$getAccountBookById->WithdrawName5}}">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mt-1">
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <label>แนบไฟล์หน้าสมุดบัญชี<span style="color: red;">*</span></label>
+                                <input type="file" class="form-control" id="file">
+                            </div>
+                        </div>
+                    </div>
+                    <hr>
+                    <input type="hidden" id="AccountBookBankId" value="{{$getAccountBookById->id}}">
+                    <div class="row mt-1">
+                        <div class="col-12">
+                            <div class="form-group" style="display: flex;justify-content:end;gap:1%">
+                                <button type="submit" class="btn" style="color: white ; background-color:#1dc9b7">บันทึก</button>
+                                <a href="javascript:history.back()">
+                                    <button type="button" class="btn" style="color: white ; background-color:red">ย้อนกลับ</button>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-        <div class="card-footer">
-            <button type="submit" class="btn btn-info">บันทึก</button>
-            <a href="javascript:history.back()" class="btn btn-default">ยกเลิก</a>
-        </div>
-        <input type="hidden" id="AccountBookBankId" value="{{$getAccountBookById->id}}">
     </form>
 </div>
 @push('bottom')
@@ -149,91 +197,63 @@
     $(function() {
         $('#BankMasterId').select2();
 
-        function bannedKey(evt, lang) {
+        $(".checkNumber").keypress(function(event) {
             var k = event.keyCode;
-            if (lang == 1) {
-                if ((k >= 48 && k <= 57) || k == 46) {
-                    return true;
-                } else {
-                    return false;
-                }
+            if (!((k >= 48 && k <= 57) || k == 46)) {
+                event.preventDefault();
             }
-        }
-        $(".checkNumber").keypress(function() {
-            var dInput = $(this).val();
-            return bannedKey(dInput, 1);
-
         });
+
+        function showErrorAlert(title, message) {
+            Swal.fire({
+                icon: 'error',
+                title: title,
+                text: message
+            });
+        }
+
         $("form[name=editBookBank]").submit(function(event) {
             event.preventDefault();
             var AccountBookBankId = $('#AccountBookBankId').val();
             var BankMasterId = $('#BankMasterId').val();
-            // if (!(BankMasterId)) {
-            //     Swal.fire({
-            //         icon: 'error',
-            //         title: 'Invalid BankMasterId',
-            //         text: 'Please enter a valid Thai ID card number consisting of 13 digits.'
-            //     });
-            //     return;
-            // }
+            if (!(BankMasterId)) {
+                showErrorAlert('ข้อมูลไม่ถูกต้อง', 'กรุณากรอกข้อมูลให้ครบถ้วน');
+                return;
+            }
             var BookBankName = $('#BookBankName').val();
-            // if (!(BookBankName)) {
-            //     Swal.fire({
-            //         icon: 'error',
-            //         title: 'Invalid BookBankName',
-            //         text: 'Please enter a valid Thai ID card number consisting of 13 digits.'
-            //     });
-            //     return;
-            // }
+            if (!(BookBankName)) {
+                showErrorAlert('ข้อมูลไม่ถูกต้อง', 'กรุณากรอกข้อมูลให้ครบถ้วน');
+                return;
+            }
             var BookBankNumber = $('#BookBankNumber').val();
-            // if (!(BookBankNumber)) {
-            //     Swal.fire({
-            //         icon: 'error',
-            //         title: 'Invalid BookBankNumber',
-            //         text: 'Please enter a valid Thai ID card number consisting of 13 digits.'
-            //     });
-            //     return;
-            // }
+            if (!(BookBankNumber)) {
+                showErrorAlert('ข้อมูลไม่ถูกต้อง', 'กรุณากรอกข้อมูลให้ครบถ้วน');
+                return;
+            }
             var WithdrawName = $('#WithdrawName').val();
-            // if (!(WithdrawName)) {
-            //     Swal.fire({
-            //         icon: 'error',
-            //         title: 'Invalid WithdrawName',
-            //         text: 'Please enter a valid Thai ID card number consisting of 13 digits.'
-            //     });
-            //     return;
-            // }
+            if (!(WithdrawName)) {
+                showErrorAlert('ข้อมูลไม่ถูกต้อง', 'กรุณากรอกข้อมูลให้ครบถ้วน');
+                return;
+            }
             var WithdrawName2 = $('#WithdrawName2').val();
-            // if (!(WithdrawName2)) {
-            //     Swal.fire({
-            //         icon: 'error',
-            //         title: 'Invalid WithdrawName2',
-            //         text: 'Please enter a valid Thai ID card number consisting of 13 digits.'
-            //     });
-            //     return;
-            // }
+            if (!(WithdrawName2)) {
+                showErrorAlert('ข้อมูลไม่ถูกต้อง', 'กรุณากรอกข้อมูลให้ครบถ้วน');
+                return;
+            }
             var WithdrawName3 = $('#WithdrawName3').val();
-            // if (!(WithdrawName3)) {
-            //     Swal.fire({
-            //         icon: 'error',
-            //         title: 'Invalid WithdrawName3',
-            //         text: 'Please enter a valid Thai ID card number consisting of 13 digits.'
-            //     });
-            //     return;
-            // }
+            if (!(WithdrawName3)) {
+                showErrorAlert('ข้อมูลไม่ถูกต้อง', 'กรุณากรอกข้อมูลให้ครบถ้วน');
+                return;
+            }
             var WithdrawName4 = $('#WithdrawName4').val();
             var WithdrawName5 = $('#WithdrawName5').val();
             var totalfiles = $('#file')[0].files.length;
             // if (totalfiles <= 0) {
-            //     Swal.fire({
-            //         icon: 'error',
-            //         title: 'Invalid File',
-            //         text: 'Please enter a valid Thai ID card number consisting of 13 digits.'
-            //     });
+            //     showErrorAlert('ไฟล์ไม่ถูกต้อง', 'กรุณาเลือกไฟล์อย่างน้อยหนึ่งไฟล์');
             //     return;
             // }
             var formData = new FormData();
-            
+
             formData.append('AccountBookBankId', AccountBookBankId);
             formData.append('BankMasterId', BankMasterId);
             formData.append('BookBankName', BookBankName);
@@ -244,16 +264,13 @@
             formData.append('WithdrawName4', WithdrawName4);
             formData.append('WithdrawName5', WithdrawName5);
             formData.append('totalfiles', totalfiles);
-            
+
             for (var index = 0; index < totalfiles; ++index) {
                 formData.append(
                     "file[]",
                     document.getElementById("file").files[index]
                 );
             }
-            for (var pair of formData.entries()) {
-                    console.log(pair[0] + '>>' + pair[1]);
-                }
             Swal.fire({
                 title: "ยืนยัน",
                 text: "คุณต้องการแก้ไขการตั้งค่าธนาคารใช่หรือไม่?",
@@ -285,11 +302,11 @@
                         },
                         error: function(xhr, status, error) {
                             Swal.fire({
-                                title: "Error",
-                                text: "An error occurred while saving the form data.",
+                                title: "เกิดข้อผิดพลาด",
+                                text: "เกิดข้อผิดพลาดขณะบันทึกข้อมูลแบบฟอร์ม",
                                 icon: "error",
                                 showCancelButton: false,
-                                confirmButtonText: "OK",
+                                confirmButtonText: "ตกลง",
                             });
                         }
                     });

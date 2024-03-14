@@ -216,8 +216,7 @@
 
 		public function getIndex()
 		{
-			$getCmsUser = DB::table('cms_users')->where('id', CRUDBooster::myId())->first();
-			$getAccountBookBank = (new ApiBookBankController)->getAccountBookByOrgId($getCmsUser->orgId);
+			$getAccountBookBank = (new ApiBookBankController)->getAccountBookByOrgId();
 			$data['getAccountBookBank'] = $getAccountBookBank;
 			return view('account/index',$data);
 		}

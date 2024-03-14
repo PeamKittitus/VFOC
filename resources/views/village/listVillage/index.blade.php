@@ -204,7 +204,7 @@
                                                         <td style="text-align:center">{{ $value->VillageCodeText }}</td>
                                                         <td style="text-align:center">{{ $value->VillageName }}</td>
                                                         <td style="text-align:center">{{ $value->VillageDbd }}</td>
-                                                        @if($value->Status == 1)
+                                                        @if($value->IsActive == 1)
                                                         <td style="text-align:center;color:#1dc9b7">กองทุนเปิดใช้งาน</td>
                                                         @else
                                                         <td style="text-align:center;color:#ffc241">รอการแก้ไขอนุมัติข้อมูลกองทุน</td>
@@ -212,8 +212,6 @@
                                                     </tr>
                                                     @endforeach
                                                 </tbody>
-
-
                                             </table>
                                         </div>
                                     </div>

@@ -13,7 +13,7 @@
 
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.css">
     <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.js"></script>
-
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;700&display=swap" rel="stylesheet">
     <style>
         body {
             font-family: 'Sarabun', sans-serif !important;
@@ -161,24 +161,22 @@
     <div class="page-content">
         <ol class="breadcrumb page-breadcrumb">
             <li class="breadcrumb-item"><a href="/home">หน้าหลัก</a></li>
-            <li class="breadcrumb-item"><a href="javascript:void(0)">ข้อมูลพื้นฐาน</a></li>
             <li class="breadcrumb-item active">ตั้งค่าธนาคาร</li>
         </ol>
-
-        <div class="d-flex justify-content-start flex-wrap demo" style="margin-bottom: 25px">
-            <div class="btn-group" style="border: 1px solid grey; border-radius: 10px">
-                <a href="/addBookBank" class="btn btn-light waves-effect waves-themed" id="AddForm">
-                    <i class="fa fa-plus-circle" aria-hidden="true" style="font-size: 20px"></i><br>
-                    <span class="fs-nano color-primary-600">สร้างใหม่</span>
-                </a>
-            </div>
-        </div>
-
         <div class="row">
             <div class="col-lg-12 sortable-grid ui-sortable" style="padding: 10px;">
                 <div class="panel panel-sortable" role="widget">
                     <div class="panel-hdr" role="heading">
                         <h2 class="ui-sortable-handle"><i class="subheader-icon fal fa-money-bill"></i> ตั้งค่าธนาคาร</h2>
+                    </div>
+                    <div class="row" style="margin-top:10px">
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <a href="/addBookBank">
+                                    <button id="addActivityBtn" type="button" class="btn" style="color: white ; background-color:#1dc9b7">ตั้งค่าธนาคาร</button>
+                                </a>
+                            </div>
+                        </div>
                     </div>
                     <div class="panel-container show" role="content">
                         <div class="panel-content">
@@ -196,7 +194,6 @@
                                                         <th class="center">จัดการข้อมูล</th>
                                                     </tr>
                                                 </thead>
-
                                                 <tbody>
                                                     @foreach($getAccountBookBank as $value)
                                                     <tr>
@@ -210,19 +207,10 @@
                                                                     <path fill-rule="evenodd" d="M4 0h8a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2m.165 11.668c.09.18.23.343.438.419.207.075.412.04.58-.03.318-.13.635-.436.926-.786.333-.401.683-.927 1.021-1.51a11.64 11.64 0 0 1 1.997-.406c.3.383.61.713.91.95.28.22.603.403.934.417a.856.856 0 0 0 .51-.138c.155-.101.27-.247.354-.416.09-.181.145-.37.138-.563a.844.844 0 0 0-.2-.518c-.226-.27-.596-.4-.96-.465a5.76 5.76 0 0 0-1.335-.05 10.954 10.954 0 0 1-.98-1.686c.25-.66.437-1.284.52-1.794.036-.218.055-.426.048-.614a1.238 1.238 0 0 0-.127-.538.7.7 0 0 0-.477-.365c-.202-.043-.41 0-.601.077-.377.15-.576.47-.651.823-.073.34-.04.736.046 1.136.088.406.238.848.43 1.295a19.707 19.707 0 0 1-1.062 2.227 7.662 7.662 0 0 0-1.482.645c-.37.22-.699.48-.897.787-.21.326-.275.714-.08 1.103z" />
                                                                 </svg>
                                                             </a>
-
                                                         </td>
-                                                        <td class="center">
-                                                            <div class="flex justify-content-evenly">
-                                                                <a href="/editbookbank/{{$value->id}}">
-                                                                    <button type="button" class="btn btn-default btn-sm edit_icon">
-                                                                        <span class="glyphicon glyphicon-pencil">แก้ไข</span>
-                                                                    </button>
-                                                                </a>
-                                                                <button type="button" class="btn btn-default btn-sm del_icon" data-id="{{$value->id}}">
-                                                                    <span class="glyphicon glyphicon-trash">ลบ</span>
-                                                                </button>
-                                                            </div>
+                                                        <td style="text-align:center; display: flex; gap: 1%; justify-content: center;">
+                                                            <a href="/editbookbank/{{$value->id}}" class="btn" style="color: white; background-color: orange">แก้ไข</a>
+                                                            <button data-id="{{$value->id}}" class="btn del_icon" style="color: white; background-color: red">ลบ</button>
                                                         </td>
                                                     </tr>
                                                     @endforeach
@@ -237,17 +225,32 @@
                 </div>
             </div>
         </div>
-
     </div>
-
-
-
-
 </body>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
     jQuery(document).ready(function($) {
         $('.select2').select2();
+        $.extend(true, $.fn.dataTable.defaults, {
+            "language": {
+                "sProcessing": "กำลังดำเนินการ...",
+                "sLengthMenu": "แสดง_MENU_ แถว",
+                "sZeroRecords": "ไม่พบข้อมูล",
+                "sInfo": "แสดง _START_ ถึง _END_ จาก _TOTAL_ แถว",
+                "sInfoEmpty": "แสดง 0 ถึง 0 จาก 0 แถว",
+                "sInfoFiltered": "(กรองข้อมูล _MAX_ ทุกแถว)",
+                "sInfoPostFix": "",
+                "sSearch": "ค้นหา:",
+                "sUrl": "",
+                "oPaginate": {
+                    "sFirst": "เริ่มต้น",
+                    "sPrevious": "ก่อนหน้า",
+                    "sNext": "ถัดไป",
+                    "sLast": "สุดท้าย"
+                }
+            },
+            "pageLength": 10 // Set the page length to 50
+        });
         $('#datatable').DataTable();
     });
     $(document).ready(function() {
@@ -281,8 +284,7 @@
                                     confirmButtonText: "OK",
                                 }).then((result) => {
                                     if (result.isConfirmed) {
-                                        window.location.href =
-                                            "/admin/accountBookBank";
+                                        window.location.href ="/admin/accountBookBank";
                                     }
                                 });
                             }

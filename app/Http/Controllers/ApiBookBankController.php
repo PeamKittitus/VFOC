@@ -21,7 +21,7 @@ class ApiBookbankController extends Controller
             ->get();
         return $AccountBankMaster;
     }
-    function getAccountBookByOrgId($orgId)
+    function getAccountBookByOrgId()
     {
         $dataAccBudget = DB::table('accountBookBank')
             ->leftjoin('transactionFileBookbank', 'transactionFileBookbank.bookbank_id', 'accountBookBank.id')
@@ -41,7 +41,7 @@ class ApiBookbankController extends Controller
                 'accountBankMaster.BankName',
                 'accountBankMaster.BankShortName'
             )
-            ->where('accountBookBank.OrgId', $orgId)
+            ->where('accountBookBank.created_by', CRUDBooster::myId())
             ->where('accountBookBank.is_active', 1)
             ->get();
         return $dataAccBudget;
