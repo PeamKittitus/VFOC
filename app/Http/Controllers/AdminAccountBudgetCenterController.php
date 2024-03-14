@@ -343,72 +343,74 @@ class AdminAccountBudgetCenterController extends \crocodicstudio\crudbooster\con
 	//By the way, you can still create your own method in here... :) 
 	public function getIndex()
 	{
-		$data = [
-			'getAccountBudgetCenter' => $this->getAccountBudgetCenter(),
-			'getAccountBudgetCenterSub' => $this->getAccountBudgetCenterSub()
-		];
+		$getAccountBudgetCenter = $this->getAccountBudgetCenter();
+		$getAccountBudgetCenterSub = $this->getAccountBudgetCenterSub();
+		$data['getAccountBudgetCenter'] = $getAccountBudgetCenter;
+		$data['getAccountBudgetCenterSub'] = $getAccountBudgetCenterSub;
 		return view('accountCenter/index', $data);
-	}
-	
-	private function prepareCommonData()
-	{
-		return [
-			'generateYearOptions' => (new FunctionController)->generateYearOptions(),
-			'getDivision' => (new FunctionController)->getDivision()
-		];
-	}
-	
-	public function addAccountBudgetCenter()
-	{
-		return view('accountCenter/addAccountBudgetCenter', $this->prepareCommonData());
 	}
 	
 	public function editAccountBudgetCenter($id)
 	{
-		$data = $this->prepareCommonData();
-		$data['getAccountBudgetCenterById'] = $this->getAccountBudgetCenterById($id);
+		$generateYearOptions = (new FunctionController)->generateYearOptions();
+		$data['generateYearOptions'] = $generateYearOptions;
+		$getAccountBudgetCenterById = $this->getAccountBudgetCenterById($id);
+		$data['getAccountBudgetCenterById'] = $getAccountBudgetCenterById;
 		return view('accountCenter/editAccountBudgetCenter', $data);
 	}
 	
 	public function addAccountBudgetSubCenter($id)
 	{
-		$data = $this->prepareCommonData();
-		$data['getAccountBudgetCenterById'] = $this->getAccountBudgetCenterById($id);
+		$generateYearOptions = (new FunctionController)->generateYearOptions();
+		$data['generateYearOptions'] = $generateYearOptions;
+		$getDivision = (new FunctionController)->getDivision();
+		$data['getDivision'] = $getDivision;
+		$getAccountBudgetCenterById = $this->getAccountBudgetCenterById($id);
+		$data['getAccountBudgetCenterById'] = $getAccountBudgetCenterById;
 		return view('accountCenter/accountSubCenter/addAccountSubBudgetCenter', $data);
 	}
 	
 	public function editAccountBudgetCenterSub($id)
 	{
-		$data = [
-			'getAccountBudgetCenterSubById' => $this->getAccountBudgetCenterSubById($id),
-			'getAccountBudgetCenterById' => $this->getAccountBudgetCenterById($id),
-			'getAccountBudgetCenterSubFileById' => $this->getAccountBudgetCenterSubFileById($id)
-		] + $this->prepareCommonData();
-	
+		$getAccountBudgetCenterSubById = $this->getAccountBudgetCenterSubById($id);
+		$data['getAccountBudgetCenterSubById'] = $getAccountBudgetCenterSubById;
+		$getAccountBudgetCenterById = $this->getAccountBudgetCenterById($getAccountBudgetCenterSubById->AccBudgetCenterId);
+		$data['getAccountBudgetCenterById'] = $getAccountBudgetCenterById;
+		$getAccountBudgetCenterSubFileById = $this->getAccountBudgetCenterSubFileById($id);
+		$data['getAccountBudgetCenterSubFileById'] = $getAccountBudgetCenterSubFileById;
+		$getDivision = (new FunctionController)->getDivision();
+		$data['getDivision'] = $getDivision;
 		return view('accountCenter/accountSubCenter/editAccountBudgetCenterSub', $data);
 	}
 	
 	public function addAccountBudgetCenterActivity($id)
 	{
-		$data = [
-			'getAccountBudgetCenterSubById' => $this->getAccountBudgetCenterSubById($id),
-			'getAccountBudgetCenterById' => $this->getAccountBudgetCenterById($id),
-			'getAccountBudgetCenterSubFileById' => $this->getAccountBudgetCenterSubFileById($id),
-			'accSubId' => $id,
-			'getAccountBudgetCenterActivityById' => $this->getAccountBudgetCenterActivityById($id)
-		] + $this->prepareCommonData();
-	
+		$getAccountBudgetCenterSubById = $this->getAccountBudgetCenterSubById($id);
+		$data['getAccountBudgetCenterSubById'] = $getAccountBudgetCenterSubById;
+		$getAccountBudgetCenterById = $this->getAccountBudgetCenterById($getAccountBudgetCenterSubById->AccBudgetCenterId);
+		$data['getAccountBudgetCenterById'] = $getAccountBudgetCenterById;
+		$getAccountBudgetCenterSubFileById = $this->getAccountBudgetCenterSubFileById($id);
+		$data['getAccountBudgetCenterSubFileById'] = $getAccountBudgetCenterSubFileById;
+		$getDivision = (new FunctionController)->getDivision();
+		$data['getDivision'] = $getDivision;
+		$data['accSubId'] = $id;
+		$getAccountBudgetCenterActivityById = $this->getAccountBudgetCenterActivityById($id);
+		$data['getAccountBudgetCenterActivityById'] = $getAccountBudgetCenterActivityById;
 		return view('accountCenter/accountSubCenter/addAccountBudgetCenterActivity', $data);
 	}
 	
 	public function viewAccountBudgetCenterSub($id)
 	{
-		$data = [
-			'getAccountBudgetCenterSubById' => $this->getAccountBudgetCenterSubById($id),
-			'getAccountBudgetCenterSubFileById' => $this->getAccountBudgetCenterSubFileById($id),
-			'getAccountBudgetCenterActivityById' => $this->getAccountBudgetCenterActivityById($id),
-			'getAccountBudgetCenterById' => $this->getAccountBudgetCenterById($id)
-		] + $this->prepareCommonData();
+		$getAccountBudgetCenterSubById = $this->getAccountBudgetCenterSubById($id);
+		$data['getAccountBudgetCenterSubById'] = $getAccountBudgetCenterSubById;
+		$getAccountBudgetCenterSubFileById = $this->getAccountBudgetCenterSubFileById($id);
+		$data['getAccountBudgetCenterSubFileById'] = $getAccountBudgetCenterSubFileById;
+		$getDivision = (new FunctionController)->getDivision();
+		$data['getDivision'] = $getDivision;
+		$getAccountBudgetCenterActivityById = $this->getAccountBudgetCenterActivityById($id);
+		$data['getAccountBudgetCenterActivityById'] = $getAccountBudgetCenterActivityById;
+		$getAccountBudgetCenterById = $this->getAccountBudgetCenterById($getAccountBudgetCenterSubById->AccBudgetCenterId);
+		$data['getAccountBudgetCenterById'] = $getAccountBudgetCenterById;
 	
 		return view('accountCenter/accountSubCenter/viewAccountBudgetCenterSub', $data);
 	}
