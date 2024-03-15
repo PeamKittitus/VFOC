@@ -263,10 +263,11 @@
                                     </div>
                                 </div>
                             </div>
+                            <hr>
                             <div class="row mt-1">
                                 <!-- <div class="col-12" style="display: flex;justify-content:space-between"> -->
                                 <h4 style="color: red;">บัญชีธนาคารตั้งต้น</h4>
-                                <p class="btn" style="color: white ; background-color:#1dc9b7" data-toggle="modal" data-target="#addBankModal"><i class="fa fa-plus" aria-hidden="true"></i> เพิ่มธนาคาร </p>
+                                <!-- <p class="btn" style="color: white ; background-color:#1dc9b7"><i class="fa fa-plus" aria-hidden="true"></i> เพิ่มธนาคาร </p> -->
                                 <!-- <form id="addBookBank" name="addBookBank" method="post" enctype="multipart/form-data"> -->
                                 <div class="row mt-1">
                                     <div class="form-group">
@@ -275,6 +276,8 @@
                                             <option value="0" disabled selected>----ธนาคาร----</option>
                                         </select>
                                     </div>
+                                </div>
+                                <div class="row mt-1">
                                     <div class="col-12">
                                         <div class="form-group">
                                             <label>ชื่อบัญชี<strong style="color:red">*</strong></label>
@@ -346,7 +349,7 @@
                                 <!-- </div> -->
 
                             </div>
-                            <div class="row mt-1">
+                            <!-- <div class="row mt-1">
                                 <div class="col-12">
                                     <table id="bankTable" class="table">
                                         <thead>
@@ -359,11 +362,12 @@
                                         </tbody>
                                     </table>
                                 </div>
-                            </div>
+                            </div> -->
+                            <hr>
                             <div class="row mt-1">
-                                <div class="col-12" style="display: flex;justify-content:space-between">
+                                <div class="col-12" style="display: flex;justify-content:space-between;padding:10px">
                                     <h4 style="color: red;">สมาชิกหมู่บ้าน</h4>
-                                    <p class="btn" style="color: white ; background-color:#1dc9b7" data-toggle="modal" data-target="#addMemberVillage"><i class="fa fa-plus" aria-hidden="true"></i> เพิ่มสมาชิก </p>
+                                    <button type="button" class="btn" style="color: white ; background-color:#1dc9b7" id="addMemberBtn"><i class="fa fa-plus" aria-hidden="true"></i> เพิ่มสมาชิก </button>
                                 </div>
                                 <hr>
                             </div>
@@ -629,7 +633,7 @@
                             </div>
                         </div>
                         <div class="mt-1" style="display: flex;justify-content:end;gap:1%">
-                            <button type="submit" class="btn" style="color: white ; background-color:#1dc9b7">บันทึก</button>
+                            <button type="button" id="saveMemberBtn" class="btn" style="color: white ; background-color:#1dc9b7">บันทึก</button>
                             <button type="button" data-dismiss="modal" aria-label="Close" class="btn btn-danger">ยกเลิก</button>
                         </div>
                     </form>
@@ -1135,9 +1139,16 @@
                 NoBirthDate = $(this).is(':checked') ? 0 : 1;
             });
 
-            //SubmitMember
-            $("form[name=addMemberVillage]").submit(function(event) {
-                event.preventDefault();
+            // เมื่อคลิกที่ปุ่ม "เพิ่มกิจกรรม"
+        document.getElementById('addMemberBtn').addEventListener('click', function() {
+            // Open Modal
+            $('#addMemberVillage').modal('show');
+
+            // Remove the previous event listener for the "Save" button
+            $('#saveMemberBtn').off('click').on('click', function() {
+                // Close Modal
+                $('#addMemberVillage').modal('hide');
+
                 var CitizenId = $('#CitizenId').val();
                 var MemberFirstName = $('#MemberFirstName').val();
                 var MemberLastName = $('#MemberLastName').val();
@@ -1170,6 +1181,44 @@
                 dataArrayMember.push(dataObject);
                 populateTableMember(dataArrayMember);
             });
+        });
+
+            // //SubmitMember
+            // $("form[name=addMemberVillage]").submit(function(event) {
+            //     $('#addMemberVillage').modal('hide');
+            //     event.preventDefault();
+            //     var CitizenId = $('#CitizenId').val();
+            //     var MemberFirstName = $('#MemberFirstName').val();
+            //     var MemberLastName = $('#MemberLastName').val();
+            //     var GenderId = $('#GenderId').val();
+
+            //     var MemberBirthDate = $('#MemberBirthDate').val();
+            //     var MemberPhone = $('#MemberPhone').val();
+            //     var MemberOccupationId = $('#MemberOccupationId').val();
+            //     var MemberAddress = $('#MemberAddress').val();
+            //     var MemberPositionId = $('#MemberPositionId').val();
+            //     var MemberStatusId = $('#MemberStatusId').val();
+            //     var Connection = $('#selectedValues').val();
+
+            //     var dataObject = {
+            //         NoCitizenId: NoCitizenId,
+            //         CitizenId: CitizenId,
+            //         MemberFirstName: MemberFirstName,
+            //         MemberLastName: MemberLastName,
+            //         GenderId: GenderId,
+            //         NoBirthDate: NoBirthDate,
+            //         MemberBirthDate: MemberBirthDate,
+            //         MemberPhone: MemberPhone,
+            //         MemberOccupationId: MemberOccupationId,
+            //         MemberAddress: MemberAddress,
+            //         MemberPositionId: MemberPositionId,
+            //         MemberStatusId: MemberStatusId,
+            //         Connection: Connection,
+            //     };
+            //     // Add the object to the array
+            //     dataArrayMember.push(dataObject);
+            //     populateTableMember(dataArrayMember);
+            // });
 
             function populateTableMember(dataArrayMember) {
                 // Assuming the table body has an id 'bankTableBody'
