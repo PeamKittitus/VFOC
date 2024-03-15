@@ -418,11 +418,12 @@ class FunctionController extends Controller
 			->header("Access-Control-Allow-Methods", config('cors.allowed_methods'))->send();    
 
     }
-    function getVillageApi()
+    public function getVillageApi()
     {
         $Village = DB::table('village')
         ->select('village.*')
         ->where('village.IsActive', 1)
+        ->whereNotNull('village.UserId') // Add this line
         ->get();
         response()->json($Village, 200)->header("Access-Control-Allow-Origin", config('cors.allowed_origins'))
         ->header("Access-Control-Allow-Methods", config('cors.allowed_methods'))->send();

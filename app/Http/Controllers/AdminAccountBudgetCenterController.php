@@ -349,7 +349,12 @@ class AdminAccountBudgetCenterController extends \crocodicstudio\crudbooster\con
 		$data['getAccountBudgetCenterSub'] = $getAccountBudgetCenterSub;
 		return view('accountCenter/index', $data);
 	}
-	
+	public function addAccountBudgetCenter()
+	{
+		$generateYearOptions = (new FunctionController)->generateYearOptions();
+		$data['generateYearOptions'] = $generateYearOptions;
+		return view('accountCenter/addAccountBudgetCenter', $data);
+	}
 	public function editAccountBudgetCenter($id)
 	{
 		$generateYearOptions = (new FunctionController)->generateYearOptions();

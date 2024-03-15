@@ -1442,86 +1442,84 @@ class ApiRegisterVillageController extends Controller
                 $DataUpdateVillage['UpdatedAt'] = date('Y-m-d');
                 $DataUpdateVillage['UpdatedBy'] = CRUDBooster::myId();
                 $DataUpdateVillageId = DB::table('village')->where('id', $villageId)->update($DataUpdateVillage);
-                if($DataUpdateVillageId){
-                    $VillageMemberData = DB::table('memberVillage')
-                    ->select(
-                        'memberVillage.id',
-                        'memberVillage.UserId',
-                    )
-                    ->where('memberVillage.id',$memberId)
-                    ->first();
-                    $UserData = DB::table('cms_users')
-                    ->select(
-                        'cms_users.id',
-                        'cms_users.name',
-                        'cms_users.email',
-                    )
-                    ->where('cms_users.id',$VillageMemberData->UserId)
-                    ->first();
-                    $VillageData = DB::table('village')
-                    ->select(
-                        'village.id',
-                        'village.VillageName',
-                    )
-                    ->where('village.id',$villageId)
-                    ->first();
-                    $DataUpdateUser = [];
-                    $hashedPassword = \Hash::make($randomPassword);
-                    $DataUpdateUser['password'] = $hashedPassword;
-                    $DataUpdateUser['updated_at'] = date('Y-m-d');
-                    $DataUpdateUser['id_cms_privileges'] = 4;
-                    $DataUpdateUserId = DB::table('cms_users')->where('id', $VillageMemberData->UserId)->update($DataUpdateUser);
-                    if($DataUpdateUserId){
-                        $DataUpdateMemberStatusVillage = [];
-                        $DataUpdateMemberStatusVillage['MemberStatusApprove'] = 1;
-                        $DataUpdateMemberStatusVillage['UpdatedAt'] = date('Y-m-d');
-                        $DataUpdateMemberStatusVillage['UpdatedBy'] = CRUDBooster::myId();
-                        $DataUpdateMemberStatusVillageId = DB::table('memberVillage')->where('id', $memberId)->update($DataUpdateMemberStatusVillage);
-                        if($DataUpdateMemberStatusVillageId){
-                            DB::commit();
-                            $data['api_status'] = 1;
-                            $data['api_message'] = 'Success';
-                            $data['id'] = $DataUpdateMemberStatusVillageId;
-                            $html_content = 
-                                '<!DOCTYPE html>
-                                <html>
-                                <head>
-                                    <meta charset="utf-8">
-                                    <title>Welcome to Net!</title>
-                                </head>
-                                <body>
-                                    <p>เรียน '.$UserData -> name.'</p>
-                                    <p>
-                                        อีเมลผู้ใช้ : '.$UserData -> email.'<br>
-                                        รหัสผ่าน : '.$randomPassword.'
-                                    </p>
-                                    <span style="color:red;">* การลงทะเบียนสมาชิกกองทุน ('.$VillageData->VillageName.') ของคุณรับการอนุมัติ</span><br>
-                                    
-                                    <p>หากท่านมีคำถามหรือต้องการความช่วยเหลือในการเข้าใช้งาน หรือมีข้อสงสัยใด ๆ เกี่ยวกับการใช้งานแอปพลิเคชัน หรือบริการอื่นๆ กรุณาติดต่อเราทางอีเมลที่ support@email.com</p>
-                                    <strong style="color: red;">อีเมลฉบับนี้เป็นการแจ้งข้อมูลจากระบบอัตโนมัติ กรุณาอย่าตอบกลับ</strong>
-                                    <p>ขอแสดงความนับถือ,<br>
-                                    ทีมผู้ดูแล สทบ</p><br><br>
-                                </body>
-                                </html>'
-                            ;
-                            $object = new stdClass();
-                            $object->email_content = $html_content;
-                            Mail::to($UserData -> email)->send(new JobMail($object, "แจ้งข้อมูลสำหรับเข้าใช้งานระบบ สทบ. ของสมาชิก"));
-                            return response()->json($data, 200)
-                            ->header("Access-Control-Allow-Origin", config('cors.allowed_origins'))
-                            ->header("Access-Control-Allow-Methods", config('cors.allowed_methods'));
-                        }else{
-                            DB::rollback();
-                            $data['api_status'] = 0;
-                            $data['api_message'] = 'กรุณาทำรายการใหม่อีกครั้ง';
-                            return response()->json($data, 200);
-                        }
+                $VillageMemberData = DB::table('memberVillage')
+                ->select(
+                    'memberVillage.id',
+                    'memberVillage.UserId',
+                )
+                ->where('memberVillage.id',$memberId)
+                ->first();
+                $UserData = DB::table('cms_users')
+                ->select(
+                    'cms_users.id',
+                    'cms_users.name',
+                    'cms_users.email',
+                )
+                ->where('cms_users.id',$VillageMemberData->UserId)
+                ->first();
+                $VillageData = DB::table('village')
+                ->select(
+                    'village.id',
+                    'village.VillageName',
+                )
+                ->where('village.id',$villageId)
+                ->first();
+                $DataUpdateUser = [];
+                $hashedPassword = \Hash::make($randomPassword);
+                $DataUpdateUser['password'] = $hashedPassword;
+                $DataUpdateUser['updated_at'] = date('Y-m-d');
+                $DataUpdateUser['id_cms_privileges'] = 4;
+                $DataUpdateUserId = DB::table('cms_users')->where('id', $VillageMemberData->UserId)->update($DataUpdateUser);
+                if($DataUpdateUserId){
+                    $DataUpdateMemberStatusVillage = [];
+                    $DataUpdateMemberStatusVillage['MemberStatusApprove'] = 1;
+                    $DataUpdateMemberStatusVillage['UpdatedAt'] = date('Y-m-d');
+                    $DataUpdateMemberStatusVillage['UpdatedBy'] = CRUDBooster::myId();
+                    $DataUpdateMemberStatusVillageId = DB::table('memberVillage')->where('id', $memberId)->update($DataUpdateMemberStatusVillage);
+                    if($DataUpdateMemberStatusVillageId){
+                        DB::commit();
+                        $data['api_status'] = 1;
+                        $data['api_message'] = 'Success';
+                        $data['id'] = $DataUpdateMemberStatusVillageId;
+                        $html_content = 
+                            '<!DOCTYPE html>
+                            <html>
+                            <head>
+                                <meta charset="utf-8">
+                                <title>Welcome to Net!</title>
+                            </head>
+                            <body>
+                                <p>เรียน '.$UserData -> name.'</p>
+                                <p>
+                                    อีเมลผู้ใช้ : '.$UserData -> email.'<br>
+                                    รหัสผ่าน : '.$randomPassword.'
+                                </p>
+                                <span style="color:red;">* การลงทะเบียนสมาชิกกองทุน ('.$VillageData->VillageName.') ของคุณรับการอนุมัติ</span><br>
+                                
+                                <p>หากท่านมีคำถามหรือต้องการความช่วยเหลือในการเข้าใช้งาน หรือมีข้อสงสัยใด ๆ เกี่ยวกับการใช้งานแอปพลิเคชัน หรือบริการอื่นๆ กรุณาติดต่อเราทางอีเมลที่ support@email.com</p>
+                                <strong style="color: red;">อีเมลฉบับนี้เป็นการแจ้งข้อมูลจากระบบอัตโนมัติ กรุณาอย่าตอบกลับ</strong>
+                                <p>ขอแสดงความนับถือ,<br>
+                                ทีมผู้ดูแล สทบ</p><br><br>
+                            </body>
+                            </html>'
+                        ;
+                        $object = new stdClass();
+                        $object->email_content = $html_content;
+                        Mail::to($UserData -> email)->send(new JobMail($object, "แจ้งข้อมูลสำหรับเข้าใช้งานระบบ สทบ. ของสมาชิก"));
+                        return response()->json($data, 200)
+                        ->header("Access-Control-Allow-Origin", config('cors.allowed_origins'))
+                        ->header("Access-Control-Allow-Methods", config('cors.allowed_methods'));
                     }else{
                         DB::rollback();
                         $data['api_status'] = 0;
                         $data['api_message'] = 'กรุณาทำรายการใหม่อีกครั้ง';
                         return response()->json($data, 200);
                     }
+                }else{
+                    DB::rollback();
+                    $data['api_status'] = 0;
+                    $data['api_message'] = 'กรุณาทำรายการใหม่อีกครั้ง';
+                    return response()->json($data, 200);
                 }
            }else{
                 $VillageMemberData = DB::table('memberVillage')
