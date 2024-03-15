@@ -343,7 +343,7 @@
 		// }
 		// public function addBookBankVillage()
 		// {
-		// 	$getAccountBankMaster = (new ApiBookBankController)->getAccountBankMaster();
+		// 	$getAccountBankMaster = (new ApiBookBankController2)->getAccountBankMaster();
 		// 	$data['getAccountBankMaster'] = $getAccountBankMaster;
 		// 	return view('village/bookbank/addBookBankVillage', $data);
 		// }

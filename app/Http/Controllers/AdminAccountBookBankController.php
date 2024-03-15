@@ -216,20 +216,20 @@
 
 		public function getIndex()
 		{
-			$getAccountBookBank = (new ApiBookBankController)->getAccountBookByOrgId();
+			$getAccountBookBank = (new ApiBookBankController2)->getAccountBookByOrgId();
 			$data['getAccountBookBank'] = $getAccountBookBank;
 			return view('account/index',$data);
 		}
 		public function addBookBank()
 		{
-			$getAccountBankMaster = (new ApiBookBankController)->getAccountBankMaster();
+			$getAccountBankMaster = (new ApiBookBankController2)->getAccountBankMaster();
 			$data['getAccountBankMaster'] = $getAccountBankMaster;
 			return view('account/addbookbank', $data);
 		}
 		public function editBookBank($id)
 		{
-			$getAccountBankMaster = (new ApiBookBankController)->getAccountBankMaster();
-			$getAccountBookById = (new ApiBookBankController)->getAccountBookById($id);
+			$getAccountBankMaster = (new ApiBookBankController2)->getAccountBankMaster();
+			$getAccountBookById = (new ApiBookBankController2)->getAccountBookById($id);
 			$data['getAccountBankMaster'] = $getAccountBankMaster;
 			$data['getAccountBookById'] = $getAccountBookById;
 			return view('account/editbookbank', $data);

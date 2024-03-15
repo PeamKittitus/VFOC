@@ -86,9 +86,9 @@ Route::post('/subStatusAccountBudget', '\App\Http\Controllers\ApiAccountBudgetCo
 Route::post('/subStatusSubAccountBudget', '\App\Http\Controllers\ApiAccountBudgetController@subStatusSubAccountBudget');
 Route::post('/saveAccountBudgetSub', '\App\Http\Controllers\ApiAccountBudgetController@saveAccountBudgetSub');
 Route::get('/getCurrentBudgetYear', '\App\Http\Controllers\FunctionController@getCurrentBudgetYear');
-Route::post('/saveBookbank', '\App\Http\Controllers\ApiBookbankController@saveBookbank');
-Route::post('/editBookbank', '\App\Http\Controllers\ApiBookbankController@editBookbank');
-Route::post('/delBookBank', '\App\Http\Controllers\ApiBookbankController@delBookBank');
+Route::post('/saveBookbank', '\App\Http\Controllers\ApiBookBankController2@saveBookbank');
+Route::post('/editBookbank', '\App\Http\Controllers\ApiBookBankController2@editBookbank');
+Route::post('/delBookBank', '\App\Http\Controllers\ApiBookBankController2@delBookBank');
 Route::post('/editProfile', '\App\Http\Controllers\ApiUserController@editProfile');
 Route::post('/getAccountBudgetandSubAPI', '\App\Http\Controllers\ApiAccountBudgetController@getAccountBudgetandSubAPI');
 Route::post('/delSubAccountBudget', '\App\Http\Controllers\ApiAccountBudgetController@delSubAccountBudget');
