@@ -212,7 +212,7 @@
                                                         <td style="text-align:center">{{ number_format($center->Amount, 2)}}</td>
                                                         <td style="text-align:center">-</td>
                                                         <td style="text-align:center; display: flex; gap: 1%; justify-content: center;">
-                                                            <a href="/addAccountBudgetSubCenter/{{$center->id}}" id="addAccountBudgetSubCenterBtn" data-id="{{$center->id}}" class="btn" style="color: white; background-color: #449d44">เพิ่มโครงการย่อย</a>
+                                                            <a href="/addAccountBudgetSubCenter/{{$center->id}}" data-id="{{$center->id}}" class="btn addAccountBudgetSubCenterBtn" style="color: white; background-color: #449d44">เพิ่มโครงการย่อย</a>
                                                             <a href="/editAccountBudgetCenter/{{$center->id}}" class="btn" style="color: white; background-color: orange">แก้ไข</a>
                                                             <button data-id="{{$center->id}}" class="btn deleteAccountCenter" style="color: white; background-color: red">ลบ</button>
                                                         </td>
@@ -414,20 +414,23 @@
             });
         });
 
-        const button = document.getElementById('addAccountBudgetSubCenterBtn');
-        // Add click event listener to the button
-        button.addEventListener('click', function(event) {
-            // Prevent the default link behavior
-            event.preventDefault();
+        // Select all elements with class 'addAccountBudgetSubCenterBtn'
+        const buttons = document.querySelectorAll('.addAccountBudgetSubCenterBtn');
 
-            // Get the value of the data-id attribute
-            const dataId = this.getAttribute('data-id');
+        // Loop through each button and add event listener
+        buttons.forEach(button => {
+            button.addEventListener('click', function(event) {
+                // Prevent the default link behavior
+                event.preventDefault();
 
-            // Store the data-id value in localStorage
-            localStorage.setItem('AccountBudgetCenterId', dataId);
+                // Get the value of the data-id attribute
+                const dataId = this.getAttribute('data-id');
+                // Store the data-id value in localStorage
+                localStorage.setItem('AccountBudgetCenterId', dataId);
 
-            // Redirect to the link's href
-            window.location.href = this.href;
+                // Redirect to the link's href
+                window.location.href = this.href;
+            });
         });
     });
 </script>

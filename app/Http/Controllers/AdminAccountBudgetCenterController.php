@@ -372,6 +372,8 @@ class AdminAccountBudgetCenterController extends \crocodicstudio\crudbooster\con
 		$data['getDivision'] = $getDivision;
 		$getAccountBudgetCenterById = $this->getAccountBudgetCenterById($id);
 		$data['getAccountBudgetCenterById'] = $getAccountBudgetCenterById;
+		$getNationalStrategy = $this->getNationalStrategy();
+		$data['getNationalStrategy'] = $getNationalStrategy;
 		return view('accountCenter/accountSubCenter/addAccountSubBudgetCenter', $data);
 	}
 	
@@ -385,6 +387,10 @@ class AdminAccountBudgetCenterController extends \crocodicstudio\crudbooster\con
 		$data['getAccountBudgetCenterSubFileById'] = $getAccountBudgetCenterSubFileById;
 		$getDivision = (new FunctionController)->getDivision();
 		$data['getDivision'] = $getDivision;
+		$getNationalStrategy = $this->getNationalStrategy();
+		$data['getNationalStrategy'] = $getNationalStrategy;
+		$getAccountBudgetCenterSubDetailById = $this->getAccountBudgetCenterSubDetailById($id);
+		$data['getAccountBudgetCenterSubDetailById'] = $getAccountBudgetCenterSubDetailById;
 		return view('accountCenter/accountSubCenter/editAccountBudgetCenterSub', $data);
 	}
 	
@@ -401,6 +407,10 @@ class AdminAccountBudgetCenterController extends \crocodicstudio\crudbooster\con
 		$data['accSubId'] = $id;
 		$getAccountBudgetCenterActivityById = $this->getAccountBudgetCenterActivityById($id);
 		$data['getAccountBudgetCenterActivityById'] = $getAccountBudgetCenterActivityById;
+		$getAccountBudgetCenterSubDetailById = $this->getAccountBudgetCenterSubDetailById($id);
+		$data['getAccountBudgetCenterSubDetailById'] = $getAccountBudgetCenterSubDetailById;
+		$getNationalStrategy = $this->getNationalStrategy();
+		$data['getNationalStrategy'] = $getNationalStrategy;
 		return view('accountCenter/accountSubCenter/addAccountBudgetCenterActivity', $data);
 	}
 	
@@ -416,7 +426,10 @@ class AdminAccountBudgetCenterController extends \crocodicstudio\crudbooster\con
 		$data['getAccountBudgetCenterActivityById'] = $getAccountBudgetCenterActivityById;
 		$getAccountBudgetCenterById = $this->getAccountBudgetCenterById($getAccountBudgetCenterSubById->AccBudgetCenterId);
 		$data['getAccountBudgetCenterById'] = $getAccountBudgetCenterById;
-	
+		$getAccountBudgetCenterSubDetailById = $this->getAccountBudgetCenterSubDetailById($id);
+		$data['getAccountBudgetCenterSubDetailById'] = $getAccountBudgetCenterSubDetailById;
+		$getNationalStrategy = $this->getNationalStrategy();
+		$data['getNationalStrategy'] = $getNationalStrategy;
 		return view('accountCenter/accountSubCenter/viewAccountBudgetCenterSub', $data);
 	}
 	
@@ -550,6 +563,17 @@ class AdminAccountBudgetCenterController extends \crocodicstudio\crudbooster\con
 			->get();
 		return $dataAccBudgetCenterSub;
 	}
+	function getNationalStrategy()
+	{
+		$getNationalStrategyData = DB::table('nationalStrategy')
+			->select(
+				'nationalStrategy.id',
+				'nationalStrategy.StrategyName',
+			)
+			->where('IsActive', 1)
+			->get();
+		return $getNationalStrategyData;
+	}
 	function getAccountBudgetCenterById($id)
 	{
 		$dataAccBudgetCenterById = DB::table('accountBudgetCenter')
@@ -604,13 +628,26 @@ class AdminAccountBudgetCenterController extends \crocodicstudio\crudbooster\con
 				'accountBudgetCenterActivity.id',
 				'accountBudgetCenterActivity.ActivityName',
 				'accountBudgetCenterActivity.ActivityDetail',
-				'accountBudgetCenterActivity.ActivityAmount'
+				'accountBudgetCenterActivity.ActivityAmount',
+				'accountBudgetCenterActivity.ActivityStartDate',
+				'accountBudgetCenterActivity.ActivityEndDate',
 			)
 			->where('accountBudgetCenterActivity.IsActive', 1)
 			->where('accountBudgetCenterActivity.AccBudgetCenterId', $id)
 			->orderBy('accountBudgetCenterActivity.id')
 			->get();
 		return $getAccountBudgetCenterActivityById;
+	}
+	function getAccountBudgetCenterSubDetailById($id)
+	{
+		$getAccountBudgetCenterSubDetailById = DB::table('accountBudgetCenterSubDetail')
+			->select(
+				'accountBudgetCenterSubDetail.*'
+			)
+			->where('accountBudgetCenterSubDetail.IsActive', 1)
+			->where('accountBudgetCenterSubDetail.AccBudgetCenterSubId', $id)
+			->first();
+		return $getAccountBudgetCenterSubDetailById;
 	}
 	function getAccountBudgetCenterActivityByIdApi(Request $request)
 	{
@@ -621,7 +658,9 @@ class AdminAccountBudgetCenterController extends \crocodicstudio\crudbooster\con
 				'accountBudgetCenterActivity.AccBudgetCenterId',
 				'accountBudgetCenterActivity.ActivityName',
 				'accountBudgetCenterActivity.ActivityDetail',
-				'accountBudgetCenterActivity.ActivityAmount'
+				'accountBudgetCenterActivity.ActivityAmount',
+				'accountBudgetCenterActivity.ActivityStartDate',
+				'accountBudgetCenterActivity.ActivityEndDate',
 			)
 			->where('accountBudgetCenterActivity.IsActive', 1)
 			->where('accountBudgetCenterActivity.id', $ActivityId)
@@ -735,10 +774,57 @@ class AdminAccountBudgetCenterController extends \crocodicstudio\crudbooster\con
 		$file = $request->file('file');
 		$array_file = [];
 
+		$OfficerFirstName = $request->input('OfficerFirstName');
+		$OfficerLastName = $request->input('OfficerLastName');
+		$OfficerDivisionId = $request->input('OfficerDivisionId');
+		$OfficerPhone = $request->input('OfficerPhone');
+		$ProjectType = $request->input('ProjectType');
+		$ProjectExternal = $request->input('ProjectExternal');
+		$ExternalAgency = $request->input('ExternalAgency');
+		$Indicators = $request->input('Indicators');
+		$Policy = $request->input('Policy');
+		$ProjectCharacteristics = $request->input('ProjectCharacteristics');
+		$OperationalCharacteristics = $request->input('OperationalCharacteristics');
+		$Experience = $request->input('Experience');
+		$ExperienceDetail = $request->input('ExperienceDetail');
+		$StrategyId = $request->input('StrategyId');
+		$StrategyMain = $request->input('StrategyMain');
+		$StrategySub = $request->input('StrategySub');
+		$MasterPlan = $request->input('MasterPlan'); //True
+		$MasterPlan = ($MasterPlan === "true") ? 1 : 0;
+		$MasterPlanMain = $request->input('MasterPlanMain');
+		$MasterPlanMainSub = $request->input('MasterPlanMainSub');
+		$DevelopmentPlan = $request->input('DevelopmentPlan'); //True
+		$DevelopmentPlan = ($DevelopmentPlan === "true") ? 1 : 0;
+		$DevelopmentPlanNo = $request->input('DevelopmentPlanNo');
+		$DevelopmentPlanMilestone = $request->input('DevelopmentPlanMilestone');
+		$DevelopmentPlanIndicators = $request->input('DevelopmentPlanIndicators');
+		$PolicyPlan = $request->input('PolicyPlan'); //True
+		$PolicyPlan = ($PolicyPlan === "true") ? 1 : 0;
+		$PolicyPlanDetail = $request->input('PolicyPlanDetail');
+		$ActionPlan = $request->input('ActionPlan'); //True
+		$ActionPlan = ($ActionPlan === "true") ? 1 : 0;
+		$ActionPlanDetail = $request->input('ActionPlanDetail');
+		$CommunityFundStrategicPlan = $request->input('CommunityFundStrategicPlan'); //True
+		$CommunityFundStrategicPlan = ($CommunityFundStrategicPlan === "true") ? 1 : 0;
+		$CommunityFundStrategicPlanDetail = $request->input('CommunityFundStrategicPlanDetail');
+		$OperationalPlans = $request->input('OperationalPlans'); //True
+		$OperationalPlans = ($OperationalPlans === "true") ? 1 : 0;
+		$OperationalPlansDetail = $request->input('OperationalPlansDetail');
+		$ProjectOriginId = $request->input('ProjectOriginId');
+		$ProjectOriginDetail = $request->input('ProjectOriginDetail');
+		$PrinciplesReason = $request->input('PrinciplesReason');
+		$Objective = $request->input('Objective');
+		$ExpectedResults = $request->input('ExpectedResults');
+		$SuccessIndicators = $request->input('SuccessIndicators');
+		$Beneficiary = $request->input('Beneficiary');
+		$Procurement = $request->input('Procurement');
+		$ProjectLocation = $request->input('ProjectLocation');
+		$Monitoring = $request->input('Monitoring');
+
 		// Get data from database
 		$DataAccBudgetCenter = DB::table('accountBudgetCenter')->where('id', $AccId)->first();
 		$AccBudgetCenterAmount = $DataAccBudgetCenter->Amount;
-
 		$DataAccBudgetCenterSubCount = DB::table('accountBudgetCenterSub')->where('AccBudgetCenterId', $AccId)->count();
 		$DataAccBudgetSubCenterSumAmount = DB::table('accountBudgetCenterSub')->where('AccBudgetCenterId', $AccId)->where('IsActive', 1)->get();
 
@@ -803,10 +889,61 @@ class AdminAccountBudgetCenterController extends \crocodicstudio\crudbooster\con
 				array_push($array_file, $val->getClientOriginalName() . '.' . $val->getClientOriginalExtension());
 			}
 
+			$AccountBudgetCenterSubDetail = DB::table('accountBudgetCenterSubDetail')->insertGetId([
+				'AccBudgetCenterSubId' => $AccountBudgetSubCenterId,
+				'OfficerFirstName' => $OfficerFirstName,
+				'OfficerLastName' => $OfficerLastName,
+				'OfficerDivisionId' => $OfficerDivisionId,
+				'OfficerPhone' => $OfficerPhone,
+				'ProjectType' => $ProjectType,
+				'ProjectExternal' => $ProjectExternal,
+				'ExternalAgency' => $ExternalAgency,
+				'Indicators' => $Indicators,
+				'Policy' => $Policy,
+				'ProjectCharacteristics' => $ProjectCharacteristics,
+				'OperationalCharacteristics' => $OperationalCharacteristics,
+				'Experience' => $Experience,
+				'ExperienceDetail' => $ExperienceDetail,
+				'StrategyId' => $StrategyId,
+				'StrategyMain' => $StrategyMain,
+				'StrategySub' => $StrategySub,
+				'MasterPlan' => $MasterPlan,
+				'MasterPlanMain' => $MasterPlanMain,
+				'MasterPlanMainSub' => $MasterPlanMainSub,
+				'DevelopmentPlan' => $DevelopmentPlan,
+				'DevelopmentPlanNo' => $DevelopmentPlanNo,
+				'DevelopmentPlanMilestone' => $DevelopmentPlanMilestone,
+				'DevelopmentPlanIndicators' => $DevelopmentPlanIndicators,
+				'PolicyPlan' => $PolicyPlan,
+				'PolicyPlanDetail' => $PolicyPlanDetail,
+				'ActionPlan' => $ActionPlan,
+				'ActionPlanDetail' => $ActionPlanDetail,
+				'CommunityFundStrategicPlan' => $CommunityFundStrategicPlan,
+				'CommunityFundStrategicPlanDetail' => $CommunityFundStrategicPlanDetail,
+				'OperationalPlans' => $OperationalPlans,
+				'OperationalPlansDetail' => $OperationalPlansDetail,
+				'ProjectOriginId' => $ProjectOriginId,
+				'ProjectOriginDetail' => $ProjectOriginDetail,
+				'PrinciplesReason' => $PrinciplesReason,
+				'Objective' => $Objective,
+				'ExpectedResults' => $ExpectedResults,
+				'SuccessIndicators' => $SuccessIndicators,
+				'Beneficiary' => $Beneficiary,
+				'Procurement' => $Procurement,
+				'ProjectLocation' => $ProjectLocation,
+				'Monitoring' => $Monitoring,
+				'CreatedAt' => now(),
+				'CreatedBy' => CRUDBooster::myId(),
+				'IsActive' => 1,
+			]);
+			if (!$AccountBudgetCenterSubDetail) {
+				throw new \Exception('Insert into AccountBudgetCenterSubDetail failed');
+			}
+			
 			// Commit transaction
 			DB::commit();
 
-			return response()->json(['api_status' => 1, 'api_message' => 'Success', 'id' => $TransactionFileAccountBudgetCenterId], 200)
+			return response()->json(['api_status' => 1, 'api_message' => 'Success', 'id' => $AccountBudgetCenterSubDetail], 200)
 				->header("Access-Control-Allow-Origin", config('cors.allowed_origins'))
 				->header("Access-Control-Allow-Methods", config('cors.allowed_methods'));
 		} catch (\Exception $e) {
@@ -822,6 +959,56 @@ class AdminAccountBudgetCenterController extends \crocodicstudio\crudbooster\con
 		$AccId = $request['AccId'];
 		$AccSubId = $request['AccSubId'];
 		$SubAmount = $request['SubAmount'];
+
+
+		$OfficerFirstName = $request->input('OfficerFirstName');
+		$OfficerLastName = $request->input('OfficerLastName');
+		$OfficerDivisionId = $request->input('OfficerDivisionId');
+		$OfficerPhone = $request->input('OfficerPhone');
+		$ProjectType = $request->input('ProjectType');
+		$ProjectExternal = $request->input('ProjectExternal');
+		$ExternalAgency = $request->input('ExternalAgency');
+		$Indicators = $request->input('Indicators');
+		$Policy = $request->input('Policy');
+		$ProjectCharacteristics = $request->input('ProjectCharacteristics');
+		$OperationalCharacteristics = $request->input('OperationalCharacteristics');
+		$Experience = $request->input('Experience');
+		$ExperienceDetail = $request->input('ExperienceDetail');
+		$StrategyId = $request->input('StrategyId');
+		$StrategyMain = $request->input('StrategyMain');
+		$StrategySub = $request->input('StrategySub');
+		$MasterPlan = $request->input('MasterPlan'); //True
+		$MasterPlan = ($MasterPlan === "true") ? 1 : 0;
+		$MasterPlanMain = $request->input('MasterPlanMain');
+		$MasterPlanMainSub = $request->input('MasterPlanMainSub');
+		$DevelopmentPlan = $request->input('DevelopmentPlan'); //True
+		$DevelopmentPlan = ($DevelopmentPlan === "true") ? 1 : 0;
+		$DevelopmentPlanNo = $request->input('DevelopmentPlanNo');
+		$DevelopmentPlanMilestone = $request->input('DevelopmentPlanMilestone');
+		$DevelopmentPlanIndicators = $request->input('DevelopmentPlanIndicators');
+		$PolicyPlan = $request->input('PolicyPlan'); //True
+		$PolicyPlan = ($PolicyPlan === "true") ? 1 : 0;
+		$PolicyPlanDetail = $request->input('PolicyPlanDetail');
+		$ActionPlan = $request->input('ActionPlan'); //True
+		$ActionPlan = ($ActionPlan === "true") ? 1 : 0;
+		$ActionPlanDetail = $request->input('ActionPlanDetail');
+		$CommunityFundStrategicPlan = $request->input('CommunityFundStrategicPlan'); //True
+		$CommunityFundStrategicPlan = ($CommunityFundStrategicPlan === "true") ? 1 : 0;
+		$CommunityFundStrategicPlanDetail = $request->input('CommunityFundStrategicPlanDetail');
+		$OperationalPlans = $request->input('OperationalPlans'); //True
+		$OperationalPlans = ($OperationalPlans === "true") ? 1 : 0;
+		$OperationalPlansDetail = $request->input('OperationalPlansDetail');
+		$ProjectOriginId = $request->input('ProjectOriginId');
+		$ProjectOriginDetail = $request->input('ProjectOriginDetail');
+		$PrinciplesReason = $request->input('PrinciplesReason');
+		$Objective = $request->input('Objective');
+		$ExpectedResults = $request->input('ExpectedResults');
+		$SuccessIndicators = $request->input('SuccessIndicators');
+		$Beneficiary = $request->input('Beneficiary');
+		$Procurement = $request->input('Procurement');
+		$ProjectLocation = $request->input('ProjectLocation');
+		$Monitoring = $request->input('Monitoring');
+
 
 		// Get data from database
 		$AccBudgetCenterAmount = DB::table('accountBudgetCenter')->where('id', $AccId)->value('Amount');
@@ -849,9 +1036,56 @@ class AdminAccountBudgetCenterController extends \crocodicstudio\crudbooster\con
 			$dataUpdateSub['UpdatedBy'] = CRUDBooster::myId();
 			$updatedRows = DB::table('accountBudgetCenterSub')->where('id', $AccSubId)->update($dataUpdateSub);
 
-			if ($updatedRows) {
+			$updatedRowsDetail = DB::table('accountBudgetCenterSubDetail')
+			->where('AccBudgetCenterSubId', $AccSubId)
+			->update([
+				'OfficerFirstName' => $OfficerFirstName,
+				'OfficerLastName' => $OfficerLastName,
+				'OfficerDivisionId' => $OfficerDivisionId,
+				'OfficerPhone' => $OfficerPhone,
+				'ProjectType' => $ProjectType,
+				'ProjectExternal' => $ProjectExternal,
+				'ExternalAgency' => $ExternalAgency,
+				'Indicators' => $Indicators,
+				'Policy' => $Policy,
+				'ProjectCharacteristics' => $ProjectCharacteristics,
+				'OperationalCharacteristics' => $OperationalCharacteristics,
+				'Experience' => $Experience,
+				'ExperienceDetail' => $ExperienceDetail,
+				'StrategyId' => $StrategyId,
+				'StrategyMain' => $StrategyMain,
+				'StrategySub' => $StrategySub,
+				'MasterPlan' => $MasterPlan,
+				'MasterPlanMain' => $MasterPlanMain,
+				'MasterPlanMainSub' => $MasterPlanMainSub,
+				'DevelopmentPlan' => $DevelopmentPlan,
+				'DevelopmentPlanNo' => $DevelopmentPlanNo,
+				'DevelopmentPlanMilestone' => $DevelopmentPlanMilestone,
+				'DevelopmentPlanIndicators' => $DevelopmentPlanIndicators,
+				'PolicyPlan' => $PolicyPlan,
+				'PolicyPlanDetail' => $PolicyPlanDetail,
+				'ActionPlan' => $ActionPlan,
+				'ActionPlanDetail' => $ActionPlanDetail,
+				'CommunityFundStrategicPlan' => $CommunityFundStrategicPlan,
+				'CommunityFundStrategicPlanDetail' => $CommunityFundStrategicPlanDetail,
+				'OperationalPlans' => $OperationalPlans,
+				'OperationalPlansDetail' => $OperationalPlansDetail,
+				'ProjectOriginId' => $ProjectOriginId,
+				'ProjectOriginDetail' => $ProjectOriginDetail,
+				'PrinciplesReason' => $PrinciplesReason,
+				'Objective' => $Objective,
+				'ExpectedResults' => $ExpectedResults,
+				'SuccessIndicators' => $SuccessIndicators,
+				'Beneficiary' => $Beneficiary,
+				'Procurement' => $Procurement,
+				'ProjectLocation' => $ProjectLocation,
+				'Monitoring' => $Monitoring,
+				'UpdatedAt' => now(),
+				'UpdatedBy' => CRUDBooster::myId(),
+			]);
+			if ($updatedRowsDetail) {
 				DB::commit();
-				return response()->json(['api_status' => 1, 'api_message' => 'Success', 'id' => $AccSubId], 200)
+				return response()->json(['api_status' => 1, 'api_message' => 'Success', 'id' => $updatedRowsDetail], 200)
 					->header("Access-Control-Allow-Origin", config('cors.allowed_origins'))
 					->header("Access-Control-Allow-Methods", config('cors.allowed_methods'));
 			} else {
@@ -872,6 +1106,8 @@ class AdminAccountBudgetCenterController extends \crocodicstudio\crudbooster\con
 		$ActivityName = $request->input('ActivityName');
 		$ActivityDetail = $request->input('ActivityDetail');
 		$ActivityAmount = $request->input('ActivityAmount');
+		$ActivityStartDate = $request->input('ActivityStartDate');
+		$ActivityEndDate = $request->input('ActivityEndDate');
 
 		// Get data from database
 		$DataAccBudgetCenterSub = DB::table('accountBudgetCenterSub')->where('id', $accSubId)->first();
@@ -896,6 +1132,8 @@ class AdminAccountBudgetCenterController extends \crocodicstudio\crudbooster\con
 				'ActivityName' => $ActivityName,
 				'ActivityDetail' => $ActivityDetail,
 				'ActivityAmount' => $ActivityAmount,
+				'ActivityStartDate' => $ActivityStartDate,
+				'ActivityEndDate' => $ActivityEndDate,
 				'IsActive' => 1,
 				'UserId'  => CRUDBooster::myId(),
 				'CreatedAt' => now(),
@@ -937,7 +1175,8 @@ class AdminAccountBudgetCenterController extends \crocodicstudio\crudbooster\con
 		$ActivityModalName = $request['ActivityModalName'];
 		$ActivityModalDetail = $request['ActivityModalDetail'];
 		$ActivityModalAmount = $request['ActivityModalAmount'];
-		
+		$ActivityModalStartDate = $request['ActivityModalStartDate'];
+		$ActivityModalEndDate = $request['ActivityModalEndDate'];
 		// Get data from database
 		$AccBudgetCenterAmount = DB::table('accountBudgetCenterSub')->where('id', $AccBudgetCenterId)->value('SubAmount');
 
@@ -961,6 +1200,8 @@ class AdminAccountBudgetCenterController extends \crocodicstudio\crudbooster\con
 				'ActivityName' => $ActivityModalName,
 				'ActivityDetail' => $ActivityModalDetail,
 				'ActivityAmount' => $ActivityModalAmount,
+				'ActivityStartDate' => $ActivityModalStartDate,
+				'ActivityEndDate' => $ActivityModalEndDate,
 				'UpdatedAt' => now(),
 				'UpdatedBy' => CRUDBooster::myId()
 			];
@@ -982,5 +1223,4 @@ class AdminAccountBudgetCenterController extends \crocodicstudio\crudbooster\con
 				->header("Access-Control-Allow-Methods", config('cors.allowed_methods'));
 		}
 	}
-	
 }
