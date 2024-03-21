@@ -133,7 +133,9 @@
                                     <select class="form-control" id="DivisionId">
                                         <option value="0" disabled selected>----เลือกฝ่าย----</option>
                                         <?php foreach ($getDivision as $division) : ?>
-                                            <option value="<?= $division->id ?>"><?= $division->name . '(' . $division->short_name . ')' ?></option>
+                                            <option value="<?= $division->id ?>">
+                                                <?= $division->name . ' (' . $division->short_name . ')' ?>
+                                            </option>
                                         <?php endforeach; ?>
                                     </select>
                                 </div>
@@ -162,7 +164,9 @@
                                     <select class="form-control" id="OfficerDivisionId">
                                         <option value="0" disabled selected>----เลือกฝ่าย----</option>
                                         <?php foreach ($getDivision as $division) : ?>
-                                            <option value="<?= $division->id ?>"><?= $division->name . '(' . $division->short_name . ')' ?></option>
+                                            <option value="<?= $division->id ?>">
+                                                <?= $division->name . ' (' . $division->short_name . ')' ?>
+                                            </option>
                                         <?php endforeach; ?>
                                     </select>
                                 </div>
@@ -476,7 +480,7 @@
                         <div class="row mt-1" style="display: none;" id="ProjectOriginHide">
                             <div class="col-sm-12">
                                 <div class="form-group">
-                                    <input type="text" class="form-control check_number" placeholder="รายละเอียด" id="ProjectOriginDetail">
+                                    <input type="text" class="form-control" placeholder="รายละเอียด" id="ProjectOriginDetail">
                                 </div>
                             </div>
                         </div>
@@ -505,14 +509,37 @@
                         <div class="row mt-1">
                             <div class="col-sm-12">
                                 <div class="form-group">
-                                    <label>3.ตัวชี้วัดความสำเร็จ</label>
+                                    <label>3.เป้าหมาย</label>
                                 </div>
                             </div>
                         </div>
                         <div class="row mt-1">
                             <div class="col-sm-12">
                                 <div class="form-group">
-                                    <label>3.1ผลที่คาดว่าจะได้รับ</label>
+                                    <label>3.1เป้าหมายเชิงปริมาณ</label>
+                                    <textarea class="form-control" id="QuantitativeGoal"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mt-1">
+                            <div class="col-sm-12">
+                                <div class="form-group">
+                                    <label>3.2เป้าหมายเชิงคุณภาพ</label>
+                                    <textarea class="form-control" id="Qualitativegoal"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mt-1">
+                            <div class="col-sm-12">
+                                <div class="form-group">
+                                    <label>4.ตัวชี้วัดความสำเร็จ</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mt-1">
+                            <div class="col-sm-12">
+                                <div class="form-group">
+                                    <label>4.1ผลที่คาดว่าจะได้รับ</label>
                                     <textarea class="form-control" id="ExpectedResults"></textarea>
                                 </div>
                             </div>
@@ -520,7 +547,7 @@
                         <div class="row mt-1">
                             <div class="col-sm-12">
                                 <div class="form-group">
-                                    <label>3.2ดัชนีชี้วัดความสำเร็จ</label>
+                                    <label>4.2ดัชนีชี้วัดความสำเร็จ</label>
                                     <textarea class="form-control" id="SuccessIndicators"></textarea>
                                 </div>
                             </div>
@@ -528,7 +555,7 @@
                         <div class="row mt-1">
                             <div class="col-sm-12">
                                 <div class="form-group">
-                                    <label>3.3กลุ่มเป้าหมาย/ผู้ที่ได้รับผลประโยชน์</label>
+                                    <label>4.3กลุ่มเป้าหมาย/ผู้ที่ได้รับผลประโยชน์</label>
                                     <textarea class="form-control" id="Beneficiary"></textarea>
                                 </div>
                             </div>
@@ -536,7 +563,7 @@
                         <div class="row mt-1">
                             <div class="col-sm-12">
                                 <div class="form-group">
-                                    <label>4.ขั้นตอน/ระยะเวลาดำเนินการ</label>
+                                    <label>5.ขั้นตอน/ระยะเวลาดำเนินการ</label>
                                 </div>
                             </div>
                         </div>
@@ -557,7 +584,7 @@
                         <div class="row mt-1">
                             <div class="col-sm-12">
                                 <div class="form-group">
-                                    <label>4.1แผนดำเนินการ/แผนงบประมาณ(โดยละเอียด)<span style="color: red;">*</span></label>
+                                    <label>5.1แผนดำเนินการ/แผนงบประมาณ(โดยละเอียด)<span style="color: red;">*</span></label>
                                     <textarea id="Detail"></textarea>
                                 </div>
                             </div>
@@ -565,7 +592,7 @@
                         <div class="row mt-1">
                             <div class="col-sm-12">
                                 <div class="form-group">
-                                    <label>4.2แผนการจัดซื้อจัดจ้าง (ถ้ามี)</label>
+                                    <label>5.2แผนการจัดซื้อจัดจ้าง (ถ้ามี)</label>
                                     <textarea class="form-control" id="Procurement"></textarea>
                                 </div>
                             </div>
@@ -573,7 +600,7 @@
                         <div class="row mt-1">
                             <div class="col-sm-12">
                                 <div class="form-group">
-                                    <label>5.สถานที่ดำเนินโครงการ</label>
+                                    <label>6.สถานที่ดำเนินโครงการ</label>
                                     <textarea class="form-control" id="ProjectLocation"></textarea>
                                 </div>
                             </div>
@@ -581,7 +608,7 @@
                         <div class="row mt-1">
                             <div class="col-sm-12">
                                 <div class="form-group">
-                                    <label>6.งบประมาณ (บาท) <span style="color: red;">*</span></label>
+                                    <label>7.งบประมาณ (บาท) <span style="color: red;">*</span></label>
                                     <input type="text" class="form-control check_number" placeholder="งบประมาณ (บาท)" id="SubAmount" oninput="formatCurrency(this)">
                                 </div>
                             </div>
@@ -589,7 +616,7 @@
                         <div class="row mt-1">
                             <div class="col-sm-12">
                                 <div class="form-group">
-                                    <label>7.การติดตามและประเมินผล</label>
+                                    <label>8.การติดตามและประเมินผล</label>
                                     <textarea class="form-control" id="Monitoring"></textarea>
                                 </div>
                             </div>
@@ -660,7 +687,7 @@
     }
 
     // Array of textarea element IDs
-    const textareaIds = ['PolicyPlanDetail', 'PrinciplesReason', 'Objective', 'ExpectedResults', 'Beneficiary', 'Procurement', 'ProjectLocation', 'Monitoring'];
+    const textareaIds = ['PolicyPlanDetail', 'PrinciplesReason', 'Objective', 'ExpectedResults', 'Beneficiary', 'Procurement', 'ProjectLocation', 'Monitoring','Qualitativegoal'];
 
     // Loop through textareaIds array and add event listeners to each textarea element
     textareaIds.forEach(addTextareaEventListener);
@@ -755,7 +782,7 @@
         $('#StrategyId').select2();
         $('#ProjectOriginId').select2();
 
-        let editor;
+        let editor,editorQuantitativeGoal;
         ClassicEditor
             .create(document.querySelector('#Detail'))
             .then(newEditor => {
@@ -764,7 +791,15 @@
             .catch(error => {
                 console.error(error);
             });
-
+        ClassicEditor
+            .create(document.querySelector('#QuantitativeGoal'))
+            .then(newEditor2 => {
+                editorQuantitativeGoal = newEditor2;
+                editorQuantitativeGoal.setData('<figure class="table"><table><thead><tr><th>ที่</th><th>กิจกรรม</th><th>หน่วยนับ</th><th>จำนวน</th></tr></thead><tbody><tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr><tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr></tbody></table></figure>');
+            })
+            .catch(error => {
+                console.error(error);
+            });
         $("form[name=addAccountBudgetSubCenter]").submit(function(event) {
             event.preventDefault();
             var AccId = localStorage.getItem('AccountBudgetCenterId');
@@ -948,7 +983,9 @@
                 showError('วันที่สิ้นสุดต้องไม่เป็นวันที่ก่อนวันที่เริ่มต้น');
                 return;
             }
-
+            var editorDataQuantitative = editorQuantitativeGoal.getData();
+            var QuantitativeGoal = editorDataQuantitative;
+            var Qualitativegoal =  $('#Qualitativegoal').val();
             var formData = new FormData();
 
             formData.append('AccId', AccId);
@@ -1008,6 +1045,8 @@
             formData.append('ProjectLocation', ProjectLocation);
             formData.append('Monitoring', Monitoring);
 
+            formData.append('Qualitativegoal', Qualitativegoal);
+            formData.append('QuantitativeGoal', QuantitativeGoal);
             confirmAction(formData);
         });
 

@@ -590,14 +590,37 @@
                         <div class="row mt-1">
                             <div class="col-sm-12">
                                 <div class="form-group">
-                                    <label>3.ตัวชี้วัดความสำเร็จ</label>
+                                    <label>3.เป้าหมาย</label>
                                 </div>
                             </div>
                         </div>
                         <div class="row mt-1">
                             <div class="col-sm-12">
                                 <div class="form-group">
-                                    <label>3.1ผลที่คาดว่าจะได้รับ</label>
+                                    <label>3.1เป้าหมายเชิงปริมาณ</label>
+                                    <textarea class="form-control" id="QuantitativeGoal"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mt-1">
+                            <div class="col-sm-12">
+                                <div class="form-group">
+                                    <label>3.2เป้าหมายเชิงคุณภาพ</label>
+                                    <textarea class="form-control" id="Qualitativegoal" disabled>{{$getAccountBudgetCenterSubDetailById->Qualitativegoal}}</textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mt-1">
+                            <div class="col-sm-12">
+                                <div class="form-group">
+                                    <label>4.ตัวชี้วัดความสำเร็จ</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mt-1">
+                            <div class="col-sm-12">
+                                <div class="form-group">
+                                    <label>4.1ผลที่คาดว่าจะได้รับ</label>
                                     <textarea class="form-control" id="ExpectedResults" disabled>{{$getAccountBudgetCenterSubDetailById->ExpectedResults}}</textarea>
                                 </div>
                             </div>
@@ -605,7 +628,7 @@
                         <div class="row mt-1">
                             <div class="col-sm-12">
                                 <div class="form-group">
-                                    <label>3.2ดัชนีชี้วัดความสำเร็จ</label>
+                                    <label>4.2ดัชนีชี้วัดความสำเร็จ</label>
                                     <textarea class="form-control" id="SuccessIndicators" disabled>{{$getAccountBudgetCenterSubDetailById->SuccessIndicators}}</textarea>
                                 </div>
                             </div>
@@ -613,7 +636,7 @@
                         <div class="row mt-1">
                             <div class="col-sm-12">
                                 <div class="form-group">
-                                    <label>3.3กลุ่มเป้าหมาย/ผู้ที่ได้รับผลประโยชน์</label>
+                                    <label>4.3กลุ่มเป้าหมาย/ผู้ที่ได้รับผลประโยชน์</label>
                                     <textarea class="form-control" id="Beneficiary" disabled>{{$getAccountBudgetCenterSubDetailById->Beneficiary}}</textarea>
                                 </div>
                             </div>
@@ -621,7 +644,7 @@
                         <div class="row mt-1">
                             <div class="col-sm-12">
                                 <div class="form-group">
-                                    <label>4.ขั้นตอน/ระยะเวลาดำเนินการ</label>
+                                    <label>5.ขั้นตอน/ระยะเวลาดำเนินการ</label>
                                 </div>
                             </div>
                         </div>
@@ -642,7 +665,7 @@
                         <div class="row mt-1">
                             <div class="col-sm-12">
                                 <div class="form-group">
-                                    <label>4.1แผนดำเนินการ/แผนงบประมาณ(โดยละเอียด)</label>
+                                    <label>5.1แผนดำเนินการ/แผนงบประมาณ(โดยละเอียด)</label>
                                     <textarea id="Detail"></textarea>
                                 </div>
                             </div>
@@ -650,7 +673,7 @@
                         <div class="row mt-1">
                             <div class="col-sm-12">
                                 <div class="form-group">
-                                    <label>4.2แผนการจัดซื้อจัดจ้าง (ถ้ามี)</label>
+                                    <label>5.2แผนการจัดซื้อจัดจ้าง (ถ้ามี)</label>
                                     <textarea class="form-control" id="Procurement" disabled>{{$getAccountBudgetCenterSubDetailById->Procurement}}</textarea>
                                 </div>
                             </div>
@@ -658,7 +681,7 @@
                         <div class="row mt-1">
                             <div class="col-sm-12">
                                 <div class="form-group">
-                                    <label>5.สถานที่ดำเนินโครงการ</label>
+                                    <label>6.สถานที่ดำเนินโครงการ</label>
                                     <textarea class="form-control" id="ProjectLocation" disabled>{{$getAccountBudgetCenterSubDetailById->ProjectLocation}}</textarea>
                                 </div>
                             </div>
@@ -666,7 +689,7 @@
                         <div class="row mt-1">
                             <div class="col-sm-12">
                                 <div class="form-group">
-                                    <label>6.งบประมาณ (บาท)</label>
+                                    <label>7.งบประมาณ (บาท)</label>
                                     <input type="text" class="form-control check_number" placeholder="งบประมาณ (บาท)" id="SubAmount" value="{{$getAccountBudgetCenterSubById->SubAmount}}" oninput="formatCurrency(this);" disabled>
                                 </div>
                             </div>
@@ -674,7 +697,7 @@
                         <div class="row mt-1">
                             <div class="col-sm-12">
                                 <div class="form-group">
-                                    <label>7.การติดตามและประเมินผล</label>
+                                    <label>8.การติดตามและประเมินผล</label>
                                     <textarea class="form-control" disabled id="Monitoring">{{$getAccountBudgetCenterSubDetailById->Monitoring}}</textarea>
                                 </div>
                             </div>
@@ -714,6 +737,7 @@
                                                 <th style="text-align: center;">กิจกรรม</th>
                                                 <th style="text-align: center;">รายละเอียด</th>
                                                 <th style="text-align: center;">งบประมาณ (บาท)</th>
+                                                <th style="text-align: center;">สถานะกิจกรรม</th>
                                             </tr>
                                         </thead>
                                         <tbody style="background-color: white;">
@@ -723,6 +747,13 @@
                                                 <td style="text-align:center">{{ $value->ActivityName}}</td>
                                                 <td style="text-align:center">{{ $value->ActivityDetail}}</td>
                                                 <td style="text-align:center">{{ number_format($value->ActivityAmount, 2)}}</td>
+                                                @if($value->ActivityStatus == 1)
+                                                <td style="text-align:center;color:orange">กำลังดำเนินการ</td>
+                                                @elseif($value->ActivityStatus == 2)
+                                                <td style="text-align:center;color:#449d44">สำเร็จ</td>
+                                                @else
+                                                <td></td>
+                                                @endif
                                             </tr>
                                             @endforeach
                                         </tbody>
@@ -731,6 +762,7 @@
                             </div>
                         </div>
                         <input type="hidden" id="DetailSub" name="DetailSub" value="{{$getAccountBudgetCenterSubById->Detail}}">
+                        <input type="hidden" id="DetailQuantitativeGoal" name="DetailQuantitativeGoal" value="{{$getAccountBudgetCenterSubDetailById->QuantitativeGoal}}">
                         <div class="row mt-1">
                             <div class="col-12">
                                 <div class="form-group" style="display: flex;justify-content:end;gap:1%">
@@ -763,23 +795,39 @@
         $('#BudgetYear').select2();
         $('#DivisionId').select2();
 
-        let editor;
+        let editor,editorQuantitativeGoal;
         var DetailSub = $('#DetailSub').val();
-        ClassicEditor
-        .create(document.querySelector('#Detail'), {
-            readOnly: true,
-            
-        })
-        .then(editor => {
-            editor.enableReadOnlyMode("editor");
-            var DetailSub = $('#DetailSub').val();
-            const initialContent = DetailSub;
-            editor.setData(initialContent);
-        })
-        .catch(error => {
-            console.error(error);
-        });
+        var DetailQuantitativeGoal = $('#DetailQuantitativeGoal').val();
 
+        ClassicEditor
+            .create(document.querySelector('#Detail'), {
+                readOnly: true,
+                
+            })
+            .then(editor => {
+                editor.enableReadOnlyMode("editor");
+                var DetailSub = $('#DetailSub').val();
+                const initialContent = DetailSub;
+                editor.setData(initialContent);
+            })
+            .catch(error => {
+                console.error(error);
+            });
+
+        ClassicEditor
+            .create(document.querySelector('#QuantitativeGoal'), {
+                readOnly: true,
+
+            })
+            .then(editor => {
+                editor.enableReadOnlyMode("editor");
+                var DetailQuantitativeGoal = $('#DetailQuantitativeGoal').val();
+                const initialContent = DetailQuantitativeGoal;
+                editor.setData(initialContent);
+            })
+            .catch(error => {
+                console.error(error);
+            });
         $("form[name=editAccountBudgetSubCenter]").submit(function(event) {
             event.preventDefault();
             var AccId = $('#AccId').val();

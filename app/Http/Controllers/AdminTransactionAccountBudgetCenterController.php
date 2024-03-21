@@ -405,10 +405,41 @@ use Exception;
 			}
 			return response()->json($data, 200);
 		}
+		function getAccountBudgetCenterSubDetailActivity(Request $request)
+		{
+			$AccountBudgetCenterSubId = $request['AccountBudgetCenterSubId'];
+			$getAccountBudgetCenterSubById = DB::table('accountBudgetCenterActivity')
+			->select(
+				'accountBudgetCenterActivity.id',
+				'accountBudgetCenterActivity.AccBudgetCenterId',
+				'accountBudgetCenterActivity.ActivityName',
+				'accountBudgetCenterActivity.ActivityDetail',
+				'accountBudgetCenterActivity.ActivityAmount',
+				'accountBudgetCenterActivity.IsActive',
+				'accountBudgetCenterActivity.ActivityAmountStatus',
+			)
+			->where('accountBudgetCenterActivity.IsActive', 1)
+			->where('accountBudgetCenterActivity.AccBudgetCenterId', $AccountBudgetCenterSubId)
+			->get();
+			try {
+				if ($getAccountBudgetCenterSubById) {
+					$data['api_status'] = 1;
+					$data['api_message'] = 'สำเร็จ';
+					$data['api_data'] = $getAccountBudgetCenterSubById;
+				} else {
+					$data['api_status'] = 0;
+					$data['api_message'] = 'ไม่พบข้อมูล';
+				}
+			} catch (\Exception $e) {
+				$data['api_status'] = 0;
+				$data['api_message'] = 'กรุณาทำรายการใหม่อีกครั้ง';
+			}
+			return response()->json($data, 200);
+		}
 		function addAccountExpensesApi(Request $request)
 		{
 			$data = [];
-			$DivisionId = $request->input('DivisionId');
+			// $DivisionId = $request->input('DivisionId');
 			$AccountBudgetCenterSubId = $request->input('AccountBudgetCenterSubId');
 			$BudgetYear = $request->input('BudgetYear');
 			$ReceiverDate = $request->input('ReceiverDate');
@@ -417,12 +448,14 @@ use Exception;
 			$Status = $request->input('Status');
 			$TotalAmount = $request->input('TotalAmount');
 
+			$IdActivity = $request['IdActivity'];
+
 			$AccountBudgetCenterSubData = DB::table('accountBudgetCenterSub')->where('id', $AccountBudgetCenterSubId)->where('IsActive',1)->first();
 			$RealAmount = $AccountBudgetCenterSubData->SubAmount;
 			DB::beginTransaction();
 			try {
 				$dataInsert = [
-					'DivisionId' => $DivisionId,
+					// 'DivisionId' => $DivisionId,
 					'AccBudgetCenterSubId' => $AccountBudgetCenterSubId,
 					'TransactionYear' => $BudgetYear,
 					'Amount' => $Amount,
@@ -444,6 +477,15 @@ use Exception;
 					'UpdatedBy' => CRUDBooster::myId()
 				];
 				$updatedRows = DB::table('accountBudgetCenterSub')->where('id', $AccountBudgetCenterSubId)->update($dataUpdate);
+
+				foreach ($IdActivity as $Act) {
+					$decodedActivity = json_decode($Act, true);
+					$ActivityId = $decodedActivity;
+
+					$UpdateStatusAmount = [];
+					$UpdateStatusAmount['ActivityAmountStatus'] = 2;
+					$ActivityAmountStatusId = DB::table('accountBudgetCenterActivity')->where('id', $ActivityId)->update($UpdateStatusAmount);
+				}
 
 				if ($TransactionAccountBudgetCenterId && $updatedRows) {
 					DB::commit();

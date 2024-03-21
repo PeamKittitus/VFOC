@@ -190,7 +190,7 @@
                                                     <tr>
                                                         <th class="center">ลำดับ</th>
                                                         <th class="center">ชื่อยุทธศาสตร์/แผนงาน/โครงการ</th>
-                                                        <th class="center">ฝ่าย</th>
+                                                        <!-- <th class="center">ฝ่าย</th> -->
                                                         <th class="center">กรอบวงเงินงบประมาณ (บาท)</th>
                                                         <th class="center">ยอดใช้จ่ายตามจริง (บาท)</th>
                                                         <th class="center">คงเหลือ (บาท)</th>
@@ -206,7 +206,7 @@
                                                     <tr>
                                                         <td style="text-align:center">{{$counter}}</td>
                                                         <td style="text-align:center">{{$Tran->AccName}}</td>
-                                                        <td style="text-align:center">{{$Tran->DivisionName}}</td>
+                                                        <!-- <td style="text-align:center">{{$Tran->DivisionName}}</td> -->
                                                         <td style="text-align:center">{{ number_format($Tran->RealAmount, 2) }}</td>
                                                         <td style="text-align:center">{{ number_format($Tran->Amount, 2) }}</td>
                                                         <td style="text-align:center">{{ number_format($Tran->TotalAmount, 2) }}</td>

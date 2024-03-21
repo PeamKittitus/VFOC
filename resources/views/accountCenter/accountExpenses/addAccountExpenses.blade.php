@@ -83,7 +83,7 @@
             <div class="row">
                 <div class="col-12 col-sm-12 box-right">
                     <div class="box-right-d">
-                        <div class="row mt-1">
+                        <!-- <div class="row mt-1">
                             <div class="col-sm-12">
                                 <div class="form-group">
                                     <label>ฝ่าย <span style="color: red;">*</span></label>
@@ -102,7 +102,18 @@
                                 <h4 style="color: red;">รายการเบิกจ่าย</h4>
                             </div>
                         </div>
-                        <hr>
+                        <hr> -->
+                        <div class="row mt-1">
+                            <div class="col-sm-12">
+                                <div class="form-group">
+                                    <label>ปีงบประมาณ</label>
+                                    <select class="form-control" id="BudgetYear">
+                                        <option value="0" disabled selected>----เลือกปีงบประมาณ----</option>
+                                        {!! $generateYearOptions !!}
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
                         <div class="row mt-1">
                             <div class="col-sm-12">
                                 <div class="form-group">
@@ -112,17 +123,6 @@
                                         <?php foreach ($getAccountBudgetCenterSub as $BudgetSub) : ?>
                                             <option value="<?= $BudgetSub->id ?>"><?= $BudgetSub->AccName ?></option>
                                         <?php endforeach; ?>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row mt-1">
-                            <div class="col-sm-12">
-                                <div class="form-group">
-                                    <label>ปีงบประมาณ</label>
-                                    <select class="form-control" id="BudgetYear">
-                                        <option value="0" disabled selected>----เลือกปีงบประมาณ----</option>
-                                        {!! $generateYearOptions !!}
                                     </select>
                                 </div>
                             </div>
@@ -144,19 +144,46 @@
                             </div>
                         </div>
                         <div class="row mt-1">
-                            <div class="col-sm-4">
+                            <div class="col-sm-12">
+                                <div class="form-group">
+                                    <label>รายการกิจกรรม</label>
+                                    <table id="datatable" class="table table-striped table-bordered" cellspacing="0" width="100%" style="margin-top: 20px !important;">
+                                        <thead>
+                                            <tr>
+                                                <th style="text-align: center;"></th>
+                                                <th style="text-align: center;">ลำดับ</th>
+                                                <th style="text-align: center;">กิจกรรม</th>
+                                                <th style="text-align: center;">รายละเอียด</th>
+                                                <th style="text-align: center;">งบประมาณ (บาท)</th>
+                                                <th style="text-align: center;">สถานะเบิกจ่าย</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mt-1">
+                            <div class="col-sm-3">
                                 <div class="form-group">
                                     <label>วงเงินงบประมาณ</label>
+                                    <input class="form-control" id="SubAmount" disabled oninput="formatCurrencyData(this)">
+                                </div>
+                            </div>
+                            <div class="col-sm-3">
+                                <div class="form-group">
+                                    <label>วงเงินงบประมาณ(คงเหลือ)</label>
                                     <input class="form-control" id="RealAmount" disabled oninput="formatCurrencyData(this)">
                                 </div>
                             </div>
-                            <div class="col-sm-4">
+                            <div class="col-sm-3">
                                 <div class="form-group">
                                     <label>ยอดใช้จ่าย<span style="color: red;">*</span></label>
-                                    <input class="form-control check_number" id="Amount" oninput="formatCurrency(this)" onchange="getValue(this)">
+                                    <input class="form-control" id="Amount" oninput="formatCurrency(this)" disabled>
                                 </div>
                             </div>
-                            <div class="col-sm-4">
+                            <div class="col-sm-3">
                                 <div class="form-group">
                                     <label>คงเหลือ</label>
                                     <input class="form-control" id="TotalAmount" disabled oninput="formatCurrencyData(this)">
@@ -194,7 +221,6 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 <script>
-
 </script>
 <script type="text/javascript">
     function getValue(input) {
@@ -235,7 +261,7 @@
     }
     $(document).ready(function() {
 
-        $('#DivisionId').select2();
+        // $('#DivisionId').select2();
         $('#BudgetYear').select2();
         $('#AccountBudgetCenterSubId').select2();
         $('#Status').select2();
@@ -261,8 +287,38 @@
                 data: Data,
                 success: function(data) {
                     if (data.api_status == 1) {
+                        $('#SubAmount').val(data.api_data.SubAmount);
+
                         $('#RealAmount').val(data.api_data.TotalAmount);
                         formatCurrencyData(document.getElementById("RealAmount"));
+                        formatCurrencyData(document.getElementById("SubAmount"));
+                    } else {
+                        swal("ยกเลิก!", data.api_message, "error");
+                    }
+                }
+            });
+            $.ajax({
+                url: '/getAccountBudgetCenterSubDetailActivity',
+                method: "POST",
+                data: Data,
+                success: function(data) {
+                    if (data.api_status == 1) {
+                        $('#datatable tbody').empty();
+
+                        // Iterate over the api_data array and append rows to the table
+                        $.each(data.api_data, function(index, activity) {
+                            var statusText = activity.ActivityAmountStatus === 1 ? 'ยังไม่ได้เบิกจ่าย' : 'เบิกจ่ายเสร็จสิ้น';
+                            var inputTag = activity.ActivityAmountStatus === 1 ? '<td style="text-align: center;"><input type="checkbox" name="activityCheckbox" value="' + activity.id + '" data-value="' + (activity.ActivityAmount) + '"></td>' : '<td style="text-align: center;"><input type="checkbox" disabled name="activityCheckbox" value="' + activity.id + '" data-value="' + (activity.ActivityAmount) + '"></td>';
+                            var row = '<tr>' +
+                                inputTag +
+                                '<td style="text-align: center;">' + (index + 1) + '</td>' +
+                                '<td style="text-align: center;">' + activity.ActivityName + '</td>' +
+                                '<td style="text-align: center;">' + activity.ActivityDetail + '</td>' +
+                                '<td style="text-align: center;">' + parseFloat(activity.ActivityAmount).toFixed(2) + '</td>' +
+                                '<td style="text-align: center;">' + statusText + '</td>' +
+                                '</tr>';
+                            $('#datatable tbody').append(row);
+                        });
                     } else {
                         swal("ยกเลิก!", data.api_message, "error");
                     }
@@ -270,10 +326,52 @@
             });
         };
 
+        // สร้าง Array เพื่อเก็บค่า Value ของกิจกรรมที่เลือก
+        var activityValues = [];
+        let activityIds = [];
+        $(document).on('change', 'input[name="activityCheckbox"]', function() {
+            var activityId = $(this).val();
+            var activityValue = $(this).data('value');
+
+            if ($(this).is(':checked')) {
+                // เช็คว่าค่า Value นี้มีอยู่ใน Array แล้วหรือยัง
+                if (!activityValues.includes(activityValue)) {
+                    // เพิ่มค่า Value ลงใน Array เฉพาะเมื่อยังไม่มีอยู่ใน Array
+                    activityValues.push(activityValue);
+                }
+                if (!activityIds.includes(activityId)) {
+                    // เพิ่มค่า Value ลงใน Array เฉพาะเมื่อยังไม่มีอยู่ใน Array
+                    activityIds.push(activityId);
+                }
+            } else {
+                // ถ้า checkbox ถูกเลือกออกแล้ว ลบค่า Value ออกจาก Array (ถ้ามีอยู่ใน Array)
+                var index = activityValues.indexOf(activityValue);
+                if (index !== -1) {
+                    activityValues.splice(index, 1);
+                }
+                var indexId = activityIds.indexOf(activityValue);
+                if (indexId !== -1) {
+                    activityIds.splice(index, 1);
+                }
+            }
+
+            console.log(activityIds);
+            // หาผลรวมของค่าในอาร์เรย์ activityValues
+            var sum = activityValues.reduce(function(total, currentValue) {
+                return total + currentValue;
+            }, 0);
+            $('#Amount').val(sum);
+            formatCurrencyData(document.getElementById("Amount"));
+            getValue(document.getElementById("Amount"));
+        });
+
+
+
+
         $("form[name=addAccountExpenses]").submit(function(event) {
             event.preventDefault();
 
-            var DivisionId = $('#DivisionId').val();
+            // var DivisionId = $('#DivisionId').val();
             var AccountBudgetCenterSubId = $('#AccountBudgetCenterSubId').val();
             var BudgetYear = $('#BudgetYear').val();
             var ReceiverDate = $('#ReceiverDate').val();
@@ -285,16 +383,34 @@
             var TotalAmount = $('#TotalAmount').val();
             TotalAmount = TotalAmount.replace(/[^\d]/g, '');
             TotalAmount = parseInt(TotalAmount);
-
-           // Usage
+            var IdActivity = activityIds;
+            // Usage
             const fieldsToCheck = [
-                { value: DivisionId, message: 'กรุณาเลือกฝ่าย' },
-                { value: AccountBudgetCenterSubId, message: 'กรุณาเลือกแผนงาน/โครงการ' },
-                { value: BudgetYear, message: 'กรุณาเลือกปีงบประมาณ' },
-                { value: ReceiverDate, message: 'กรุณาเลือกวันที่ทำรายการ' },
-                { value: Detail, message: 'กรุณากรอกรายการเบิกจ่าย' },
-                { value: Amount, message: 'กรุณากรอกยอดใช้จ่าย' },
-                { value: Status, message: 'กรุณาเลือกสถานะ' }
+                // { value: DivisionId, message: 'กรุณาเลือกฝ่าย' },
+                {
+                    value: AccountBudgetCenterSubId,
+                    message: 'กรุณาเลือกแผนงาน/โครงการ'
+                },
+                {
+                    value: BudgetYear,
+                    message: 'กรุณาเลือกปีงบประมาณ'
+                },
+                {
+                    value: ReceiverDate,
+                    message: 'กรุณาเลือกวันที่ทำรายการ'
+                },
+                {
+                    value: Detail,
+                    message: 'กรุณากรอกรายการเบิกจ่าย'
+                },
+                {
+                    value: Amount,
+                    message: 'กรุณากรอกยอดใช้จ่าย'
+                },
+                {
+                    value: Status,
+                    message: 'กรุณาเลือกสถานะ'
+                }
             ];
 
             if (!validateForm(fieldsToCheck)) {
@@ -303,7 +419,7 @@
 
             var formData = new FormData();
 
-            formData.append('DivisionId', DivisionId);
+            // formData.append('DivisionId', DivisionId);
             formData.append('AccountBudgetCenterSubId', AccountBudgetCenterSubId);
             formData.append('BudgetYear', BudgetYear);
             formData.append('ReceiverDate', ReceiverDate);
@@ -311,7 +427,10 @@
             formData.append('Amount', Amount);
             formData.append('Status', Status);
             formData.append('TotalAmount', TotalAmount);
-
+            $.each(IdActivity, function(i, val) {
+                formData.append("IdActivity[]", JSON.stringify(val));
+            });
+            
             confirmAction(formData);
         });
 
@@ -340,9 +459,9 @@
                 contentType: false,
                 processData: false,
                 success: function(response) {
-                    if(response.api_message == 'Success'){
+                    if (response.api_message == 'Success') {
                         handleSuccess();
-                    }else{
+                    } else {
                         handleError();
                     }
                 },

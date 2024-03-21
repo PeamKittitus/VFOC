@@ -629,14 +629,37 @@
                         <div class="row mt-1">
                             <div class="col-sm-12">
                                 <div class="form-group">
-                                    <label>3.ตัวชี้วัดความสำเร็จ</label>
+                                    <label>3.เป้าหมาย</label>
                                 </div>
                             </div>
                         </div>
                         <div class="row mt-1">
                             <div class="col-sm-12">
                                 <div class="form-group">
-                                    <label>3.1ผลที่คาดว่าจะได้รับ</label>
+                                    <label>3.1เป้าหมายเชิงปริมาณ</label>
+                                    <textarea class="form-control" id="QuantitativeGoal"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mt-1">
+                            <div class="col-sm-12">
+                                <div class="form-group">
+                                    <label>3.2เป้าหมายเชิงคุณภาพ</label>
+                                    <textarea class="form-control" id="Qualitativegoal" disabled>{{$getAccountBudgetCenterSubDetailById->Qualitativegoal}}</textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mt-1">
+                            <div class="col-sm-12">
+                                <div class="form-group">
+                                    <label>4.ตัวชี้วัดความสำเร็จ</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mt-1">
+                            <div class="col-sm-12">
+                                <div class="form-group">
+                                    <label>4.1ผลที่คาดว่าจะได้รับ</label>
                                     <textarea class="form-control" id="ExpectedResults" disabled>{{$getAccountBudgetCenterSubDetailById->ExpectedResults}}</textarea>
                                 </div>
                             </div>
@@ -644,7 +667,7 @@
                         <div class="row mt-1">
                             <div class="col-sm-12">
                                 <div class="form-group">
-                                    <label>3.2ดัชนีชี้วัดความสำเร็จ</label>
+                                    <label>4.2ดัชนีชี้วัดความสำเร็จ</label>
                                     <textarea class="form-control" id="SuccessIndicators" disabled>{{$getAccountBudgetCenterSubDetailById->SuccessIndicators}}</textarea>
                                 </div>
                             </div>
@@ -652,7 +675,7 @@
                         <div class="row mt-1">
                             <div class="col-sm-12">
                                 <div class="form-group">
-                                    <label>3.3กลุ่มเป้าหมาย/ผู้ที่ได้รับผลประโยชน์</label>
+                                    <label>4.3กลุ่มเป้าหมาย/ผู้ที่ได้รับผลประโยชน์</label>
                                     <textarea class="form-control" id="Beneficiary" disabled>{{$getAccountBudgetCenterSubDetailById->Beneficiary}}</textarea>
                                 </div>
                             </div>
@@ -660,7 +683,7 @@
                         <div class="row mt-1">
                             <div class="col-sm-12">
                                 <div class="form-group">
-                                    <label>4.ขั้นตอน/ระยะเวลาดำเนินการ</label>
+                                    <label>5.ขั้นตอน/ระยะเวลาดำเนินการ</label>
                                 </div>
                             </div>
                         </div>
@@ -681,7 +704,7 @@
                         <div class="row mt-1">
                             <div class="col-sm-12">
                                 <div class="form-group">
-                                    <label>4.1แผนดำเนินการ/แผนงบประมาณ(โดยละเอียด)</label>
+                                    <label>5.1แผนดำเนินการ/แผนงบประมาณ(โดยละเอียด)</label>
                                     <textarea id="Detail"></textarea>
                                 </div>
                             </div>
@@ -689,7 +712,7 @@
                         <div class="row mt-1">
                             <div class="col-sm-12">
                                 <div class="form-group">
-                                    <label>4.2แผนการจัดซื้อจัดจ้าง (ถ้ามี)</label>
+                                    <label>5.2แผนการจัดซื้อจัดจ้าง (ถ้ามี)</label>
                                     <textarea class="form-control" id="Procurement" disabled>{{$getAccountBudgetCenterSubDetailById->Procurement}}</textarea>
                                 </div>
                             </div>
@@ -697,7 +720,7 @@
                         <div class="row mt-1">
                             <div class="col-sm-12">
                                 <div class="form-group">
-                                    <label>5.สถานที่ดำเนินโครงการ</label>
+                                    <label>6.สถานที่ดำเนินโครงการ</label>
                                     <textarea class="form-control" id="ProjectLocation" disabled>{{$getAccountBudgetCenterSubDetailById->ProjectLocation}}</textarea>
                                 </div>
                             </div>
@@ -705,7 +728,7 @@
                         <div class="row mt-1">
                             <div class="col-sm-12">
                                 <div class="form-group">
-                                    <label>6.งบประมาณ (บาท)</label>
+                                    <label>7.งบประมาณ (บาท)</label>
                                     <input type="text" class="form-control check_number" placeholder="งบประมาณ (บาท)" id="SubAmount" value="{{$getAccountBudgetCenterSubById->SubAmount}}" oninput="formatCurrency(this);" disabled>
                                 </div>
                             </div>
@@ -713,7 +736,7 @@
                         <div class="row mt-1">
                             <div class="col-sm-12">
                                 <div class="form-group">
-                                    <label>7.การติดตามและประเมินผล</label>
+                                    <label>8.การติดตามและประเมินผล</label>
                                     <textarea class="form-control" disabled id="Monitoring">{{$getAccountBudgetCenterSubDetailById->Monitoring}}</textarea>
                                 </div>
                             </div>
@@ -753,6 +776,7 @@
                                                 <th style="text-align: center;">กิจกรรม</th>
                                                 <th style="text-align: center;">รายละเอียด</th>
                                                 <th style="text-align: center;">งบประมาณ (บาท)</th>
+                                                <th style="text-align: center;">สถานะกิจกรรม</th>
                                                 <th style="text-align: center;">จัดการข้อมูล</th>
                                             </tr>
                                         </thead>
@@ -763,8 +787,19 @@
                                                 <td style="text-align:center">{{ $value->ActivityName}}</td>
                                                 <td style="text-align:center">{{ $value->ActivityDetail}}</td>
                                                 <td style="text-align:center">{{ number_format($value->ActivityAmount, 2)}}</td>
+                                                @if($value->ActivityStatus == 1)
+                                                <td style="text-align:center;color:orange">กำลังดำเนินการ</td>
+                                                @elseif($value->ActivityStatus == 2)
+                                                <td style="text-align:center;color:#449d44">สำเร็จ</td>
+                                                @else
+                                                <td></td>
+                                                @endif
+                                                </td>
                                                 <td style="text-align:center; display: flex; gap: 1%; justify-content: center;">
+                                                    @if($value->ActivityStatus == 1)
+                                                    <button type="button" data-id="{{$value->id}}" class="btn updateActivityBtn" style="color: white; background-color: #449d44">อัพเดทกิจกรรม</button>
                                                     <button type="button" data-id="{{$value->id}}" class="btn editActivityBtn" style="color: white; background-color: orange">แก้ไข</button>
+                                                    @endif
                                                 </td>
                                             </tr>
                                             @endforeach
@@ -817,6 +852,7 @@
                             <hr>
                             <input type="hidden" id="DetailSub" name="DetailSub" value="{{$getAccountBudgetCenterSubById->Detail}}">
                             <input type="hidden" value="{{$accSubId}}" id="accSubId">
+                            <input type="hidden" id="DetailQuantitativeGoal" name="DetailQuantitativeGoal" value="{{$getAccountBudgetCenterSubDetailById->QuantitativeGoal}}">
                         </div>
                         <div class="row mt-1">
                             <div class="col-12">
@@ -924,8 +960,10 @@
     }
     $(document).ready(function() {
 
-        let editor;
+        let editor,editorQuantitativeGoal;
         var DetailSub = $('#DetailSub').val();
+        var DetailQuantitativeGoal = $('#DetailQuantitativeGoal').val();
+
         ClassicEditor
             .create(document.querySelector('#Detail'), {
                 readOnly: true,
@@ -935,6 +973,21 @@
                 editor.enableReadOnlyMode("editor");
                 var DetailSub = $('#DetailSub').val();
                 const initialContent = DetailSub;
+                editor.setData(initialContent);
+            })
+            .catch(error => {
+                console.error(error);
+            });
+
+        ClassicEditor
+            .create(document.querySelector('#QuantitativeGoal'), {
+                readOnly: true,
+
+            })
+            .then(editor => {
+                editor.enableReadOnlyMode("editor");
+                var DetailQuantitativeGoal = $('#DetailQuantitativeGoal').val();
+                const initialContent = DetailQuantitativeGoal;
                 editor.setData(initialContent);
             })
             .catch(error => {
@@ -1195,6 +1248,57 @@
                     },
                     error: function(xhr, status, error) {
                         console.error(error);
+                    }
+                });
+            });
+        });
+
+        // เมื่อคลิกที่ปุ่ม "อัพเดทกิจกรรม"
+        var btnUpdateList = document.querySelectorAll('.updateActivityBtn');
+        btnUpdateList.forEach(function(btnUpdate) {
+            btnUpdate.addEventListener('click', function() {
+                var ActivityId = $(this).data('id');
+
+                // Swal เตือนก่อนทำรายการ
+                Swal.fire({
+                    title: 'คุณแน่ใจหรือไม่?',
+                    text: "คุณต้องการที่จะเปลี่ยนสถานะจาก กำลังดำเนินการ เป็น เสร็จสิ้นใช่หรือไม่?",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'ใช่, เสร็จสิ้น!',
+                    cancelButtonText: 'ยกเลิก'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        // ทำการอัปเดตกิจกรรม
+                        var formData = new FormData();
+                        formData.append("ActivityId", ActivityId);
+                        $.ajax({
+                            url: "/updateStatusAccountBudgetCenterActivity",
+                            method: "POST",
+                            data: formData,
+                            contentType: false,
+                            processData: false,
+                            success: function(response) {
+                                handleSuccess();
+                                if(response.api_message == 'Success'){
+                                    handleSuccess()
+                                }else{
+                                    Swal.fire({
+                                        title: "Error",
+                                        text: response.api_message,
+                                        icon: "error",
+                                        showCancelButton: false,
+                                        confirmButtonText: "OK",
+                                    });
+                                }
+                            },
+                            error: function(xhr, status, error) {
+                                // จัดการข้อผิดพลาดตามที่ต้องการ
+                                console.error(error);
+                            }
+                        });
                     }
                 });
             });

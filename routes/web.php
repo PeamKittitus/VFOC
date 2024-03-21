@@ -147,6 +147,8 @@ Route::post('/getAccountBudgetCenterActivityByIdApi', '\App\Http\Controllers\Adm
 Route::post('/editAccountBudgetCenterActivity', '\App\Http\Controllers\AdminAccountBudgetCenterController@editAccountBudgetCenterActivity');
 Route::post('/getAccountBudgetCenterSubDetail', '\App\Http\Controllers\AdminTransactionAccountBudgetCenterController@getAccountBudgetCenterSubDetail');
 Route::post('/addAccountExpensesApi', '\App\Http\Controllers\AdminTransactionAccountBudgetCenterController@addAccountExpensesApi');
+Route::post('/updateStatusAccountBudgetCenterActivity', '\App\Http\Controllers\AdminAccountBudgetCenterController@updateStatusAccountBudgetCenterActivity');
+Route::post('/getAccountBudgetCenterSubDetailActivity', '\App\Http\Controllers\AdminTransactionAccountBudgetCenterController@getAccountBudgetCenterSubDetailActivity');
 //========================================================================================== API
 
 //========================================================================================== Report

@@ -593,14 +593,37 @@
                         <div class="row mt-1">
                             <div class="col-sm-12">
                                 <div class="form-group">
-                                    <label>3.ตัวชี้วัดความสำเร็จ</label>
+                                    <label>3.เป้าหมาย</label>
                                 </div>
                             </div>
                         </div>
                         <div class="row mt-1">
                             <div class="col-sm-12">
                                 <div class="form-group">
-                                    <label>3.1ผลที่คาดว่าจะได้รับ</label>
+                                    <label>3.1เป้าหมายเชิงปริมาณ</label>
+                                    <textarea class="form-control" id="QuantitativeGoal"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mt-1">
+                            <div class="col-sm-12">
+                                <div class="form-group">
+                                    <label>3.2เป้าหมายเชิงคุณภาพ</label>
+                                    <textarea class="form-control" id="Qualitativegoal">{{$getAccountBudgetCenterSubDetailById->Qualitativegoal}}</textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mt-1">
+                            <div class="col-sm-12">
+                                <div class="form-group">
+                                    <label>4.ตัวชี้วัดความสำเร็จ</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mt-1">
+                            <div class="col-sm-12">
+                                <div class="form-group">
+                                    <label>4.1ผลที่คาดว่าจะได้รับ</label>
                                     <textarea class="form-control" id="ExpectedResults">{{$getAccountBudgetCenterSubDetailById->ExpectedResults}}</textarea>
                                 </div>
                             </div>
@@ -608,7 +631,7 @@
                         <div class="row mt-1">
                             <div class="col-sm-12">
                                 <div class="form-group">
-                                    <label>3.2ดัชนีชี้วัดความสำเร็จ</label>
+                                    <label>4.2ดัชนีชี้วัดความสำเร็จ</label>
                                     <textarea class="form-control" id="SuccessIndicators">{{$getAccountBudgetCenterSubDetailById->SuccessIndicators}}</textarea>
                                 </div>
                             </div>
@@ -616,7 +639,7 @@
                         <div class="row mt-1">
                             <div class="col-sm-12">
                                 <div class="form-group">
-                                    <label>3.3กลุ่มเป้าหมาย/ผู้ที่ได้รับผลประโยชน์</label>
+                                    <label>4.3กลุ่มเป้าหมาย/ผู้ที่ได้รับผลประโยชน์</label>
                                     <textarea class="form-control" id="Beneficiary">{{$getAccountBudgetCenterSubDetailById->Beneficiary}}</textarea>
                                 </div>
                             </div>
@@ -624,7 +647,7 @@
                         <div class="row mt-1">
                             <div class="col-sm-12">
                                 <div class="form-group">
-                                    <label>4.ขั้นตอน/ระยะเวลาดำเนินการ</label>
+                                    <label>5.ขั้นตอน/ระยะเวลาดำเนินการ</label>
                                 </div>
                             </div>
                         </div>
@@ -645,7 +668,7 @@
                         <div class="row mt-1">
                             <div class="col-sm-12">
                                 <div class="form-group">
-                                    <label>4.1แผนดำเนินการ/แผนงบประมาณ(โดยละเอียด)<span style="color: red;">*</span></label>
+                                    <label>5.1แผนดำเนินการ/แผนงบประมาณ(โดยละเอียด)<span style="color: red;">*</span></label>
                                     <textarea id="Detail"></textarea>
                                 </div>
                             </div>
@@ -653,7 +676,7 @@
                         <div class="row mt-1">
                             <div class="col-sm-12">
                                 <div class="form-group">
-                                    <label>4.2แผนการจัดซื้อจัดจ้าง (ถ้ามี)</label>
+                                    <label>5.2แผนการจัดซื้อจัดจ้าง (ถ้ามี)</label>
                                     <textarea class="form-control" id="Procurement">{{$getAccountBudgetCenterSubDetailById->Procurement}}</textarea>
                                 </div>
                             </div>
@@ -661,7 +684,7 @@
                         <div class="row mt-1">
                             <div class="col-sm-12">
                                 <div class="form-group">
-                                    <label>5.สถานที่ดำเนินโครงการ</label>
+                                    <label>6.สถานที่ดำเนินโครงการ</label>
                                     <textarea class="form-control" id="ProjectLocation">{{$getAccountBudgetCenterSubDetailById->ProjectLocation}}</textarea>
                                 </div>
                             </div>
@@ -669,7 +692,7 @@
                         <div class="row mt-1">
                             <div class="col-sm-12">
                                 <div class="form-group">
-                                    <label>6.งบประมาณ (บาท)<span style="color: red;">*</span></label>
+                                    <label>7.งบประมาณ (บาท)<span style="color: red;">*</span></label>
                                     <input type="text" class="form-control check_number" placeholder="งบประมาณ (บาท)" id="SubAmount" value="{{$getAccountBudgetCenterSubById->SubAmount}}" oninput="formatCurrency(this);">
                                 </div>
                             </div>
@@ -677,7 +700,7 @@
                         <div class="row mt-1">
                             <div class="col-sm-12">
                                 <div class="form-group">
-                                    <label>7.การติดตามและประเมินผล</label>
+                                    <label>8.การติดตามและประเมินผล</label>
                                     <textarea class="form-control" id="Monitoring">{{$getAccountBudgetCenterSubDetailById->Monitoring}}</textarea>
                                 </div>
                             </div>
@@ -709,6 +732,7 @@
                         <input type="hidden" id="DetailSub" name="DetailSub" value="{{$getAccountBudgetCenterSubById->Detail}}">
                         <input type="hidden" id="AccId" name="AccId" value="{{$getAccountBudgetCenterSubById->AccBudgetCenterId}}">
                         <input type="hidden" id="AccSubId" name="AccSubId" value="{{$getAccountBudgetCenterSubById->id}}">
+                        <input type="hidden" id="DetailQuantitativeGoal" name="DetailQuantitativeGoal" value="{{$getAccountBudgetCenterSubDetailById->QuantitativeGoal}}">
                         <div class="row mt-1">
                             <div class="col-12">
                                 <div class="form-group" style="display: flex;justify-content:end;gap:1%">
@@ -833,8 +857,10 @@
         $('#StrategyId').select2();
         $('#ProjectOriginId').select2();
 
-        let editor;
+        let editor,editorQuantitativeGoal;
         var DetailSub = $('#DetailSub').val();
+        var DetailQuantitativeGoal = $('#DetailQuantitativeGoal').val();
+        
         ClassicEditor
             .create(document.querySelector('#Detail'))
             .then(createdEditor => {
@@ -846,6 +872,16 @@
                 console.error(error);
             });
 
+        ClassicEditor
+            .create(document.querySelector('#QuantitativeGoal'))
+            .then(newEditor2 => {
+                editorQuantitativeGoal = newEditor2;
+                const initialContentGoal = DetailQuantitativeGoal;
+                editorQuantitativeGoal.setData(initialContentGoal);
+            })
+            .catch(error => {
+                console.error(error);
+            });
         $("form[name=editAccountBudgetSubCenter]").submit(function(event) {
             event.preventDefault();
             var AccId = $('#AccId').val();
@@ -1020,6 +1056,11 @@
                 showError('วันที่สิ้นสุดต้องไม่เป็นวันที่ก่อนวันที่เริ่มต้น');
                 return;
             }
+
+            var editorDataQuantitative = editorQuantitativeGoal.getData();
+            var QuantitativeGoal = editorDataQuantitative;
+            var Qualitativegoal =  $('#Qualitativegoal').val();
+
             var formData = new FormData();
 
             formData.append('AccId', AccId);
@@ -1074,6 +1115,8 @@
             formData.append('ProjectLocation', ProjectLocation);
             formData.append('Monitoring', Monitoring);
 
+            formData.append('Qualitativegoal', Qualitativegoal);
+            formData.append('QuantitativeGoal', QuantitativeGoal);
             confirmAction(formData);
         });
 

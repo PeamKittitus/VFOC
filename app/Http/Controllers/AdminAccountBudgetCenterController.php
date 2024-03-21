@@ -631,6 +631,7 @@ class AdminAccountBudgetCenterController extends \crocodicstudio\crudbooster\con
 				'accountBudgetCenterActivity.ActivityAmount',
 				'accountBudgetCenterActivity.ActivityStartDate',
 				'accountBudgetCenterActivity.ActivityEndDate',
+				'accountBudgetCenterActivity.ActivityStatus',
 			)
 			->where('accountBudgetCenterActivity.IsActive', 1)
 			->where('accountBudgetCenterActivity.AccBudgetCenterId', $id)
@@ -661,6 +662,7 @@ class AdminAccountBudgetCenterController extends \crocodicstudio\crudbooster\con
 				'accountBudgetCenterActivity.ActivityAmount',
 				'accountBudgetCenterActivity.ActivityStartDate',
 				'accountBudgetCenterActivity.ActivityEndDate',
+				'accountBudgetCenterActivity.ActivityStatus',
 			)
 			->where('accountBudgetCenterActivity.IsActive', 1)
 			->where('accountBudgetCenterActivity.id', $ActivityId)
@@ -822,6 +824,9 @@ class AdminAccountBudgetCenterController extends \crocodicstudio\crudbooster\con
 		$ProjectLocation = $request->input('ProjectLocation');
 		$Monitoring = $request->input('Monitoring');
 
+		$Qualitativegoal = $request->input('Qualitativegoal');
+		$QuantitativeGoal = $request->input('QuantitativeGoal');
+
 		// Get data from database
 		$DataAccBudgetCenter = DB::table('accountBudgetCenter')->where('id', $AccId)->first();
 		$AccBudgetCenterAmount = $DataAccBudgetCenter->Amount;
@@ -932,6 +937,8 @@ class AdminAccountBudgetCenterController extends \crocodicstudio\crudbooster\con
 				'Procurement' => $Procurement,
 				'ProjectLocation' => $ProjectLocation,
 				'Monitoring' => $Monitoring,
+				'Qualitativegoal' => $Qualitativegoal,
+				'QuantitativeGoal' => $QuantitativeGoal,
 				'CreatedAt' => now(),
 				'CreatedBy' => CRUDBooster::myId(),
 				'IsActive' => 1,
@@ -1009,7 +1016,8 @@ class AdminAccountBudgetCenterController extends \crocodicstudio\crudbooster\con
 		$ProjectLocation = $request->input('ProjectLocation');
 		$Monitoring = $request->input('Monitoring');
 
-
+		$Qualitativegoal = $request->input('Qualitativegoal');
+		$QuantitativeGoal = $request->input('QuantitativeGoal');
 		// Get data from database
 		$AccBudgetCenterAmount = DB::table('accountBudgetCenter')->where('id', $AccId)->value('Amount');
 
@@ -1080,6 +1088,8 @@ class AdminAccountBudgetCenterController extends \crocodicstudio\crudbooster\con
 				'Procurement' => $Procurement,
 				'ProjectLocation' => $ProjectLocation,
 				'Monitoring' => $Monitoring,
+				'Qualitativegoal' => $Qualitativegoal,
+				'QuantitativeGoal' => $QuantitativeGoal,
 				'UpdatedAt' => now(),
 				'UpdatedBy' => CRUDBooster::myId(),
 			]);
@@ -1134,6 +1144,8 @@ class AdminAccountBudgetCenterController extends \crocodicstudio\crudbooster\con
 				'ActivityAmount' => $ActivityAmount,
 				'ActivityStartDate' => $ActivityStartDate,
 				'ActivityEndDate' => $ActivityEndDate,
+				'ActivityAmountStatus' => 1,
+				'ActivityStatus' => 1,
 				'IsActive' => 1,
 				'UserId'  => CRUDBooster::myId(),
 				'CreatedAt' => now(),
@@ -1223,4 +1235,34 @@ class AdminAccountBudgetCenterController extends \crocodicstudio\crudbooster\con
 				->header("Access-Control-Allow-Methods", config('cors.allowed_methods'));
 		}
 	}
+	function updateStatusAccountBudgetCenterActivity(Request $request)
+	{
+		$ActivityId = $request['ActivityId'];
+		// Update the database
+		DB::beginTransaction();
+		try {
+			$dataUpdate = [
+				'ActivityStatus' => 2,
+				'UpdatedAt' => now(),
+				'UpdatedBy' => CRUDBooster::myId()
+			];
+			$updatedRows = DB::table('accountBudgetCenterActivity')->where('id', $ActivityId)->update($dataUpdate);
+
+			if ($updatedRows) {
+				DB::commit();
+				return response()->json(['api_status' => 1, 'api_message' => 'Success', 'id' => $updatedRows], 200)
+					->header("Access-Control-Allow-Origin", config('cors.allowed_origins'))
+					->header("Access-Control-Allow-Methods", config('cors.allowed_methods'));
+			} else {
+				DB::rollback();
+				return response()->json(['api_status' => 0, 'api_message' => 'กรุณาทำรายการใหม่อีกครั้ง'], 200);
+			}
+		} catch (\Exception $e) {
+			DB::rollback();
+			return response()->json(['api_status' => 0, 'api_message' => 'กรุณาทำรายการใหม่อีกครั้ง', 'api_data' => $e], 200)
+				->header("Access-Control-Allow-Origin", config('cors.allowed_origins'))
+				->header("Access-Control-Allow-Methods", config('cors.allowed_methods'));
+		}
+	}
+	
 }
