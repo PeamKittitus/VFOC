@@ -40,7 +40,7 @@
         .dataTables_wrapper {
             position: relative;
             clear: both;
-            margin-top: 25px !important;
+            margin-top: 10px !important;
         }
 
         .breadcrumb {
@@ -171,12 +171,43 @@
                         <h2 class="ui-sortable-handle"><i class="subheader-icon fal fa-money-bill"></i> แผนงานโครงการ</h2>
                     </div>
                     <div class="row" style="margin-top:10px">
-                        <div class="col-sm-12">
+                        <div class="col-sm-12" style="display: flex;">
                             <div class="form-group">
                                 <a href="/addAccountBudgetCenter">
                                     <button id="addActivityBtn" type="button" class="btn" style="color: white ; background-color:#1dc9b7">สร้างใหม่</button>
                                 </a>
                             </div>
+                        </div>
+                    </div>
+                    <div class="row" style="margin-top:10px">
+                        <div class="col-sm-4">
+                            <div class="form-group">
+                                <select class="form-control" id="BudgetYear">
+                                    <option value="0" disabled selected>----เลือกปีงบประมาณ----</option>
+                                    <option value="2569">2569</option>
+                                    <option value="2568">2568</option>
+                                    <option value="2567">2567</option>
+                                    <option value="2566">2566</option>
+                                    <option value="2565">2565</option>
+                                    <option value="2564">2564</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <div class="form-group">
+                                <select class="form-control" id="DivisionId">
+                                    <option value="0" disabled selected>----เลือกฝ่าย----</option>
+                                    <?php foreach ($getDivision as $division) : ?>
+                                        <option value="<?= $division->id ?>">
+                                            <?= $division->name . ' (' . $division->short_name . ')' ?>
+                                        </option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-sm-4" style="display:flex;justify-content:end;gap:1%">
+                            <button id="btnSearch" class="btn btn-success btnSearch">ค้นหา</button>
+                            <button style="display: none;" id="btnExport" class="btn btn-warning btnExport">ส่งออกข้อมูล
                         </div>
                     </div>
                     <div class="panel-container show" role="content">
@@ -230,23 +261,23 @@
                                                         <td style="text-align: center"> {{ $centerSub->AccName }}</td>
                                                         <td style="text-align: center"> {{ $centerSub->DivisionName }}</td>
                                                         <?php
-                                                            $StartAt = date('d F Y', strtotime($centerSub->AccStartDate));
-                                                            $StartAtThai = str_replace(
-                                                                array('January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'),
-                                                                array('มกราคม', 'กุมภาพันธ์', 'มีนาคม', 'เมษายน', 'พฤษภาคม', 'มิถุนายน', 'กรกฎาคม', 'สิงหาคม', 'กันยายน', 'ตุลาคม', 'พฤศจิกายน', 'ธันวาคม'),
-                                                                $StartAt
-                                                            );
-                                                            $yearThai = intval(date('Y', strtotime($centerSub->AccStartDate))) + 543; // แปลงปีเป็น พ.ศ.
-                                                            $StartAtThai = str_replace(date('Y', strtotime($centerSub->AccStartDate)), $yearThai, $StartAtThai);
+                                                        $StartAt = date('d F Y', strtotime($centerSub->AccStartDate));
+                                                        $StartAtThai = str_replace(
+                                                            array('January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'),
+                                                            array('มกราคม', 'กุมภาพันธ์', 'มีนาคม', 'เมษายน', 'พฤษภาคม', 'มิถุนายน', 'กรกฎาคม', 'สิงหาคม', 'กันยายน', 'ตุลาคม', 'พฤศจิกายน', 'ธันวาคม'),
+                                                            $StartAt
+                                                        );
+                                                        $yearThai = intval(date('Y', strtotime($centerSub->AccStartDate))) + 543; // แปลงปีเป็น พ.ศ.
+                                                        $StartAtThai = str_replace(date('Y', strtotime($centerSub->AccStartDate)), $yearThai, $StartAtThai);
 
-                                                            $EndAt = date('d F Y', strtotime($centerSub->AccEndDate));
-                                                            $EndAtThai = str_replace(
-                                                                array('January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'),
-                                                                array('มกราคม', 'กุมภาพันธ์', 'มีนาคม', 'เมษายน', 'พฤษภาคม', 'มิถุนายน', 'กรกฎาคม', 'สิงหาคม', 'กันยายน', 'ตุลาคม', 'พฤศจิกายน', 'ธันวาคม'),
-                                                                $EndAt
-                                                            );
-                                                            $yearThai = intval(date('Y', strtotime($centerSub->AccEndDate))) + 543; // แปลงปีเป็น พ.ศ.
-                                                            $EndAtThai = str_replace(date('Y', strtotime($centerSub->AccEndDate)), $yearThai, $EndAtThai);
+                                                        $EndAt = date('d F Y', strtotime($centerSub->AccEndDate));
+                                                        $EndAtThai = str_replace(
+                                                            array('January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'),
+                                                            array('มกราคม', 'กุมภาพันธ์', 'มีนาคม', 'เมษายน', 'พฤษภาคม', 'มิถุนายน', 'กรกฎาคม', 'สิงหาคม', 'กันยายน', 'ตุลาคม', 'พฤศจิกายน', 'ธันวาคม'),
+                                                            $EndAt
+                                                        );
+                                                        $yearThai = intval(date('Y', strtotime($centerSub->AccEndDate))) + 543; // แปลงปีเป็น พ.ศ.
+                                                        $EndAtThai = str_replace(date('Y', strtotime($centerSub->AccEndDate)), $yearThai, $EndAtThai);
                                                         ?>
                                                         <td style="text-align:center">{{$StartAtThai}} - {{$EndAtThai}}</td>
                                                         <td class="text-right" style="text-align: center">-</td>
@@ -290,6 +321,268 @@
 <script>
     jQuery(document).ready(function($) {
         $('.select2').select2();
+        $('#BudgetYear').select2();
+        $('#DivisionId').select2();
+
+        //Search
+        $('#btnSearch').on('click', function() {
+            $('#btnExport').show();
+            var BudgetYear = $("#BudgetYear").val();
+            var DivisionId = $("#DivisionId").val();
+
+            var formData = new FormData();
+            formData.append('BudgetYear', BudgetYear);
+            formData.append('DivisionId', DivisionId);
+
+            $.ajax({
+                url: '/getSearchAccountBudgetCenter',
+                method: 'POST',
+                data: formData,
+                contentType: false,
+                processData: false,
+                success: function(response) {
+                    var responseDetail = response.api_detail;
+                    var getAccountBudgetCenter = response.getAccountBudgetCenter;
+                    var getAccountBudgetCenterSub = response.getAccountBudgetCenterSub;
+                    updateTable(responseDetail, getAccountBudgetCenter, getAccountBudgetCenterSub);
+                },
+                error: function(xhr, status, error) {
+                    Swal.fire({
+                        title: "Error",
+                        text: "An error occurred while saving the form data.",
+                        icon: "error",
+                        showCancelButton: false,
+                        confirmButtonText: "OK",
+                    });
+                }
+            });
+        });
+
+        function updateTable(responseDetail, getAccountBudgetCenter, getAccountBudgetCenterSub) {
+
+            // console.log("responseDetail>>", responseDetail);
+            // console.log("getAccountBudgetCenter>>", getAccountBudgetCenter);
+            // console.log("getAccountBudgetCenterSub>>", getAccountBudgetCenterSub);
+
+            var tableBody = $('#datatable tbody');
+            tableBody.empty();
+
+            if (responseDetail == 'OnlyBudget') {
+                if (getAccountBudgetCenter != "") {
+                    var accountProjectNumber = 1;
+                    getAccountBudgetCenter.forEach(function(center) {
+                        var Amount = parseFloat(center.Amount).toLocaleString('en-US', {
+                            minimumFractionDigits: 2,
+                            maximumFractionDigits: 2
+                        });
+                        tableBody.append(`
+                            <tr>
+                                <td style="text-align:center">${accountProjectNumber}</td>
+                                <td style="text-align:center">${center.AccCode}</td>
+                                <td style="text-align:center">${center.AccName}</td>
+                                <td style="text-align:center">-</td>
+                                <td style="text-align:center">-</td>
+                                <td style="text-align:center">${Amount}</td>
+                                <td style="text-align:center">-</td>
+                                <td style="text-align:center; display: flex; gap: 1%; justify-content: center;">
+                                    <a href="/addAccountBudgetSubCenter/${center.id}" data-id="${center.id}" class="btn addAccountBudgetSubCenterBtn" style="color: white; background-color: #449d44">เพิ่มโครงการย่อย</a>
+                                    <a href="/editAccountBudgetCenter/${center.id}" class="btn" style="color: white; background-color: orange">แก้ไข</a>
+                                    <button data-id="${center.id}" class="btn deleteAccountCenter" style="color: white; background-color: red">ลบ</button>
+                                </td>
+                            </tr>
+                        `);
+                        var accountProjectNumberSub = 1;
+                        getAccountBudgetCenterSub.forEach(function(centersub) {
+                            var SubAmount = parseFloat(centersub.SubAmount).toLocaleString('en-US', {
+                                minimumFractionDigits: 2,
+                                maximumFractionDigits: 2
+                            });
+                            // ประกาศตัวแปร
+                            var startDate = centersub.AccStartDate;
+                            var endDate = centersub.AccEndDate;
+
+                            // แปลงรูปแบบวันที่
+                            var formattedStartDate = new Date(startDate).toLocaleDateString('th-TH', {
+                                year: 'numeric',
+                                month: 'long',
+                                day: 'numeric'
+                            });
+                            var formattedEndDate = new Date(endDate).toLocaleDateString('th-TH', {
+                                year: 'numeric',
+                                month: 'long',
+                                day: 'numeric'
+                            });
+                            if (centersub.AccBudgetCenterId == center.id) {
+                                tableBody.append(`
+                                    <tr>
+                                        <td style="text-align: center">${accountProjectNumber}.${accountProjectNumberSub}</td>
+                                        <td style="text-align: center">${centersub.AccCode}</td>
+                                        <td style="text-align: center">${centersub.AccName}</td>
+                                        <td style="text-align: center">${centersub.DivisionName}</td>
+                                        <td style="text-align: center">${formattedStartDate} - ${formattedEndDate}</td>
+                                        <td style="text-align: center">-</td>
+                                        <td style="text-align: center">${SubAmount}</td>
+                                        <td style="text-align:center; display: flex; gap: 1%; justify-content: center;">
+                                            <a href="/viewAccountBudgetCenterSub/${centersub.id}" class="btn" style="color: white; background-color: #09d7f7">ดูข้อมูล</a>
+                                            <a href="/addAccountBudgetCenterActivity/${centersub.id}" class="btn" style="color: white; background-color: #449d44">อัพเดทกิจกรรม</a>
+                                            <a href="/editAccountBudgetCenterSub/${centersub.id}" class="btn" style="color: white; background-color: orange">แก้ไข</a>
+                                            <button data-id="${centersub.id}" class="btn deleteAccountCenterSub" style="color: white; background-color: red">ลบ</button>
+                                        </td>
+                                    </tr>
+                                `);
+                                accountProjectNumberSub++;
+                            }
+                        });
+                        accountProjectNumber++;
+                    });
+                }
+            } else if (responseDetail == 'OnlyDevision') {
+                if (getAccountBudgetCenter != "") {
+                    var accountProjectNumber = 1;
+                    getAccountBudgetCenter.forEach(function(center) {
+                        var Amount = parseFloat(center.Amount).toLocaleString('en-US', {
+                            minimumFractionDigits: 2,
+                            maximumFractionDigits: 2
+                        });
+
+                        // Check if the center id matches any id in getAccountBudgetCenterSub.AccBudgetCenterId
+                        if (getAccountBudgetCenterSub.some(sub => sub.AccBudgetCenterId === center.id)) {
+                            tableBody.append(`
+                                <tr>
+                                    <td style="text-align:center">${accountProjectNumber}</td>
+                                    <td style="text-align:center">${center.AccCode}</td>
+                                    <td style="text-align:center">${center.AccName}</td>
+                                    <td style="text-align:center">-</td>
+                                    <td style="text-align:center">-</td>
+                                    <td style="text-align:center">${Amount}</td>
+                                    <td style="text-align:center">-</td>
+                                    <td style="text-align:center; display: flex; gap: 1%; justify-content: center;">
+                                        <a href="/addAccountBudgetSubCenter/${center.id}" data-id="${center.id}" class="btn addAccountBudgetSubCenterBtn" style="color: white; background-color: #449d44">เพิ่มโครงการย่อย</a>
+                                        <a href="/editAccountBudgetCenter/${center.id}" class="btn" style="color: white; background-color: orange">แก้ไข</a>
+                                        <button data-id="${center.id}" class="btn deleteAccountCenter" style="color: white; background-color: red">ลบ</button>
+                                    </td>
+                                </tr>
+                            `);
+                        }
+
+                        var accountProjectNumberSub = 1;
+                        getAccountBudgetCenterSub.forEach(function(centersub) {
+                            var SubAmount = parseFloat(centersub.SubAmount).toLocaleString('en-US', {
+                                minimumFractionDigits: 2,
+                                maximumFractionDigits: 2
+                            });
+                            var startDate = centersub.AccStartDate;
+                            var endDate = centersub.AccEndDate;
+
+                            var formattedStartDate = new Date(startDate).toLocaleDateString('th-TH', {
+                                year: 'numeric',
+                                month: 'long',
+                                day: 'numeric'
+                            });
+                            var formattedEndDate = new Date(endDate).toLocaleDateString('th-TH', {
+                                year: 'numeric',
+                                month: 'long',
+                                day: 'numeric'
+                            });
+                            if (centersub.AccBudgetCenterId == center.id) {
+                                tableBody.append(`
+                                    <tr>
+                                        <td style="text-align: center">${accountProjectNumber}.${accountProjectNumberSub}</td>
+                                        <td style="text-align: center">${centersub.AccCode}</td>
+                                        <td style="text-align: center">${centersub.AccName}</td>
+                                        <td style="text-align: center">${centersub.DivisionName}</td>
+                                        <td style="text-align: center">${formattedStartDate} - ${formattedEndDate}</td>
+                                        <td style="text-align: center">-</td>
+                                        <td style="text-align: center">${SubAmount}</td>
+                                        <td style="text-align:center; display: flex; gap: 1%; justify-content: center;">
+                                            <a href="/viewAccountBudgetCenterSub/${centersub.id}" class="btn" style="color: white; background-color: #09d7f7">ดูข้อมูล</a>
+                                            <a href="/addAccountBudgetCenterActivity/${centersub.id}" class="btn" style="color: white; background-color: #449d44">อัพเดทกิจกรรม</a>
+                                            <a href="/editAccountBudgetCenterSub/${centersub.id}" class="btn" style="color: white; background-color: orange">แก้ไข</a>
+                                            <button data-id="${centersub.id}" class="btn deleteAccountCenterSub" style="color: white; background-color: red">ลบ</button>
+                                        </td>
+                                    </tr>
+                                `);
+                                accountProjectNumberSub++;
+                            }
+                        });
+                        accountProjectNumber++;
+                    });
+                }
+            } else {
+                if (getAccountBudgetCenter != "") {
+                    var accountProjectNumber = 1;
+                    getAccountBudgetCenter.forEach(function(center) {
+                        var Amount = parseFloat(center.Amount).toLocaleString('en-US', {
+                            minimumFractionDigits: 2,
+                            maximumFractionDigits: 2
+                        });
+
+                        // Check if the center id matches any id in getAccountBudgetCenterSub.AccBudgetCenterId
+                        if (getAccountBudgetCenterSub.some(sub => sub.AccBudgetCenterId === center.id)) {
+                            tableBody.append(`
+                                <tr>
+                                    <td style="text-align:center">${accountProjectNumber}</td>
+                                    <td style="text-align:center">${center.AccCode}</td>
+                                    <td style="text-align:center">${center.AccName}</td>
+                                    <td style="text-align:center">-</td>
+                                    <td style="text-align:center">-</td>
+                                    <td style="text-align:center">${Amount}</td>
+                                    <td style="text-align:center">-</td>
+                                    <td style="text-align:center; display: flex; gap: 1%; justify-content: center;">
+                                        <a href="/addAccountBudgetSubCenter/${center.id}" data-id="${center.id}" class="btn addAccountBudgetSubCenterBtn" style="color: white; background-color: #449d44">เพิ่มโครงการย่อย</a>
+                                        <a href="/editAccountBudgetCenter/${center.id}" class="btn" style="color: white; background-color: orange">แก้ไข</a>
+                                        <button data-id="${center.id}" class="btn deleteAccountCenter" style="color: white; background-color: red">ลบ</button>
+                                    </td>
+                                </tr>
+                            `);
+                        }
+
+                        var accountProjectNumberSub = 1;
+                        getAccountBudgetCenterSub.forEach(function(centersub) {
+                            var SubAmount = parseFloat(centersub.SubAmount).toLocaleString('en-US', {
+                                minimumFractionDigits: 2,
+                                maximumFractionDigits: 2
+                            });
+                            var startDate = centersub.AccStartDate;
+                            var endDate = centersub.AccEndDate;
+
+                            var formattedStartDate = new Date(startDate).toLocaleDateString('th-TH', {
+                                year: 'numeric',
+                                month: 'long',
+                                day: 'numeric'
+                            });
+                            var formattedEndDate = new Date(endDate).toLocaleDateString('th-TH', {
+                                year: 'numeric',
+                                month: 'long',
+                                day: 'numeric'
+                            });
+                            if (centersub.AccBudgetCenterId == center.id) {
+                                tableBody.append(`
+                                    <tr>
+                                        <td style="text-align: center">${accountProjectNumber}.${accountProjectNumberSub}</td>
+                                        <td style="text-align: center">${centersub.AccCode}</td>
+                                        <td style="text-align: center">${centersub.AccName}</td>
+                                        <td style="text-align: center">${centersub.DivisionName}</td>
+                                        <td style="text-align: center">${formattedStartDate} - ${formattedEndDate}</td>
+                                        <td style="text-align: center">-</td>
+                                        <td style="text-align: center">${SubAmount}</td>
+                                        <td style="text-align:center; display: flex; gap: 1%; justify-content: center;">
+                                            <a href="/viewAccountBudgetCenterSub/${centersub.id}" class="btn" style="color: white; background-color: #09d7f7">ดูข้อมูล</a>
+                                            <a href="/addAccountBudgetCenterActivity/${centersub.id}" class="btn" style="color: white; background-color: #449d44">อัพเดทกิจกรรม</a>
+                                            <a href="/editAccountBudgetCenterSub/${centersub.id}" class="btn" style="color: white; background-color: orange">แก้ไข</a>
+                                            <button data-id="${centersub.id}" class="btn deleteAccountCenterSub" style="color: white; background-color: red">ลบ</button>
+                                        </td>
+                                    </tr>
+                                `);
+                                accountProjectNumberSub++;
+                            }
+                        });
+                        accountProjectNumber++;
+                    });
+                }
+            }
+        }
+
         $.extend(true, $.fn.dataTable.defaults, {
             "language": {
                 "sProcessing": "กำลังดำเนินการ...",
@@ -309,9 +602,9 @@
                 }
             }
         });
+
         $('#datatable').DataTable();
-        
-        
+
         $('.deleteAccountCenter').on('click', function() {
             var AccId = $(this).data('id');
             var formData = new FormData();
@@ -341,7 +634,7 @@
                                     confirmButtonText: "OK",
                                 }).then((result) => {
                                     if (result.isConfirmed) {
-                                        window.location.href ="/admin/accountBudgetCenter";
+                                        window.location.href = "/admin/accountBudgetCenter";
                                     }
                                 });
                             } else {
@@ -392,7 +685,7 @@
                                     confirmButtonText: "OK",
                                 }).then((result) => {
                                     if (result.isConfirmed) {
-                                        window.location.href ="/admin/accountBudgetCenter";
+                                        window.location.href = "/admin/accountBudgetCenter";
                                     }
                                 });
                             } else {

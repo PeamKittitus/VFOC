@@ -345,6 +345,10 @@ class AdminAccountBudgetCenterController extends \crocodicstudio\crudbooster\con
 	{
 		$getAccountBudgetCenter = $this->getAccountBudgetCenter();
 		$getAccountBudgetCenterSub = $this->getAccountBudgetCenterSub();
+		$generateYearOptions = (new FunctionController)->generateYearOptions();
+		$getDivision = (new FunctionController)->getDivision();
+		$data['getDivision'] = $getDivision;
+		$data['generateYearOptions'] = $generateYearOptions;
 		$data['getAccountBudgetCenter'] = $getAccountBudgetCenter;
 		$data['getAccountBudgetCenterSub'] = $getAccountBudgetCenterSub;
 		return view('accountCenter/index', $data);
@@ -363,7 +367,7 @@ class AdminAccountBudgetCenterController extends \crocodicstudio\crudbooster\con
 		$data['getAccountBudgetCenterById'] = $getAccountBudgetCenterById;
 		return view('accountCenter/editAccountBudgetCenter', $data);
 	}
-	
+
 	public function addAccountBudgetSubCenter($id)
 	{
 		$generateYearOptions = (new FunctionController)->generateYearOptions();
@@ -376,7 +380,7 @@ class AdminAccountBudgetCenterController extends \crocodicstudio\crudbooster\con
 		$data['getNationalStrategy'] = $getNationalStrategy;
 		return view('accountCenter/accountSubCenter/addAccountSubBudgetCenter', $data);
 	}
-	
+
 	public function editAccountBudgetCenterSub($id)
 	{
 		$getAccountBudgetCenterSubById = $this->getAccountBudgetCenterSubById($id);
@@ -393,7 +397,7 @@ class AdminAccountBudgetCenterController extends \crocodicstudio\crudbooster\con
 		$data['getAccountBudgetCenterSubDetailById'] = $getAccountBudgetCenterSubDetailById;
 		return view('accountCenter/accountSubCenter/editAccountBudgetCenterSub', $data);
 	}
-	
+
 	public function addAccountBudgetCenterActivity($id)
 	{
 		$getAccountBudgetCenterSubById = $this->getAccountBudgetCenterSubById($id);
@@ -413,7 +417,7 @@ class AdminAccountBudgetCenterController extends \crocodicstudio\crudbooster\con
 		$data['getNationalStrategy'] = $getNationalStrategy;
 		return view('accountCenter/accountSubCenter/addAccountBudgetCenterActivity', $data);
 	}
-	
+
 	public function viewAccountBudgetCenterSub($id)
 	{
 		$getAccountBudgetCenterSubById = $this->getAccountBudgetCenterSubById($id);
@@ -432,8 +436,8 @@ class AdminAccountBudgetCenterController extends \crocodicstudio\crudbooster\con
 		$data['getNationalStrategy'] = $getNationalStrategy;
 		return view('accountCenter/accountSubCenter/viewAccountBudgetCenterSub', $data);
 	}
-	
-	
+
+
 	function addAccountBudgetCenterApi(Request $request)
 	{
 		$data = [];
@@ -667,8 +671,8 @@ class AdminAccountBudgetCenterController extends \crocodicstudio\crudbooster\con
 			->where('accountBudgetCenterActivity.IsActive', 1)
 			->where('accountBudgetCenterActivity.id', $ActivityId)
 			->first();
-			response()->json($getAccountBudgetCenterActivityById, 200)->header("Access-Control-Allow-Origin", config('cors.allowed_origins'))
-				->header("Access-Control-Allow-Methods", config('cors.allowed_methods'))->send();
+		response()->json($getAccountBudgetCenterActivityById, 200)->header("Access-Control-Allow-Origin", config('cors.allowed_origins'))
+			->header("Access-Control-Allow-Methods", config('cors.allowed_methods'))->send();
 	}
 	function delAccountBudgetCenter(Request $request)
 	{
@@ -946,7 +950,7 @@ class AdminAccountBudgetCenterController extends \crocodicstudio\crudbooster\con
 			if (!$AccountBudgetCenterSubDetail) {
 				throw new \Exception('Insert into AccountBudgetCenterSubDetail failed');
 			}
-			
+
 			// Commit transaction
 			DB::commit();
 
@@ -1040,59 +1044,59 @@ class AdminAccountBudgetCenterController extends \crocodicstudio\crudbooster\con
 		try {
 			$dataUpdateSub = $request->only(['AccName', 'DivisionId', 'SubAmount', 'Detail', 'AccStartDate', 'AccEndDate']);
 			$dataUpdateSub['UpdatedAt'] = date('Y-m-d');
-			$dataUpdateSub['TotalAmount'] = $SubAmount ;
+			$dataUpdateSub['TotalAmount'] = $SubAmount;
 			$dataUpdateSub['UpdatedBy'] = CRUDBooster::myId();
 			$updatedRows = DB::table('accountBudgetCenterSub')->where('id', $AccSubId)->update($dataUpdateSub);
 
 			$updatedRowsDetail = DB::table('accountBudgetCenterSubDetail')
-			->where('AccBudgetCenterSubId', $AccSubId)
-			->update([
-				'OfficerFirstName' => $OfficerFirstName,
-				'OfficerLastName' => $OfficerLastName,
-				'OfficerDivisionId' => $OfficerDivisionId,
-				'OfficerPhone' => $OfficerPhone,
-				'ProjectType' => $ProjectType,
-				'ProjectExternal' => $ProjectExternal,
-				'ExternalAgency' => $ExternalAgency,
-				'Indicators' => $Indicators,
-				'Policy' => $Policy,
-				'ProjectCharacteristics' => $ProjectCharacteristics,
-				'OperationalCharacteristics' => $OperationalCharacteristics,
-				'Experience' => $Experience,
-				'ExperienceDetail' => $ExperienceDetail,
-				'StrategyId' => $StrategyId,
-				'StrategyMain' => $StrategyMain,
-				'StrategySub' => $StrategySub,
-				'MasterPlan' => $MasterPlan,
-				'MasterPlanMain' => $MasterPlanMain,
-				'MasterPlanMainSub' => $MasterPlanMainSub,
-				'DevelopmentPlan' => $DevelopmentPlan,
-				'DevelopmentPlanNo' => $DevelopmentPlanNo,
-				'DevelopmentPlanMilestone' => $DevelopmentPlanMilestone,
-				'DevelopmentPlanIndicators' => $DevelopmentPlanIndicators,
-				'PolicyPlan' => $PolicyPlan,
-				'PolicyPlanDetail' => $PolicyPlanDetail,
-				'ActionPlan' => $ActionPlan,
-				'ActionPlanDetail' => $ActionPlanDetail,
-				'CommunityFundStrategicPlan' => $CommunityFundStrategicPlan,
-				'CommunityFundStrategicPlanDetail' => $CommunityFundStrategicPlanDetail,
-				'OperationalPlans' => $OperationalPlans,
-				'OperationalPlansDetail' => $OperationalPlansDetail,
-				'ProjectOriginId' => $ProjectOriginId,
-				'ProjectOriginDetail' => $ProjectOriginDetail,
-				'PrinciplesReason' => $PrinciplesReason,
-				'Objective' => $Objective,
-				'ExpectedResults' => $ExpectedResults,
-				'SuccessIndicators' => $SuccessIndicators,
-				'Beneficiary' => $Beneficiary,
-				'Procurement' => $Procurement,
-				'ProjectLocation' => $ProjectLocation,
-				'Monitoring' => $Monitoring,
-				'Qualitativegoal' => $Qualitativegoal,
-				'QuantitativeGoal' => $QuantitativeGoal,
-				'UpdatedAt' => now(),
-				'UpdatedBy' => CRUDBooster::myId(),
-			]);
+				->where('AccBudgetCenterSubId', $AccSubId)
+				->update([
+					'OfficerFirstName' => $OfficerFirstName,
+					'OfficerLastName' => $OfficerLastName,
+					'OfficerDivisionId' => $OfficerDivisionId,
+					'OfficerPhone' => $OfficerPhone,
+					'ProjectType' => $ProjectType,
+					'ProjectExternal' => $ProjectExternal,
+					'ExternalAgency' => $ExternalAgency,
+					'Indicators' => $Indicators,
+					'Policy' => $Policy,
+					'ProjectCharacteristics' => $ProjectCharacteristics,
+					'OperationalCharacteristics' => $OperationalCharacteristics,
+					'Experience' => $Experience,
+					'ExperienceDetail' => $ExperienceDetail,
+					'StrategyId' => $StrategyId,
+					'StrategyMain' => $StrategyMain,
+					'StrategySub' => $StrategySub,
+					'MasterPlan' => $MasterPlan,
+					'MasterPlanMain' => $MasterPlanMain,
+					'MasterPlanMainSub' => $MasterPlanMainSub,
+					'DevelopmentPlan' => $DevelopmentPlan,
+					'DevelopmentPlanNo' => $DevelopmentPlanNo,
+					'DevelopmentPlanMilestone' => $DevelopmentPlanMilestone,
+					'DevelopmentPlanIndicators' => $DevelopmentPlanIndicators,
+					'PolicyPlan' => $PolicyPlan,
+					'PolicyPlanDetail' => $PolicyPlanDetail,
+					'ActionPlan' => $ActionPlan,
+					'ActionPlanDetail' => $ActionPlanDetail,
+					'CommunityFundStrategicPlan' => $CommunityFundStrategicPlan,
+					'CommunityFundStrategicPlanDetail' => $CommunityFundStrategicPlanDetail,
+					'OperationalPlans' => $OperationalPlans,
+					'OperationalPlansDetail' => $OperationalPlansDetail,
+					'ProjectOriginId' => $ProjectOriginId,
+					'ProjectOriginDetail' => $ProjectOriginDetail,
+					'PrinciplesReason' => $PrinciplesReason,
+					'Objective' => $Objective,
+					'ExpectedResults' => $ExpectedResults,
+					'SuccessIndicators' => $SuccessIndicators,
+					'Beneficiary' => $Beneficiary,
+					'Procurement' => $Procurement,
+					'ProjectLocation' => $ProjectLocation,
+					'Monitoring' => $Monitoring,
+					'Qualitativegoal' => $Qualitativegoal,
+					'QuantitativeGoal' => $QuantitativeGoal,
+					'UpdatedAt' => now(),
+					'UpdatedBy' => CRUDBooster::myId(),
+				]);
 			if ($updatedRowsDetail) {
 				DB::commit();
 				return response()->json(['api_status' => 1, 'api_message' => 'Success', 'id' => $updatedRowsDetail], 200)
@@ -1134,7 +1138,7 @@ class AdminAccountBudgetCenterController extends \crocodicstudio\crudbooster\con
 				return response()->json(['api_status' => 0, 'api_message' => 'กรุณาตรวจสอบข้อมูลวงเงินในโครงการ'], 200);
 			}
 		}
-		
+
 		DB::beginTransaction();
 		try {
 			$dataInsert = [
@@ -1264,5 +1268,128 @@ class AdminAccountBudgetCenterController extends \crocodicstudio\crudbooster\con
 				->header("Access-Control-Allow-Methods", config('cors.allowed_methods'));
 		}
 	}
-	
+	public function getSearchAccountBudgetCenter(Request $request)
+	{
+		$BudgetYear = $request->BudgetYear;
+		$DivisionId = $request->DivisionId;
+		if ($BudgetYear != "null" && $DivisionId == "null") {
+			$getAccountBudgetCenter = DB::table('accountBudgetCenter')
+				->select(
+					'accountBudgetCenter.id',
+					'accountBudgetCenter.AccName',
+					'accountBudgetCenter.AccCode',
+					'accountBudgetCenter.Amount',
+					'accountBudgetCenter.IsActive',
+					'accountBudgetCenter.BudgetYear'
+				)
+				->where('accountBudgetCenter.BudgetYear', $BudgetYear)
+				->where('accountBudgetCenter.IsActive', 1)
+				->get();
+
+			$getAccountBudgetCenterSub = DB::table('accountBudgetCenterSub')
+				->leftjoin('systemDivision', 'systemDivision.id', 'accountBudgetCenterSub.DivisionId')
+				->select(
+					'accountBudgetCenterSub.id',
+					'accountBudgetCenterSub.AccBudgetCenterId',
+					'accountBudgetCenterSub.AccName',
+					'accountBudgetCenterSub.AccCode',
+					'accountBudgetCenterSub.SubAmount',
+					'accountBudgetCenterSub.AccStartDate',
+					'accountBudgetCenterSub.AccEndDate',
+					'accountBudgetCenterSub.IsActive',
+					'systemDivision.name as DivisionName'
+				)
+				// ->where('accountBudgetCenterSub.DivisionId', $DivisionId)
+				->where('accountBudgetCenterSub.IsActive', 1)
+				->get();
+			$data = [];
+			$data['api_detail'] = 'OnlyBudget';
+			$data['api_status'] = 1;
+			$data['api_message'] = 'Success';
+			$data['getAccountBudgetCenter'] = $getAccountBudgetCenter;
+			$data['getAccountBudgetCenterSub'] = $getAccountBudgetCenterSub;
+			return response()->json($data, 200)
+				->header("Access-Control-Allow-Origin", config('cors.allowed_origins'))
+				->header("Access-Control-Allow-Methods", config('cors.allowed_methods'));
+		} else if ($DivisionId != "null" && $BudgetYear == "null") {
+			$getAccountBudgetCenter = DB::table('accountBudgetCenter')
+				->select(
+					'accountBudgetCenter.id',
+					'accountBudgetCenter.AccName',
+					'accountBudgetCenter.AccCode',
+					'accountBudgetCenter.Amount',
+					'accountBudgetCenter.IsActive',
+					'accountBudgetCenter.BudgetYear'
+				)
+				// ->where('accountBudgetCenter.BudgetYear', $BudgetYear)
+				->where('accountBudgetCenter.IsActive', 1)
+				->get();
+
+			$getAccountBudgetCenterSub = DB::table('accountBudgetCenterSub')
+				->leftjoin('systemDivision', 'systemDivision.id', 'accountBudgetCenterSub.DivisionId')
+				->select(
+					'accountBudgetCenterSub.id',
+					'accountBudgetCenterSub.AccBudgetCenterId',
+					'accountBudgetCenterSub.AccName',
+					'accountBudgetCenterSub.AccCode',
+					'accountBudgetCenterSub.SubAmount',
+					'accountBudgetCenterSub.AccStartDate',
+					'accountBudgetCenterSub.AccEndDate',
+					'accountBudgetCenterSub.IsActive',
+					'systemDivision.name as DivisionName'
+				)
+				->where('accountBudgetCenterSub.DivisionId', $DivisionId)
+				->where('accountBudgetCenterSub.IsActive', 1)
+				->get();
+			$data = [];
+			$data['api_detail'] = 'OnlyDevision';
+			$data['api_status'] = 1;
+			$data['api_message'] = 'Success';
+			$data['getAccountBudgetCenter'] = $getAccountBudgetCenter;
+			$data['getAccountBudgetCenterSub'] = $getAccountBudgetCenterSub;
+			return response()->json($data, 200)
+				->header("Access-Control-Allow-Origin", config('cors.allowed_origins'))
+				->header("Access-Control-Allow-Methods", config('cors.allowed_methods'));
+		} else {
+			$getAccountBudgetCenter = DB::table('accountBudgetCenter')
+				->select(
+					'accountBudgetCenter.id',
+					'accountBudgetCenter.AccName',
+					'accountBudgetCenter.AccCode',
+					'accountBudgetCenter.Amount',
+					'accountBudgetCenter.IsActive',
+					'accountBudgetCenter.BudgetYear'
+				)
+				->where('accountBudgetCenter.BudgetYear', $BudgetYear)
+				->where('accountBudgetCenter.IsActive', 1)
+				->get();
+
+			$getAccountBudgetCenterSub = DB::table('accountBudgetCenterSub')
+				->leftjoin('systemDivision', 'systemDivision.id', 'accountBudgetCenterSub.DivisionId')
+				->select(
+					'accountBudgetCenterSub.id',
+					'accountBudgetCenterSub.AccBudgetCenterId',
+					'accountBudgetCenterSub.AccName',
+					'accountBudgetCenterSub.AccCode',
+					'accountBudgetCenterSub.SubAmount',
+					'accountBudgetCenterSub.AccStartDate',
+					'accountBudgetCenterSub.AccEndDate',
+					'accountBudgetCenterSub.IsActive',
+					'systemDivision.name as DivisionName'
+				)
+				->where('accountBudgetCenterSub.DivisionId', $DivisionId)
+				->where('accountBudgetCenterSub.BudgetYear', $BudgetYear)
+				->where('accountBudgetCenterSub.IsActive', 1)
+				->get();
+			$data = [];
+			$data['api_detail'] = 'Both';
+			$data['api_status'] = 1;
+			$data['api_message'] = 'Success';
+			$data['getAccountBudgetCenter'] = $getAccountBudgetCenter;
+			$data['getAccountBudgetCenterSub'] = $getAccountBudgetCenterSub;
+			return response()->json($data, 200)
+				->header("Access-Control-Allow-Origin", config('cors.allowed_origins'))
+				->header("Access-Control-Allow-Methods", config('cors.allowed_methods'));
+		}
+	}
 }

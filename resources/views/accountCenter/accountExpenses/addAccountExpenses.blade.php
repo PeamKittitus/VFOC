@@ -354,8 +354,6 @@
                     activityIds.splice(index, 1);
                 }
             }
-
-            console.log(activityIds);
             // หาผลรวมของค่าในอาร์เรย์ activityValues
             var sum = activityValues.reduce(function(total, currentValue) {
                 return total + currentValue;
