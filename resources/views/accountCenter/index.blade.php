@@ -206,6 +206,7 @@
                             </div>
                         </div>
                         <div class="col-sm-4" style="display:flex;justify-content:end;gap:1%">
+                            <button id="btnClear" class="btn btn-warning btnClear">เคลียการค้นหา</button>
                             <button id="btnSearch" class="btn btn-success btnSearch">ค้นหา</button>
                             <button style="display: none;" id="btnExport" class="btn btn-warning btnExport">ส่งออกข้อมูล
                         </div>
@@ -324,12 +325,22 @@
         $('#BudgetYear').select2();
         $('#DivisionId').select2();
 
+        
+        $('#btnClear').on('click', function() {
+            window.location.reload();
+        });
+
         //Search
         $('#btnSearch').on('click', function() {
             $('#btnExport').show();
             var BudgetYear = $("#BudgetYear").val();
             var DivisionId = $("#DivisionId").val();
 
+            if (!BudgetYear && !DivisionId) {
+                showError('กรุณาเลือกข้อมูล');
+                $('#btnExport').hide();
+                return;
+            }
             var formData = new FormData();
             formData.append('BudgetYear', BudgetYear);
             formData.append('DivisionId', DivisionId);
@@ -357,6 +368,15 @@
                 }
             });
         });
+
+        // Function to display error messages
+        function showError(message) {
+            Swal.fire({
+                icon: 'error',
+                title: 'ข้อมูลไม่ถูกต้อง',
+                text: message
+            });
+        }
 
         function updateTable(responseDetail, getAccountBudgetCenter, getAccountBudgetCenterSub) {
 
@@ -581,6 +601,26 @@
                     });
                 }
             }
+        }
+
+        //Export
+        $('#btnExport').on('click',function(){
+            var BudgetCenter = 1;
+            var BudgetYear = $("#BudgetYear").val();
+            var DivisionId = $("#DivisionId").val();
+            var url ="/ExportAccountBudgetCenter?BudgetCenter=1&BudgetYear="+BudgetYear+"&DivisionId="+DivisionId;
+            console.log("url>>",url);
+            download(url);
+        });
+
+        //Download
+        function download(url) {
+            const a = document.createElement('a')
+            a.href = url
+            a.download = url.split('/').pop()
+            document.body.appendChild(a)
+            a.click()
+            document.body.removeChild(a)
         }
 
         $.extend(true, $.fn.dataTable.defaults, {

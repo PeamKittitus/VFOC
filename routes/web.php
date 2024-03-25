@@ -156,6 +156,7 @@ Route::post('/getTransactionNewsReportCreatorMostNewsBy', '\App\Http\Controllers
 Route::post('/getTransactionNewsReportTypeNewsByMonth', '\App\Http\Controllers\ApiNewsController@getTransactionNewsReportTypeNewsByMonth');
 Route::post('/getTransactionNewsReportApproveNewsByMonth', '\App\Http\Controllers\ApiNewsController@getTransactionNewsReportApproveNewsByMonth');
 Route::post('/getSearchAccountBudgetCenter', '\App\Http\Controllers\AdminAccountBudgetCenterController@getSearchAccountBudgetCenter');
+Route::get('/ExportAccountBudgetCenter', '\App\Http\Controllers\AdminAccountBudgetCenterController@ExportAccountBudgetCenter');
 //========================================================================================== Report
 
 

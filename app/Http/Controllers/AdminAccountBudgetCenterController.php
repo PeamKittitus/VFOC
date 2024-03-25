@@ -10,7 +10,8 @@ use \stdClass;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\JobMail;
 use Exception;
-
+use Excel;
+use App\Exports\Export;
 class AdminAccountBudgetCenterController extends \crocodicstudio\crudbooster\controllers\CBController
 {
 
@@ -1272,124 +1273,324 @@ class AdminAccountBudgetCenterController extends \crocodicstudio\crudbooster\con
 	{
 		$BudgetYear = $request->BudgetYear;
 		$DivisionId = $request->DivisionId;
-		if ($BudgetYear != "null" && $DivisionId == "null") {
-			$getAccountBudgetCenter = DB::table('accountBudgetCenter')
+
+		$accountBudgetCenterQuery = DB::table('accountBudgetCenter')
+			->select(
+				'accountBudgetCenter.id',
+				'accountBudgetCenter.AccName',
+				'accountBudgetCenter.AccCode',
+				'accountBudgetCenter.Amount',
+				'accountBudgetCenter.IsActive',
+				'accountBudgetCenter.BudgetYear'
+			)
+			->where('accountBudgetCenter.IsActive', 1);
+
+		$accountBudgetCenterSubQuery = DB::table('accountBudgetCenterSub')
+			->leftjoin('systemDivision', 'systemDivision.id', 'accountBudgetCenterSub.DivisionId')
+			->select(
+				'accountBudgetCenterSub.id',
+				'accountBudgetCenterSub.AccBudgetCenterId',
+				'accountBudgetCenterSub.AccName',
+				'accountBudgetCenterSub.AccCode',
+				'accountBudgetCenterSub.SubAmount',
+				'accountBudgetCenterSub.AccStartDate',
+				'accountBudgetCenterSub.AccEndDate',
+				'accountBudgetCenterSub.IsActive',
+				'systemDivision.name as DivisionName'
+			)
+			->where('accountBudgetCenterSub.IsActive', 1);
+
+		if ($BudgetYear != "null") {
+			$accountBudgetCenterQuery->where('accountBudgetCenter.BudgetYear', $BudgetYear);
+			$accountBudgetCenterSubQuery->where('accountBudgetCenterSub.BudgetYear', $BudgetYear);
+		}
+
+		if ($DivisionId != "null") {
+			$accountBudgetCenterSubQuery->where('accountBudgetCenterSub.DivisionId', $DivisionId);
+		}
+
+		$getAccountBudgetCenter = $accountBudgetCenterQuery->get();
+		$getAccountBudgetCenterSub = $accountBudgetCenterSubQuery->get();
+
+		$data = [];
+		$data['api_detail'] = ($BudgetYear != "null" && $DivisionId == "null") ? 'OnlyBudget' : (($DivisionId != "null" && $BudgetYear == "null") ? 'OnlyDivision' : 'Both');
+		$data['api_status'] = 1;
+		$data['api_message'] = 'Success';
+		$data['getAccountBudgetCenter'] = $getAccountBudgetCenter;
+		$data['getAccountBudgetCenterSub'] = $getAccountBudgetCenterSub;
+
+		return response()->json($data, 200)
+			->header("Access-Control-Allow-Origin", config('cors.allowed_origins'))
+			->header("Access-Control-Allow-Methods", config('cors.allowed_methods'));
+	}
+
+	function ExportAccountBudgetCenter(Request $request)
+    {
+        $bodyReport = array();
+		$bodyReportSub = array();
+		$bodyReportSubActivity = array();
+        $reportName = array();
+
+        $BudgetCenter = $request->get('BudgetCenter');
+        $BudgetYear = $request->get('BudgetYear');
+        $DivisionId = $request->get('DivisionId');
+    
+        if($BudgetCenter){
+            if($BudgetYear != "null" && $DivisionId == "null"){
+				$getAccountBudgetCenter = DB::table('accountBudgetCenter')
 				->select(
 					'accountBudgetCenter.id',
 					'accountBudgetCenter.AccName',
 					'accountBudgetCenter.AccCode',
 					'accountBudgetCenter.Amount',
 					'accountBudgetCenter.IsActive',
-					'accountBudgetCenter.BudgetYear'
+					'accountBudgetCenter.BudgetYear',
+					'accountBudgetCenter.AccDetail'
 				)
 				->where('accountBudgetCenter.BudgetYear', $BudgetYear)
 				->where('accountBudgetCenter.IsActive', 1)
 				->get();
-
-			$getAccountBudgetCenterSub = DB::table('accountBudgetCenterSub')
-				->leftjoin('systemDivision', 'systemDivision.id', 'accountBudgetCenterSub.DivisionId')
-				->select(
-					'accountBudgetCenterSub.id',
-					'accountBudgetCenterSub.AccBudgetCenterId',
-					'accountBudgetCenterSub.AccName',
-					'accountBudgetCenterSub.AccCode',
-					'accountBudgetCenterSub.SubAmount',
-					'accountBudgetCenterSub.AccStartDate',
-					'accountBudgetCenterSub.AccEndDate',
-					'accountBudgetCenterSub.IsActive',
-					'systemDivision.name as DivisionName'
-				)
-				// ->where('accountBudgetCenterSub.DivisionId', $DivisionId)
-				->where('accountBudgetCenterSub.IsActive', 1)
-				->get();
-			$data = [];
-			$data['api_detail'] = 'OnlyBudget';
-			$data['api_status'] = 1;
-			$data['api_message'] = 'Success';
-			$data['getAccountBudgetCenter'] = $getAccountBudgetCenter;
-			$data['getAccountBudgetCenterSub'] = $getAccountBudgetCenterSub;
-			return response()->json($data, 200)
-				->header("Access-Control-Allow-Origin", config('cors.allowed_origins'))
-				->header("Access-Control-Allow-Methods", config('cors.allowed_methods'));
-		} else if ($DivisionId != "null" && $BudgetYear == "null") {
-			$getAccountBudgetCenter = DB::table('accountBudgetCenter')
+				$getAccountBudgetCenterSub = DB::table('accountBudgetCenterSub')
+					->leftjoin('systemDivision', 'systemDivision.id', 'accountBudgetCenterSub.DivisionId')
+					->leftjoin('accountBudgetCenterSubDetail', 'accountBudgetCenterSubDetail.AccBudgetCenterSubId', 'accountBudgetCenterSub.id')
+					->select(
+						'accountBudgetCenterSub.id',
+						'accountBudgetCenterSub.AccBudgetCenterId',
+						'accountBudgetCenterSub.AccName',
+						'accountBudgetCenterSub.AccCode',
+						'accountBudgetCenterSub.SubAmount',
+						'accountBudgetCenterSub.AccStartDate',
+						'accountBudgetCenterSub.AccEndDate',
+						'accountBudgetCenterSub.Detail',
+						'accountBudgetCenterSub.IsActive',
+						'systemDivision.name as DivisionName',
+						'accountBudgetCenterSubDetail.QuantitativeGoal',
+						'accountBudgetCenterSubDetail.ExpectedResults',
+						'accountBudgetCenterSubDetail.DevelopmentPlanIndicators',
+						
+					)
+					->where('accountBudgetCenterSub.IsActive', 1)
+					->get();
+				$getAccountBudgetCenterActivity = DB::table('accountBudgetCenterActivity')
+					->select(
+						'accountBudgetCenterActivity.id',
+						'accountBudgetCenterActivity.AccBudgetCenterId',
+						'accountBudgetCenterActivity.ActivityName',
+						'accountBudgetCenterActivity.ActivityDetail',
+						'accountBudgetCenterActivity.ActivityAmount',
+					)
+					->where('accountBudgetCenterActivity.IsActive', 1)
+					->get();
+				foreach ($getAccountBudgetCenter as $key => $value) {
+					$i = 0;
+					$arrayIndex = [];
+					$arrayIndex[$i] = $value->id;
+					$arrayIndex[$i + 1] = $value->AccName;
+					$arrayIndex[$i + 2] =  $value->AccDetail;
+					$arrayIndex[$i + 3] =  $value->BudgetYear;
+					array_push($bodyReport, $arrayIndex);
+				}
+				foreach ($getAccountBudgetCenterSub as $key => $value) {
+					$i = 0;
+					$arrayIndex = [];
+					$arrayIndex[$i] = $value->id;
+					$arrayIndex[$i + 1] = $value->AccBudgetCenterId;
+					$arrayIndex[$i + 2] =  $value->AccName;
+					$arrayIndex[$i + 3] =  $value->SubAmount;
+					$arrayIndex[$i + 4] =  $value->Detail;
+					$arrayIndex[$i + 5] =  $value->DivisionName;
+					$arrayIndex[$i + 6] =  $value->QuantitativeGoal;
+					$arrayIndex[$i + 7] =  $value->ExpectedResults;
+					$arrayIndex[$i + 8] =  $value->DevelopmentPlanIndicators;
+					array_push($bodyReportSub, $arrayIndex);
+				}
+				foreach ($getAccountBudgetCenterActivity as $key => $value) {
+					$i = 0;
+					$arrayIndex = [];
+					$arrayIndex[$i] = $value->id;
+					$arrayIndex[$i + 1] = $value->AccBudgetCenterId;
+					$arrayIndex[$i + 2] =  $value->ActivityName;
+					$arrayIndex[$i + 3] =  $value->ActivityDetail;
+					$arrayIndex[$i + 4] =  $value->ActivityAmount;
+					array_push($bodyReportSubActivity, $arrayIndex);
+				}
+				$reportName = 'ยุทธศาสตร์';
+			}
+			
+			if($BudgetYear == "null" && $DivisionId != "null"){
+				$getAccountBudgetCenter = DB::table('accountBudgetCenter')
 				->select(
 					'accountBudgetCenter.id',
 					'accountBudgetCenter.AccName',
 					'accountBudgetCenter.AccCode',
 					'accountBudgetCenter.Amount',
 					'accountBudgetCenter.IsActive',
-					'accountBudgetCenter.BudgetYear'
+					'accountBudgetCenter.BudgetYear',
+					'accountBudgetCenter.AccDetail'
 				)
 				// ->where('accountBudgetCenter.BudgetYear', $BudgetYear)
 				->where('accountBudgetCenter.IsActive', 1)
 				->get();
-
-			$getAccountBudgetCenterSub = DB::table('accountBudgetCenterSub')
-				->leftjoin('systemDivision', 'systemDivision.id', 'accountBudgetCenterSub.DivisionId')
-				->select(
-					'accountBudgetCenterSub.id',
-					'accountBudgetCenterSub.AccBudgetCenterId',
-					'accountBudgetCenterSub.AccName',
-					'accountBudgetCenterSub.AccCode',
-					'accountBudgetCenterSub.SubAmount',
-					'accountBudgetCenterSub.AccStartDate',
-					'accountBudgetCenterSub.AccEndDate',
-					'accountBudgetCenterSub.IsActive',
-					'systemDivision.name as DivisionName'
-				)
-				->where('accountBudgetCenterSub.DivisionId', $DivisionId)
-				->where('accountBudgetCenterSub.IsActive', 1)
-				->get();
-			$data = [];
-			$data['api_detail'] = 'OnlyDevision';
-			$data['api_status'] = 1;
-			$data['api_message'] = 'Success';
-			$data['getAccountBudgetCenter'] = $getAccountBudgetCenter;
-			$data['getAccountBudgetCenterSub'] = $getAccountBudgetCenterSub;
-			return response()->json($data, 200)
-				->header("Access-Control-Allow-Origin", config('cors.allowed_origins'))
-				->header("Access-Control-Allow-Methods", config('cors.allowed_methods'));
-		} else {
-			$getAccountBudgetCenter = DB::table('accountBudgetCenter')
+				$getAccountBudgetCenterSub = DB::table('accountBudgetCenterSub')
+					->leftjoin('systemDivision', 'systemDivision.id', 'accountBudgetCenterSub.DivisionId')
+					->leftjoin('accountBudgetCenterSubDetail', 'accountBudgetCenterSubDetail.AccBudgetCenterSubId', 'accountBudgetCenterSub.id')
+					->select(
+						'accountBudgetCenterSub.id',
+						'accountBudgetCenterSub.AccBudgetCenterId',
+						'accountBudgetCenterSub.AccName',
+						'accountBudgetCenterSub.AccCode',
+						'accountBudgetCenterSub.SubAmount',
+						'accountBudgetCenterSub.AccStartDate',
+						'accountBudgetCenterSub.AccEndDate',
+						'accountBudgetCenterSub.Detail',
+						'accountBudgetCenterSub.IsActive',
+						'systemDivision.name as DivisionName',
+						'accountBudgetCenterSubDetail.QuantitativeGoal',
+						'accountBudgetCenterSubDetail.ExpectedResults',
+						'accountBudgetCenterSubDetail.DevelopmentPlanIndicators',
+						
+					)
+					->where('accountBudgetCenterSub.DivisionId', $DivisionId)
+					->where('accountBudgetCenterSub.IsActive', 1)
+					->get();
+				$getAccountBudgetCenterActivity = DB::table('accountBudgetCenterActivity')
+					->select(
+						'accountBudgetCenterActivity.id',
+						'accountBudgetCenterActivity.AccBudgetCenterId',
+						'accountBudgetCenterActivity.ActivityName',
+						'accountBudgetCenterActivity.ActivityDetail',
+						'accountBudgetCenterActivity.ActivityAmount',
+					)
+					->where('accountBudgetCenterActivity.IsActive', 1)
+					->get();
+				foreach ($getAccountBudgetCenter as $key => $value) {
+					$i = 0;
+					$arrayIndex = [];
+					$arrayIndex[$i] = $value->id;
+					$arrayIndex[$i + 1] = $value->AccName;
+					$arrayIndex[$i + 2] =  $value->AccDetail;
+					$arrayIndex[$i + 3] =  $value->BudgetYear;
+					array_push($bodyReport, $arrayIndex);
+				}
+				foreach ($getAccountBudgetCenterSub as $key => $value) {
+					$i = 0;
+					$arrayIndex = [];
+					$arrayIndex[$i] = $value->id;
+					$arrayIndex[$i + 1] = $value->AccBudgetCenterId;
+					$arrayIndex[$i + 2] =  $value->AccName;
+					$arrayIndex[$i + 3] =  $value->SubAmount;
+					$arrayIndex[$i + 4] =  $value->Detail;
+					$arrayIndex[$i + 5] =  $value->DivisionName;
+					$arrayIndex[$i + 6] =  $value->QuantitativeGoal;
+					$arrayIndex[$i + 7] =  $value->ExpectedResults;
+					$arrayIndex[$i + 8] =  $value->DevelopmentPlanIndicators;
+					array_push($bodyReportSub, $arrayIndex);
+				}
+				foreach ($getAccountBudgetCenterActivity as $key => $value) {
+					$i = 0;
+					$arrayIndex = [];
+					$arrayIndex[$i] = $value->id;
+					$arrayIndex[$i + 1] = $value->AccBudgetCenterId;
+					$arrayIndex[$i + 2] =  $value->ActivityName;
+					$arrayIndex[$i + 3] =  $value->ActivityDetail;
+					$arrayIndex[$i + 4] =  $value->ActivityAmount;
+					array_push($bodyReportSubActivity, $arrayIndex);
+				}
+				$reportName = 'ยุทธศาสตร์';
+			}
+			if($BudgetYear != "null" && $DivisionId != "null"){
+				$getAccountBudgetCenter = DB::table('accountBudgetCenter')
 				->select(
 					'accountBudgetCenter.id',
 					'accountBudgetCenter.AccName',
 					'accountBudgetCenter.AccCode',
 					'accountBudgetCenter.Amount',
 					'accountBudgetCenter.IsActive',
-					'accountBudgetCenter.BudgetYear'
+					'accountBudgetCenter.BudgetYear',
+					'accountBudgetCenter.AccDetail'
 				)
 				->where('accountBudgetCenter.BudgetYear', $BudgetYear)
 				->where('accountBudgetCenter.IsActive', 1)
 				->get();
-
-			$getAccountBudgetCenterSub = DB::table('accountBudgetCenterSub')
-				->leftjoin('systemDivision', 'systemDivision.id', 'accountBudgetCenterSub.DivisionId')
-				->select(
-					'accountBudgetCenterSub.id',
-					'accountBudgetCenterSub.AccBudgetCenterId',
-					'accountBudgetCenterSub.AccName',
-					'accountBudgetCenterSub.AccCode',
-					'accountBudgetCenterSub.SubAmount',
-					'accountBudgetCenterSub.AccStartDate',
-					'accountBudgetCenterSub.AccEndDate',
-					'accountBudgetCenterSub.IsActive',
-					'systemDivision.name as DivisionName'
-				)
-				->where('accountBudgetCenterSub.DivisionId', $DivisionId)
-				->where('accountBudgetCenterSub.BudgetYear', $BudgetYear)
-				->where('accountBudgetCenterSub.IsActive', 1)
-				->get();
-			$data = [];
-			$data['api_detail'] = 'Both';
-			$data['api_status'] = 1;
-			$data['api_message'] = 'Success';
-			$data['getAccountBudgetCenter'] = $getAccountBudgetCenter;
-			$data['getAccountBudgetCenterSub'] = $getAccountBudgetCenterSub;
-			return response()->json($data, 200)
-				->header("Access-Control-Allow-Origin", config('cors.allowed_origins'))
-				->header("Access-Control-Allow-Methods", config('cors.allowed_methods'));
-		}
-	}
+				$getAccountBudgetCenterSub = DB::table('accountBudgetCenterSub')
+					->leftjoin('systemDivision', 'systemDivision.id', 'accountBudgetCenterSub.DivisionId')
+					->leftjoin('accountBudgetCenterSubDetail', 'accountBudgetCenterSubDetail.AccBudgetCenterSubId', 'accountBudgetCenterSub.id')
+					->select(
+						'accountBudgetCenterSub.id',
+						'accountBudgetCenterSub.AccBudgetCenterId',
+						'accountBudgetCenterSub.AccName',
+						'accountBudgetCenterSub.AccCode',
+						'accountBudgetCenterSub.SubAmount',
+						'accountBudgetCenterSub.AccStartDate',
+						'accountBudgetCenterSub.AccEndDate',
+						'accountBudgetCenterSub.Detail',
+						'accountBudgetCenterSub.IsActive',
+						'systemDivision.name as DivisionName',
+						'accountBudgetCenterSubDetail.QuantitativeGoal',
+						'accountBudgetCenterSubDetail.ExpectedResults',
+						'accountBudgetCenterSubDetail.DevelopmentPlanIndicators',
+						
+					)
+					->where('accountBudgetCenterSub.DivisionId', $DivisionId)
+					->where('accountBudgetCenterSub.IsActive', 1)
+					->get();
+				$getAccountBudgetCenterActivity = DB::table('accountBudgetCenterActivity')
+					->select(
+						'accountBudgetCenterActivity.id',
+						'accountBudgetCenterActivity.AccBudgetCenterId',
+						'accountBudgetCenterActivity.ActivityName',
+						'accountBudgetCenterActivity.ActivityDetail',
+						'accountBudgetCenterActivity.ActivityAmount',
+					)
+					->where('accountBudgetCenterActivity.IsActive', 1)
+					->get();
+				foreach ($getAccountBudgetCenter as $key => $value) {
+					$i = 0;
+					$arrayIndex = [];
+					$arrayIndex[$i] = $value->id;
+					$arrayIndex[$i + 1] = $value->AccName;
+					$arrayIndex[$i + 2] =  $value->AccDetail;
+					$arrayIndex[$i + 3] =  $value->BudgetYear;
+					array_push($bodyReport, $arrayIndex);
+				}
+				foreach ($getAccountBudgetCenterSub as $key => $value) {
+					$i = 0;
+					$arrayIndex = [];
+					$arrayIndex[$i] = $value->id;
+					$arrayIndex[$i + 1] = $value->AccBudgetCenterId;
+					$arrayIndex[$i + 2] =  $value->AccName;
+					$arrayIndex[$i + 3] =  $value->SubAmount;
+					$arrayIndex[$i + 4] =  $value->Detail;
+					$arrayIndex[$i + 5] =  $value->DivisionName;
+					$arrayIndex[$i + 6] =  $value->QuantitativeGoal;
+					$arrayIndex[$i + 7] =  $value->ExpectedResults;
+					$arrayIndex[$i + 8] =  $value->DevelopmentPlanIndicators;
+					array_push($bodyReportSub, $arrayIndex);
+				}
+				foreach ($getAccountBudgetCenterActivity as $key => $value) {
+					$i = 0;
+					$arrayIndex = [];
+					$arrayIndex[$i] = $value->id;
+					$arrayIndex[$i + 1] = $value->AccBudgetCenterId;
+					$arrayIndex[$i + 2] =  $value->ActivityName;
+					$arrayIndex[$i + 3] =  $value->ActivityDetail;
+					$arrayIndex[$i + 4] =  $value->ActivityAmount;
+					array_push($bodyReportSubActivity, $arrayIndex);
+				}
+				$reportName = 'ยุทธศาสตร์';
+			}
+        }
+        
+        $file_name = $reportName . date("YmdHis") . ".xls";
+        $data['getAccountBudgetCenter'] = $bodyReport;
+		$data['getAccountBudgetCenterSub'] = $bodyReportSub;
+		$data['getAccountBudgetCenterActivity'] = $bodyReportSubActivity;
+        $data['report_name'] = $reportName;
+        $data['print_name'] = CRUDBooster::myName();
+        return $this->getexcel($data, $file_name);
+    }
+    function getexcel($data, $file_name)
+    {
+        return Excel::download(new Export("export.export", $data), $file_name);
+    }
 }

@@ -92,12 +92,12 @@
                                     <label>ปีงบประมาณ</label>
                                     <select class="form-control" id="BudgetYear" disabled>
                                         <option value="0" disabled>----เลือกปีงบประมาณ----</option>
-                                        <option value="2569" {{ $getAccountBudgetCenterSubById->BudgetYear == '2569' ? 'selected' : '' }}>2569</option>
-                                        <option value="2568" {{ $getAccountBudgetCenterSubById->BudgetYear == '2568' ? 'selected' : '' }}>2568</option>
-                                        <option value="2567" {{ $getAccountBudgetCenterSubById->BudgetYear == '2567' ? 'selected' : '' }}>2567</option>
-                                        <option value="2566" {{ $getAccountBudgetCenterSubById->BudgetYear == '2566' ? 'selected' : '' }}>2566</option>
-                                        <option value="2565" {{ $getAccountBudgetCenterSubById->BudgetYear == '2565' ? 'selected' : '' }}>2565</option>
-                                        <option value="2564" {{ $getAccountBudgetCenterSubById->BudgetYear == '2564' ? 'selected' : '' }}>2564</option>
+                                        <option value="2569" {{ $getAccountBudgetCenterById->BudgetYear == '2569' ? 'selected' : '' }}>2569</option>
+                                        <option value="2568" {{ $getAccountBudgetCenterById->BudgetYear == '2568' ? 'selected' : '' }}>2568</option>
+                                        <option value="2567" {{ $getAccountBudgetCenterById->BudgetYear == '2567' ? 'selected' : '' }}>2567</option>
+                                        <option value="2566" {{ $getAccountBudgetCenterById->BudgetYear == '2566' ? 'selected' : '' }}>2566</option>
+                                        <option value="2565" {{ $getAccountBudgetCenterById->BudgetYear == '2565' ? 'selected' : '' }}>2565</option>
+                                        <option value="2564" {{ $getAccountBudgetCenterById->BudgetYear == '2564' ? 'selected' : '' }}>2564</option>
                                     </select>
                                 </div>
                             </div>
