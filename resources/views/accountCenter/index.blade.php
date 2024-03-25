@@ -14,6 +14,7 @@
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.css">
     <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
     <style>
         body {
             font-family: 'Sarabun', sans-serif !important;
@@ -163,7 +164,13 @@
             <li class="breadcrumb-item"><a href="/home">หน้าหลัก</a></li>
             <li class="breadcrumb-item active">แผนงานโครงการ</li>
         </ol>
-
+        <div class="row">
+            <div class="col-lg-12 sortable-grid ui-sortable" style="padding: 10px;">
+                <div class="panel panel-sortable" role="widget" style="width: 100% !important;height:300px !important">
+                    <canvas id="myChart"></canvas>
+                </div>
+            </div>
+        </div>
         <div class="row">
             <div class="col-lg-12 sortable-grid ui-sortable" style="padding: 10px;">
                 <div class="panel panel-sortable" role="widget">
@@ -171,11 +178,17 @@
                         <h2 class="ui-sortable-handle"><i class="subheader-icon fal fa-money-bill"></i> แผนงานโครงการ</h2>
                     </div>
                     <div class="row" style="margin-top:10px">
-                        <div class="col-sm-12" style="display: flex;">
+                        <div class="col-sm-8" style="display: flex;">
                             <div class="form-group">
                                 <a href="/addAccountBudgetCenter">
                                     <button id="addActivityBtn" type="button" class="btn" style="color: white ; background-color:#1dc9b7">สร้างใหม่</button>
                                 </a>
+                            </div>
+                        </div>
+                        <div class="col-sm-4" style="display:flex;justify-content:end;gap:1%">
+                            <div class="form-group">
+                                <button type="button" class="btn" data-toggle="modal" data-target="#myModal" style="color: white ; background-color:#1dc9b7">นำเข้าข้อมูล</button>
+                                <button type="button" class="btn btn-success">เทมเพลท</button>
                             </div>
                         </div>
                     </div>
@@ -311,21 +324,114 @@
                 </div>
             </div>
         </div>
-
     </div>
-
-
-
-
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <form id="uploadFile" name="uploadFile">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">อัพโหลดไฟล์</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row mt-1">
+                            <div class="col-sm-12">
+                                <label>อัพโหลดไฟล์</label>
+                                <input type="file" id="file" name="file" class="form-control" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">ปิด</button>
+                        <button type="submit" class="btn btn-success">บันทึก</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
 </body>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
+    const data = @json($getAccountBudgetCenter->pluck('Amount', 'AccName'));
+
+    const ctx = document.getElementById('myChart');
+
+    // Function to generate random colors
+    function getRandomColor() {
+        const letters = '0123456789ABCDEF';
+        let color = '#';
+        for (let i = 0; i < 6; i++) {
+            color += letters[Math.floor(Math.random() * 16)];
+        }
+        return color + '80'; // Add alpha channel for transparency
+    }
+
+    new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels: Object.keys(data),
+            datasets: [{
+                label: 'กรอบวงเงินงบประมาณ',
+                data: Object.values(data),
+                backgroundColor: Object.keys(data).map(() => getRandomColor()), // Generate random colors dynamically
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                title: {
+                    display: true,
+                    text: 'กรอบวงเงินงบประมาณ'
+                },
+                legend: {
+                    position: 'bottom'
+                }
+            }
+        }
+    });
+</script>
+<script>
+    jQuery.noConflict();
     jQuery(document).ready(function($) {
         $('.select2').select2();
         $('#BudgetYear').select2();
         $('#DivisionId').select2();
 
-        
+        //Uploads
+        $("form[name=uploadFile]").submit(function(event) {
+            event.preventDefault();
+            var formData = new FormData();
+            formData.append('file', $('#file')[0].files[0]);
+            $.ajax({
+                url: '/UploadAccountBudgetCenter',
+                type: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function(data) {
+                    if (data.api_status == 1) {
+                        swal({
+                            title: "สำเร็จ!",
+                            text: "นำเข้าข้อมูลสำเร็จ!",
+                            icon: "success",
+                        }).then(function(value) {
+                            if (value) {
+                                window.location.reload();
+                            }
+                        });
+                    } else if (data.api_status == 2 || data.api_status !== undefined) {
+                        swal("ยกเลิก!", data.api_message || 'An error occurred', "error");
+                    }
+                }
+            });
+        });
+
+        //Clear
         $('#btnClear').on('click', function() {
             window.location.reload();
         });
@@ -609,8 +715,6 @@
             var BudgetYear = $("#BudgetYear").val();
             var DivisionId = $("#DivisionId").val();
             var url ="/ExportAccountBudgetCenter?BudgetCenter=1&BudgetYear="+BudgetYear+"&DivisionId="+DivisionId;
-            console.log("url>>",url);
-            download(url);
         });
 
         //Download

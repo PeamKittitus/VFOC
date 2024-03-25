@@ -1593,4 +1593,97 @@ class AdminAccountBudgetCenterController extends \crocodicstudio\crudbooster\con
     {
         return Excel::download(new Export("export.export", $data), $file_name);
     }
+	public function UploadAccountBudgetCenter(Request $request)
+	{
+		$file = $request->file('file');
+		$file_name = time() . '' . rand(10000, 99999);
+		try {
+			$filename = $file->getClientOriginalName();
+			$extension = $file->getClientOriginalExtension();
+			$tempPath = $file->getRealPath();
+			$fileSize = $file->getSize();
+			$newFile_name = $file_name . $filename;
+			$fileNewPath = Storage::putFileAs('/uploads/import', $file, $newFile_name);
+			$url = $_SERVER['HTTP_ORIGIN'];
+			$pathfile = $url . "/" . $fileNewPath;
+			$dataCsv = "";
+			if (($open = fopen($pathfile, "r")) !== FALSE) {
+				$dataCsv = $this->getCsv($open);
+				fclose($open);
+			}
+			$ArrayInsert = [];
+			foreach ($dataCsv as $row => $val) {
+
+				$ArrayAccountBudgetCenter = [];
+				$ArrayAccountBudgetCenter['AccName'] = $val[1];
+				$ArrayAccountBudgetCenter['BudgetYear'] = $val[2];
+				$ArrayAccountBudgetCenter['Amount'] = $val[3];
+				$ArrayAccountBudgetCenter['AccDetail'] = $val[4];
+
+				array_push($ArrayInsert, $ArrayAccountBudgetCenter);
+			}
+			if (count($ArrayInsert) > 0) {
+				$response = $this->insertDataFormEXCEL($ArrayInsert);
+
+				if ($response['api_status'] == 1) {
+					$data['api_status'] = 1;
+					$data['api_message'] = 'สำเร็จ';
+				} else {
+					$data['api_status'] = 0;
+					$data['api_message'] = 'มีข้อมูลซ้ำในระบบ';
+				}
+			} else {
+				$data['api_status'] = 0;
+				$data['api_message'] = 'กรุณาใส่ข้อมูลให้ถูกต้อง';
+			}
+		} catch (\Exception $e) {
+			print_r($e);
+			$data['api_status'] = 0;
+			$data['api_message'] = 'กรุณาทำรายการใหม่อีกครั้ง';
+		}
+		return response()->json($data, 200);
+	}
+	function insertDataFormEXCEL($Data)
+	{
+		dd($Data);
+		$data = [];
+
+		DB::beginTransaction();
+		try {
+			foreach ($Data as $key => $value) {
+
+				$countData = DB::table('accountBudgetCenter')->count();
+				$AccCode = $value['BudgetYear'] . '-' . sprintf('%03d', $countData + 1);
+				$newAccountBudgetCenter = [
+					'AccName' => $value['AccName'],
+					'BudgetYear' => $value['BudgetYear'],
+					'Amount' => $value['Amount'],
+					'AccCode' => $AccCode,
+					'AccDetail' => $value['AmouAccDetailnt'],
+					'IsActive' => 1,
+					'CreatedAt' => now(),
+					'CreatedBy' => CRUDBooster::myId()
+				];
+				$AccountBudgetCenterId = DB::table('employee_seminarCR')->insertGetId($newAccountBudgetCenter);
+			}
+			if ($AccountBudgetCenterId) {
+				DB::commit();
+				$data['api_status'] = 1;
+				$data['api_message'] = 'Success';
+				return $data;
+			} else {
+				DB::rollback();
+				$data['api_status'] = 3;
+				$data['api_message'] = 'กรุณาทำรายการใหม่อีกครั้ง';
+				return $data;
+			}
+		} catch (\Exception $e) {
+			DB::rollback();
+			$data['api_status'] = 0;
+			$data['exception'] = $e->getMessage();
+			print_r($e);
+		}
+
+		return $data;
+	}
 }
