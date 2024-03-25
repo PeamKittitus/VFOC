@@ -415,17 +415,17 @@
                 contentType: false,
                 success: function(data) {
                     if (data.api_status == 1) {
-                        swal({
+                        Swal.fire({
                             title: "สำเร็จ!",
                             text: "นำเข้าข้อมูลสำเร็จ!",
                             icon: "success",
-                        }).then(function(value) {
-                            if (value) {
+                        }).then(function(result) {
+                            if (result.isConfirmed) {
                                 window.location.reload();
                             }
                         });
                     } else if (data.api_status == 2 || data.api_status !== undefined) {
-                        swal("ยกเลิก!", data.api_message || 'An error occurred', "error");
+                        Swal.fire("ยกเลิก!", data.api_message || 'An error occurred', "error");
                     }
                 }
             });

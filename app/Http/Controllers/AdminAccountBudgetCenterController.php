@@ -1645,7 +1645,6 @@ class AdminAccountBudgetCenterController extends \crocodicstudio\crudbooster\con
 	}
 	function insertDataFormEXCEL($Data)
 	{
-		dd($Data);
 		$data = [];
 
 		DB::beginTransaction();
@@ -1659,12 +1658,12 @@ class AdminAccountBudgetCenterController extends \crocodicstudio\crudbooster\con
 					'BudgetYear' => $value['BudgetYear'],
 					'Amount' => $value['Amount'],
 					'AccCode' => $AccCode,
-					'AccDetail' => $value['AmouAccDetailnt'],
+					'AccDetail' => $value['AccDetail'],
 					'IsActive' => 1,
 					'CreatedAt' => now(),
 					'CreatedBy' => CRUDBooster::myId()
 				];
-				$AccountBudgetCenterId = DB::table('employee_seminarCR')->insertGetId($newAccountBudgetCenter);
+				$AccountBudgetCenterId = DB::table('accountBudgetCenter')->insertGetId($newAccountBudgetCenter);
 			}
 			if ($AccountBudgetCenterId) {
 				DB::commit();
@@ -1685,5 +1684,12 @@ class AdminAccountBudgetCenterController extends \crocodicstudio\crudbooster\con
 		}
 
 		return $data;
+	}
+	function getCsv($open)
+	{
+		while (($data = fgetcsv($open, 9999, ",")) !== FALSE) {
+			$array[] = $data;
+		}
+		return $array;
 	}
 }
