@@ -72,14 +72,53 @@
         .select2-container {
             width: 100% !important;
         }
+
+        .plus-button {
+            border: 2px solid white;
+            background-color: #1dc9b7;
+            font-size: 16px;
+            height: 2.5em;
+            width: 2.5em;
+            border-radius: 999px;
+            position: relative;
+
+            &:after,
+            &:before {
+                content: "";
+                display: block;
+                background-color: white;
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+            }
+
+            &:before {
+                height: 1em;
+                width: 0.2em;
+            }
+
+            &:after {
+                height: 0.2em;
+                width: 1em;
+            }
+        }
+
+        .plus-button--small {
+            font-size: 12px;
+        }
+
+        .plus-button--large {
+            font-size: 17px;
+        }
     </style>
 </head>
 
 <body>
 
     <div class="w-box" style="margin: auto !important; padding: 10px">
-        <h4 style="text-align: center;color:black">รายละเอียดแผนงานโครงการย่อย</h4>
-        <form id="editAccountBudgetSubCenter" name="editAccountBudgetSubCenter" method="post" enctype="multipart/form-data">
+        <h4 style="text-align: center;color:black">สร้างกิจกรรมโครงการ</h4>
+        <form id="addAccountBudgetCenterActivity" name="addAccountBudgetCenterActivity" method="post" enctype="multipart/form-data">
             <div class="row">
                 <div class="col-12 col-sm-12 box-right">
                     <div class="box-right-d">
@@ -126,7 +165,7 @@
                         <div class="row mt-1">
                             <div class="col-sm-12">
                                 <div class="form-group">
-                                    <label>ชื่อแผนงาน/โครงการ <span style="color: red;">*</span></label>
+                                    <label>ชื่อแผนงาน/โครงการ </label>
                                     <input type="text" class="form-control" placeholder="ชื่อแผนงาน/โครงการ" id="AccName" value="{{$getAccountBudgetCenterSubById->AccName}}" disabled>
                                 </div>
                             </div>
@@ -134,7 +173,7 @@
                         <div class="row mt-1">
                             <div class="col-sm-12">
                                 <div class="form-group">
-                                    <label>ฝ่าย <span style="color: red;">*</span></label>
+                                    <label>ฝ่าย </label>
                                     <select class="form-control" id="DivisionId" disabled>
                                         <option value="0" disabled>----เลือกฝ่าย----</option>
                                         <?php foreach ($getDivision as $division) : ?>
@@ -490,7 +529,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="row mt-1" <?= $ActionPlanHideStyle1 ?> id="ActionPlanHide">
+                        <div class="row mt-1" <?= $isCheckedValue1 ?> id="ActionPlanHide">
                             <div class="col-sm-12">
                                 <div class="form-group">
                                     <input type="text" class="form-control" placeholder="แผนปฎิบัติการ (ด้าน)" id="ActionPlanDetail" value="{{$getAccountBudgetCenterSubDetailById->ActionPlanDetail}}" disabled>
@@ -558,7 +597,7 @@
 
                                         $ProjectOriginIdsHideStyle1 = ($ProjectOriginId != 0) ? 'style="display: block;"' : 'style="display: none;"';
                                     ?>
-                                    <select disabled class="form-control" id="ProjectOriginId" onchange="showHideDiv()">
+                                    <select disabled class="form-control" id="ProjectOriginId">
                                         <option value="0" <?= $isCheckedValue0 ?> disabled>----เลือกที่มาของโครงการ----</option>
                                         <option value="1" <?= $isCheckedValue1 ?>>มติคณะรัฐมนตรี (ชุดปัจจุบัน)</option>
                                         <option value="2" <?= $isCheckedValue2 ?>>ข้อสั่งการของนายกรัฐมนตรี</option>
@@ -715,11 +754,6 @@
                         <hr>
                         <div class="row mt-1">
                             <div class="col-sm-12">
-                                <h4>เอกสารแนบ</h4>
-                            </div>
-                        </div>
-                        <div class="row mt-1">
-                            <div class="col-sm-12">
                                 <div class="form-group">
                                     <table id="datatableProjectActivity" class="table table-striped table-bordered" cellspacing="0" width="100%" style="background-color: #1dc9b7;">
                                         <thead>
@@ -752,7 +786,7 @@
                                                 <th style="text-align: center;">กิจกรรม</th>
                                                 <th style="text-align: center;">รายละเอียด</th>
                                                 <th style="text-align: center;">งบประมาณ (บาท)</th>
-                                                <th style="text-align: center;">สถานะกิจกรรม</th>
+                                                <th style="text-align: center;">จัดการข้อมูล</th>
                                             </tr>
                                         </thead>
                                         <tbody style="background-color: white;">
@@ -762,13 +796,11 @@
                                                 <td style="text-align:center">{{ $value->ActivityName}}</td>
                                                 <td style="text-align:center">{{ $value->ActivityDetail}}</td>
                                                 <td style="text-align:center">{{ number_format($value->ActivityAmount, 2)}}</td>
-                                                @if($value->ActivityStatus == 1)
-                                                <td style="text-align:center;color:orange">กำลังดำเนินการ</td>
-                                                @elseif($value->ActivityStatus == 2)
-                                                <td style="text-align:center;color:#449d44">สำเร็จ</td>
-                                                @else
-                                                <td></td>
-                                                @endif
+                                                <td style="text-align:center; display: flex; gap: 1%; justify-content: center;">
+                                                    @if($value->ActivityStatus == 1)
+                                                    <button type="button" data-id="{{$value->id}}" class="btn editActivityBtn" style="color: white; background-color: orange">แก้ไข</button>
+                                                    @endif
+                                                </td>
                                             </tr>
                                             @endforeach
                                         </tbody>
@@ -776,12 +808,57 @@
                                 </div>
                             </div>
                         </div>
-                        <input type="hidden" id="DetailSub" name="DetailSub" value="{{$getAccountBudgetCenterSubById->Detail}}">
-                        <input type="hidden" id="DetailQuantitativeGoal" name="DetailQuantitativeGoal" value="{{$getAccountBudgetCenterSubDetailById->QuantitativeGoal}}">
+                        <div class="addMore">
+                            <div class="row mt-1">
+                                <div class="col-sm-12">
+                                    <div class="form-group">
+                                        <label>กิจกรรม/ขั้นตอน </label>
+                                        <input type="text" class="form-control" placeholder="กิจกรรม/ขั้นตอน" id="ActivityName">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mt-1">
+                                <div class="col-sm-12">
+                                    <div class="form-group">
+                                        <label>รายละเอียดกิจกรรม </label>
+                                        <textarea type="text" class="form-control" placeholder="รายละเอียดกิจกรรม" id="ActivityDetail"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mt-1">
+                                <div class="col-sm-12">
+                                    <div class="form-group">
+                                        <label>วันเริ่มต้นกิจกรรม </label>
+                                        <input type="date" class="form-control" id="ActivityStartDate">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mt-1">
+                                <div class="col-sm-12">
+                                    <div class="form-group">
+                                        <label>วันสิ้นสุดกิจกรรม </label>
+                                        <input type="date" class="form-control" id="ActivityEndDate">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mt-1">
+                                <div class="col-sm-12">
+                                    <div class="form-group">
+                                        <label>งบประมาณ (บาท)</label>
+                                        <input type="text" class="form-control check_number" placeholder="งบประมาณ (บาท)" id="ActivityAmount" oninput="formatCurrencyInput(this)">
+                                    </div>
+                                </div>
+                            </div>
+                            <hr>
+                            <input type="hidden" id="DetailSub" name="DetailSub" value="{{$getAccountBudgetCenterSubById->Detail}}">
+                            <input type="hidden" value="{{$accSubId}}" id="accSubId">
+                            <input type="hidden" id="DetailQuantitativeGoal" name="DetailQuantitativeGoal" value="{{$getAccountBudgetCenterSubDetailById->QuantitativeGoal}}">
+                        </div>
                         <div class="row mt-1">
                             <div class="col-12">
                                 <div class="form-group" style="display: flex;justify-content:end;gap:1%">
-                                    <a href="/admin/accountBudgetCenter">
+                                    <button type="submit" class="btn" style="color: white ; background-color:#1dc9b7">บันทึก</button>
+                                    <a href="/admin/accountBudgetCenterActivity">
                                         <button type="button" class="btn" style="color: white ; background-color:red">ย้อนกลับ</button>
                                     </a>
                                 </div>
@@ -793,6 +870,70 @@
         </form>
     </div>
 </body>
+<!-- Modal -->
+<div class="modal fade" id="editActivityModal" tabindex="-1" role="dialog" aria-labelledby="addActivityModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <form id="editData" name="editData">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addActivityModalLabel">แก้ไขรายละเอียดแผนงานกิจกรรม</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row mt-1">
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <label>กิจกรรม/โครงการ<strong style="color:red">*</strong></label>
+                                <input type="text" class="form-control" placeholder="กิจกรรม/โครงการ" id="ActivityModalName">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mt-1">
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <label>รายละเอียดกิจกรรม<strong style="color:red">*</strong></label>
+                                <input type="text" class="form-control" placeholder="รายละเอียดกิจกรรม" id="ActivityModalDetail">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mt-1">
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <label>วันเริ่มต้นกิจกรรม </label>
+                                <input type="date" class="form-control" id="ActivityModalStartDate">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mt-1">
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <label>วันสิ้นสุดกิจกรรม </label>
+                                <input type="date" class="form-control" id="ActivityModalEndDate">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mt-1">
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <label>งบประมาณ (บาท)<strong style="color:red">*</strong></label>
+                                <input type="text" class="form-control" placeholder="งบประมาณ (บาท)" id="ActivityModalAmount" oninput="formatCurrencyDataModal(this)">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <input type="hidden" name="ActivityModalId" id="ActivityModalId" value="" />
+                <input type="hidden" name="AccBudgetCenterId" id="AccBudgetCenterId" value="" />
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" id="saveActivityBtn" style="color: white ; background-color:#1dc9b7">บันทึก</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" style="color: white ; background-color:red">ปิด</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<!-- Modal -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 <script type="text/javascript">
@@ -806,9 +947,18 @@
     function formatCurrency(input) {
         input.value = input.value.replace(/[^\d]/g, '').replace(/\B(?=(\d{3})+(?!\d))/g, ',');
     }
+    function formatCurrencyInput(input) {
+        // Check if input value is not empty
+        if (input.value.trim() !== "") {
+            // Remove non-numeric characters
+            let value = input.value.replace(/[^0-9]/g, "");
+            // Format the number to have commas every three digits
+            value = new Intl.NumberFormat('th-TH').format(value);
+            // Set the formatted value back to the input
+            input.value = value;
+        }
+    }
     $(document).ready(function() {
-        $('#BudgetYear').select2();
-        $('#DivisionId').select2();
 
         let editor,editorQuantitativeGoal;
         var DetailSub = $('#DetailSub').val();
@@ -817,7 +967,7 @@
         ClassicEditor
             .create(document.querySelector('#Detail'), {
                 readOnly: true,
-                
+
             })
             .then(editor => {
                 editor.enableReadOnlyMode("editor");
@@ -843,58 +993,64 @@
             .catch(error => {
                 console.error(error);
             });
-        $("form[name=editAccountBudgetSubCenter]").submit(function(event) {
+
+        // เลือก textarea ด้วย ID
+        var textarea = document.getElementById("ActivityDetail");
+
+        // เพิ่ม event listener เมื่อมีการพิมพ์ใน textarea
+        textarea.addEventListener("input", function() {
+            // ปรับขนาดของ textarea ตามข้อความที่ผู้ใช้พิมพ์เข้าไป
+            this.style.height = "auto";
+            this.style.height = (this.scrollHeight) + "px";
+        });
+
+        $("form[name=addAccountBudgetCenterActivity]").submit(function(event) {
             event.preventDefault();
-            var AccId = $('#AccId').val();
-            var AccSubId = $('#AccSubId').val();
-            var BudgetYear = $('#BudgetYear').val();
-            var AccName = $('#AccName').val();
-            var DivisionId = $('#DivisionId').val();
-            var SubAmount = $('#SubAmount').val();
-            var AccStartDate = $('#AccStartDate').val();
-            var AccEndDate = $('#AccEndDate').val();
-            var editorData = editor.getData();
-            var Detail = editorData;
 
-            if (!BudgetYear) {
-                showError('กรุณาเลือกปีงบประมาณ');
-                return;
-            }
-            if (!AccName) {
-                showError('กรุณากรอกชื่อยุทธศาสตร์');
-                return;
-            }
-            if (!DivisionId) {
-                showError('กรุณาเลือกฝ่าย');
-                return;
-            }
-            if (!SubAmount) {
-                showError('กรุณากรอกวงเงินงบประมาณ');
-                return;
-            }
-            if (!Detail) {
-                showError('กรุณากรอกแหล่งที่มา/วัตถุประสงค์');
-                return;
-            }
-            var startDate = new Date(AccStartDate);
-            var endDate = new Date(AccEndDate);
+            var accSubId = $('#accSubId').val();
+            var ActivityName = $('#ActivityName').val();
+            var ActivityDetail = $('#ActivityDetail').val();
+            var ActivityAmount = $('#ActivityAmount').val();
+            ActivityAmount = ActivityAmount.replace(/[^\d]/g, '');
+            ActivityAmount = parseInt(ActivityAmount);
 
+            var ActivityStartDate = $('#ActivityStartDate').val();
+            var ActivityEndDate = $('#ActivityEndDate').val();
+            var startDate = new Date(ActivityStartDate);
+            var endDate = new Date(ActivityEndDate);
+            if (!ActivityStartDate) {
+                showError('กรุณากรอกวันที่เริ่มกิจกรรม');
+                return;
+            }
+            if (!ActivityEndDate) {
+                showError('กรุณากรอกวันที่สิ้นสุดกิจกรรม');
+                return;
+            }
             if (endDate < startDate) {
                 showError('วันที่สิ้นสุดต้องไม่เป็นวันที่ก่อนวันที่เริ่มต้น');
                 return;
             }
+            if (!ActivityName) {
+                showError('กรุณากรอกกิจกรรม');
+                return;
+            }
+            if (!ActivityDetail) {
+                showError('กรุณากรอกรายละเอียดกิจกรรม');
+                return;
+            }
+            if (!ActivityAmount) {
+                showError('กรุณากรอกงบประมาณ');
+                return;
+            }
+
             var formData = new FormData();
 
-            formData.append('AccId', AccId);
-            formData.append('AccSubId', AccSubId);
-            formData.append('BudgetYear', BudgetYear);
-            formData.append('AccName', AccName);
-            formData.append('DivisionId', DivisionId);
-            formData.append('SubAmount', SubAmount);
-            formData.append('AccStartDate', AccStartDate);
-            formData.append('AccEndDate', AccEndDate);
-            formData.append('Detail', Detail);
-
+            formData.append('accSubId', accSubId);
+            formData.append('ActivityName', ActivityName);
+            formData.append('ActivityDetail', ActivityDetail);
+            formData.append('ActivityAmount', ActivityAmount);
+            formData.append('ActivityStartDate', ActivityStartDate);
+            formData.append('ActivityEndDate', ActivityEndDate);
             confirmAction(formData);
         });
 
@@ -902,7 +1058,7 @@
         function confirmAction(formData) {
             Swal.fire({
                 title: "ยืนยัน",
-                text: "คุณต้องการแก้ไขแผนงานโครงการย่อย",
+                text: "คุณต้องการสร้างกิจกรรมโครงการ",
                 icon: "question",
                 showCancelButton: true,
                 confirmButtonText: "ใช่",
@@ -917,16 +1073,16 @@
         // Function to handle form submission
         function submitFormData(formData) {
             $.ajax({
-                url: '/editAccountBudgetCenterSubApi',
+                url: '/addAccountBudgetCenterActivityApi',
                 method: 'POST',
                 data: formData,
                 contentType: false,
                 processData: false,
                 success: function(response) {
                     handleSuccess();
-                    if (response.api_message == 'Success') {
+                    if(response.api_message == 'Success'){
                         handleSuccess()
-                    } else {
+                    }else{
                         Swal.fire({
                             title: "Error",
                             text: response.api_message,
@@ -952,7 +1108,7 @@
                 confirmButtonText: "OK",
             }).then((result) => {
                 if (result.isConfirmed) {
-                    window.location.href = "/admin/accountBudgetCenter";
+                    window.location.reload();
                 }
             });
         }
@@ -992,6 +1148,160 @@
         $(".check_number").keypress(function() {
             var dInput = $(this).val();
             return bannedKey(dInput, 1);
+        });
+
+        // เมื่อคลิกที่ปุ่ม "แก้ไขกิจกรรม"
+        var btnEditList = document.querySelectorAll('.editActivityBtn');
+        btnEditList.forEach(function(btnEdit) {
+            btnEdit.addEventListener('click', function() {
+                var ActivityId = $(this).data('id');
+                var formData = new FormData();
+                formData.append("ActivityId", ActivityId);
+                $.ajax({
+                    url: "/getAccountBudgetCenterActivityByIdApi",
+                    method: "POST",
+                    data: formData,
+                    contentType: false,
+                    processData: false,
+                    success: function(response) {
+                        $('#editActivityModal').modal('show');
+                        $('#ActivityModalId').val(response.id);
+                        $('#AccBudgetCenterId').val(response.AccBudgetCenterId);
+                        $('#ActivityModalName').val(response.ActivityName);
+                        $('#ActivityModalDetail').val(response.ActivityDetail);
+                        $('#ActivityModalAmount').val(response.ActivityAmount);
+                        $('#ActivityModalStartDate').val(response.ActivityStartDate);
+                        $('#ActivityModalEndDate').val(response.ActivityEndDate);
+
+                        $('#saveActivityBtn').on('click', function() {
+                            var ActivityModalId = $('#ActivityModalId').val();
+                            var AccBudgetCenterId = $('#AccBudgetCenterId').val();
+                            
+                            var ActivityModalName = $('#ActivityModalName').val();
+                            var ActivityModalDetail = $('#ActivityModalDetail').val();
+                            var ActivityModalAmount = $('#ActivityModalAmount').val();
+                            var ActivityModalStartDate = $('#ActivityModalStartDate').val(); 
+                            var ActivityModalEndDate = $('#ActivityModalEndDate').val(); 
+                            var startDate = new Date(ActivityModalStartDate);
+                            var endDate = new Date(ActivityModalEndDate);
+                            if (!ActivityModalStartDate) {
+                                showError('กรุณากรอกวันที่เริ่มกิจกรรม');
+                                return;
+                            }
+                            if (!ActivityModalEndDate) {
+                                showError('กรุณากรอกวันที่สิ้นสุดกิจกรรม');
+                                return;
+                            }
+                            if (endDate < startDate) {
+                                showError('วันที่สิ้นสุดต้องไม่เป็นวันที่ก่อนวันที่เริ่มต้น');
+                                return;
+                            }
+                            if (!ActivityModalName) {
+                                showError('กรุณากรอกกิจกรรม');
+                                return;
+                            }
+                            if (!ActivityModalDetail) {
+                                showError('กรุณากรอกรายละเอียดกิจกรรม');
+                                return;
+                            }
+                            if (!ActivityModalAmount) {
+                                showError('กรุณากรอกงบประมาณ');
+                                return;
+                            }
+                            var formData = new FormData();
+                            formData.append("ActivityModalId", ActivityModalId);
+                            formData.append("AccBudgetCenterId", AccBudgetCenterId);
+                            formData.append("ActivityModalName", ActivityModalName);
+                            formData.append("ActivityModalDetail", ActivityModalDetail);
+                            formData.append("ActivityModalAmount", ActivityModalAmount);
+                            formData.append("ActivityModalStartDate", ActivityModalStartDate);
+                            formData.append("ActivityModalEndDate", ActivityModalEndDate);
+                            $.ajax({
+                                url: "/editAccountBudgetCenterActivity",
+                                method: "POST",
+                                data: formData,
+                                contentType: false,
+                                processData: false,
+                                success: function(response) {
+                                    handleSuccess();
+                                    if(response.api_message == 'Success'){
+                                        handleSuccess()
+                                    }else{
+                                        Swal.fire({
+                                            title: "Error",
+                                            text: response.api_message,
+                                            icon: "error",
+                                            showCancelButton: false,
+                                            confirmButtonText: "OK",
+                                        });
+                                    }
+                                },
+                                error: function(xhr, status, error) {
+                                    // จัดการข้อผิดพลาดตามที่ต้องการ
+                                    console.error(error);
+                                }
+                            });
+                            
+                            // Close the modal after handling the delete
+                            // $('#editActivityModal').modal('hide');
+                        });
+                    },
+                    error: function(xhr, status, error) {
+                        console.error(error);
+                    }
+                });
+            });
+        });
+
+        // เมื่อคลิกที่ปุ่ม "อัพเดทกิจกรรม"
+        var btnUpdateList = document.querySelectorAll('.updateActivityBtn');
+        btnUpdateList.forEach(function(btnUpdate) {
+            btnUpdate.addEventListener('click', function() {
+                var ActivityId = $(this).data('id');
+
+                // Swal เตือนก่อนทำรายการ
+                Swal.fire({
+                    title: 'คุณแน่ใจหรือไม่?',
+                    text: "คุณต้องการที่จะเปลี่ยนสถานะจาก กำลังดำเนินการ เป็น เสร็จสิ้นใช่หรือไม่?",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'ใช่, เสร็จสิ้น!',
+                    cancelButtonText: 'ยกเลิก'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        // ทำการอัปเดตกิจกรรม
+                        var formData = new FormData();
+                        formData.append("ActivityId", ActivityId);
+                        $.ajax({
+                            url: "/updateStatusAccountBudgetCenterActivity",
+                            method: "POST",
+                            data: formData,
+                            contentType: false,
+                            processData: false,
+                            success: function(response) {
+                                handleSuccess();
+                                if(response.api_message == 'Success'){
+                                    handleSuccess()
+                                }else{
+                                    Swal.fire({
+                                        title: "Error",
+                                        text: response.api_message,
+                                        icon: "error",
+                                        showCancelButton: false,
+                                        confirmButtonText: "OK",
+                                    });
+                                }
+                            },
+                            error: function(xhr, status, error) {
+                                // จัดการข้อผิดพลาดตามที่ต้องการ
+                                console.error(error);
+                            }
+                        });
+                    }
+                });
+            });
         });
     });
 </script>

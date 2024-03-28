@@ -160,17 +160,13 @@
 
 <body>
     <div class="page-content">
-        <ol class="breadcrumb page-breadcrumb">
-            <li class="breadcrumb-item"><a href="/home">หน้าหลัก</a></li>
-            <li class="breadcrumb-item active">แผนงานโครงการ</li>
-        </ol>
-        <div class="row">
+        <!-- <div class="row">
             <div class="col-lg-12 sortable-grid ui-sortable" style="padding: 10px;">
                 <div class="panel panel-sortable" role="widget" style="width: 100% !important;height:300px !important">
                     <canvas id="myChart"></canvas>
                 </div>
             </div>
-        </div>
+        </div> -->
         <div class="row">
             <div class="col-lg-12 sortable-grid ui-sortable" style="padding: 10px;">
                 <div class="panel panel-sortable" role="widget">
@@ -188,7 +184,7 @@
                         <div class="col-sm-4" style="display:flex;justify-content:end;gap:1%">
                             <div class="form-group">
                                 <button type="button" class="btn" data-toggle="modal" data-target="#myModal" style="color: white ; background-color:#1dc9b7">นำเข้าข้อมูล</button>
-                                <button type="button" class="btn btn-success">เทมเพลท</button>
+                                <button type="button" class="btn btn-success" id="downloadTemplate">เทมเพลท</button>
                             </div>
                         </div>
                     </div>
@@ -240,6 +236,7 @@
                                                         <th class="center">วันที่เริ่มต้น-สิ้นสุดโครงการ</th>
                                                         <th class="center">กรอบวงเงินงบประมาณ (บาท)</th>
                                                         <th class="center">งบประมาณ (บาท)</th>
+                                                        <th class="center">ความคืบหน้า</th>
                                                         <th class="center">จัดการข้อมูล</th>
                                                     </tr>
                                                 </thead>
@@ -256,10 +253,11 @@
                                                         <td style="text-align:center">-</td>
                                                         <td style="text-align:center">{{ number_format($center->Amount, 2)}}</td>
                                                         <td style="text-align:center">-</td>
+                                                        <td style="text-align:center">-</td>
                                                         <td style="text-align:center; display: flex; gap: 1%; justify-content: center;">
-                                                            <a href="/addAccountBudgetSubCenter/{{$center->id}}" data-id="{{$center->id}}" class="btn addAccountBudgetSubCenterBtn" style="color: white; background-color: #449d44">เพิ่มโครงการย่อย</a>
-                                                            <a href="/editAccountBudgetCenter/{{$center->id}}" class="btn" style="color: white; background-color: orange">แก้ไข</a>
-                                                            <button data-id="{{$center->id}}" class="btn deleteAccountCenter" style="color: white; background-color: red">ลบ</button>
+                                                            <a href="/addAccountBudgetSubCenter/{{$center->id}}" data-id="{{$center->id}}" class="btn addAccountBudgetSubCenterBtn" style="color: white; background-color: #449d44;">เพิ่มโครงการย่อย</a>
+                                                            <a href="/editAccountBudgetCenter/{{$center->id}}" class="btn" style="color: white; background-color: orange;">แก้ไข</a>
+                                                            <button data-id="{{$center->id}}" class="btn deleteAccountCenter" style="color: white; background-color: red;">ลบ</button>
                                                         </td>
                                                     </tr>
 
@@ -296,11 +294,19 @@
                                                         <td style="text-align:center">{{$StartAtThai}} - {{$EndAtThai}}</td>
                                                         <td class="text-right" style="text-align: center">-</td>
                                                         <td class="text-right" style="text-align: center">{{ number_format($centerSub->SubAmount, 2) }}</td>
+                                                        <td class="text-right" style="text-align: center">
+                                                        <div class="progress progress-xs">
+                                                                <div class="progress-bar progress-bar-striped" role="progressbar" aria-valuenow="<?=$centerSub->percentage ?>" aria-valuemin="0" aria-valuemax="100" style="width:<?=$centerSub->percentage?>%; background-color: #1ab3a3; ">
+                                                                </div>
+                                                            </div>
+                                                        {{$centerSub->percentage}}% เสร็จแล้ว
+                                                        </td>
+                                                       
                                                         <td style="text-align:center; display: flex; gap: 1%; justify-content: center;">
-                                                            <a href="/viewAccountBudgetCenterSub/{{$centerSub->id}}" class="btn" style="color: white; background-color: #09d7f7">ดูข้อมูล</a>
-                                                            <a href="/addAccountBudgetCenterActivity/{{$centerSub->id}}" class="btn" style="color: white; background-color: #449d44">อัพเดทกิจกรรม</a>
-                                                            <a href="/editAccountBudgetCenterSub/{{$centerSub->id}}" class="btn" style="color: white; background-color: orange">แก้ไข</a>
-                                                            <button data-id="{{$centerSub->id}}" class="btn deleteAccountCenterSub" style="color: white; background-color: red">ลบ</button>
+                                                            <a href="/viewAccountBudgetCenterSub/{{$centerSub->id}}" class="btn" style="color: white; background-color: #09d7f7;">ดูข้อมูล</a>
+                                                            <!-- <a href="/addAccountBudgetCenterActivity/{{$centerSub->id}}" class="btn" style="color: white; background-color: #1dc9b7;">อัพเดทกิจกรรม</a> -->
+                                                            <a href="/editAccountBudgetCenterSub/{{$centerSub->id}}" class="btn" style="color: white; background-color: orange;">แก้ไข</a>
+                                                            <button data-id="{{$centerSub->id}}" class="btn deleteAccountCenterSub" style="color: white; background-color: red;">ลบ</button>
                                                         </td>
                                                     </tr>
                                                     @php
@@ -354,9 +360,8 @@
 </body>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script>
+<!-- <script>
     const data = @json($getAccountBudgetCenter->pluck('Amount', 'AccName'));
-
     const ctx = document.getElementById('myChart');
 
     // Function to generate random colors
@@ -394,13 +399,21 @@
             }
         }
     });
-</script>
+</script> -->
 <script>
     jQuery.noConflict();
     jQuery(document).ready(function($) {
         $('.select2').select2();
         $('#BudgetYear').select2();
         $('#DivisionId').select2();
+
+        document.getElementById("downloadTemplate").addEventListener("click", function() {
+            downloadFile();
+        });
+        //FileDownload
+        function downloadFile() {
+            window.location.href = "/fileDownload/import_accountBudgetCenter.csv";
+        }
 
         //Uploads
         $("form[name=uploadFile]").submit(function(event) {
@@ -486,9 +499,9 @@
 
         function updateTable(responseDetail, getAccountBudgetCenter, getAccountBudgetCenterSub) {
 
-            // console.log("responseDetail>>", responseDetail);
-            // console.log("getAccountBudgetCenter>>", getAccountBudgetCenter);
-            // console.log("getAccountBudgetCenterSub>>", getAccountBudgetCenterSub);
+            console.log("responseDetail>>", responseDetail);
+            console.log("getAccountBudgetCenter>>", getAccountBudgetCenter);
+            console.log("getAccountBudgetCenterSub>>", getAccountBudgetCenterSub);
 
             var tableBody = $('#datatable tbody');
             tableBody.empty();
@@ -510,6 +523,7 @@
                                 <td style="text-align:center">-</td>
                                 <td style="text-align:center">${Amount}</td>
                                 <td style="text-align:center">-</td>
+                                <td style="text-align: center">-</td>
                                 <td style="text-align:center; display: flex; gap: 1%; justify-content: center;">
                                     <a href="/addAccountBudgetSubCenter/${center.id}" data-id="${center.id}" class="btn addAccountBudgetSubCenterBtn" style="color: white; background-color: #449d44">เพิ่มโครงการย่อย</a>
                                     <a href="/editAccountBudgetCenter/${center.id}" class="btn" style="color: white; background-color: orange">แก้ไข</a>
@@ -548,9 +562,15 @@
                                         <td style="text-align: center">${formattedStartDate} - ${formattedEndDate}</td>
                                         <td style="text-align: center">-</td>
                                         <td style="text-align: center">${SubAmount}</td>
+                                        <td style="text-align: center">
+                                        <div class="progress progress-xs">
+                                                <div class="progress-bar progress-bar-striped" role="progressbar" aria-valuenow="${centersub.percentage}" aria-valuemin="0" aria-valuemax="100" style="width:${centersub.percentage}%; background-color: #1ab3a3; ">
+                                                </div>
+                                            </div>
+                                        ${centersub.percentage}% เสร็จแล้ว
+                                        </td>
                                         <td style="text-align:center; display: flex; gap: 1%; justify-content: center;">
                                             <a href="/viewAccountBudgetCenterSub/${centersub.id}" class="btn" style="color: white; background-color: #09d7f7">ดูข้อมูล</a>
-                                            <a href="/addAccountBudgetCenterActivity/${centersub.id}" class="btn" style="color: white; background-color: #449d44">อัพเดทกิจกรรม</a>
                                             <a href="/editAccountBudgetCenterSub/${centersub.id}" class="btn" style="color: white; background-color: orange">แก้ไข</a>
                                             <button data-id="${centersub.id}" class="btn deleteAccountCenterSub" style="color: white; background-color: red">ลบ</button>
                                         </td>
@@ -622,7 +642,6 @@
                                         <td style="text-align: center">${SubAmount}</td>
                                         <td style="text-align:center; display: flex; gap: 1%; justify-content: center;">
                                             <a href="/viewAccountBudgetCenterSub/${centersub.id}" class="btn" style="color: white; background-color: #09d7f7">ดูข้อมูล</a>
-                                            <a href="/addAccountBudgetCenterActivity/${centersub.id}" class="btn" style="color: white; background-color: #449d44">อัพเดทกิจกรรม</a>
                                             <a href="/editAccountBudgetCenterSub/${centersub.id}" class="btn" style="color: white; background-color: orange">แก้ไข</a>
                                             <button data-id="${centersub.id}" class="btn deleteAccountCenterSub" style="color: white; background-color: red">ลบ</button>
                                         </td>
@@ -694,7 +713,6 @@
                                         <td style="text-align: center">${SubAmount}</td>
                                         <td style="text-align:center; display: flex; gap: 1%; justify-content: center;">
                                             <a href="/viewAccountBudgetCenterSub/${centersub.id}" class="btn" style="color: white; background-color: #09d7f7">ดูข้อมูล</a>
-                                            <a href="/addAccountBudgetCenterActivity/${centersub.id}" class="btn" style="color: white; background-color: #449d44">อัพเดทกิจกรรม</a>
                                             <a href="/editAccountBudgetCenterSub/${centersub.id}" class="btn" style="color: white; background-color: orange">แก้ไข</a>
                                             <button data-id="${centersub.id}" class="btn deleteAccountCenterSub" style="color: white; background-color: red">ลบ</button>
                                         </td>
@@ -715,6 +733,7 @@
             var BudgetYear = $("#BudgetYear").val();
             var DivisionId = $("#DivisionId").val();
             var url ="/ExportAccountBudgetCenter?BudgetCenter=1&BudgetYear="+BudgetYear+"&DivisionId="+DivisionId;
+            download(url);
         });
 
         //Download

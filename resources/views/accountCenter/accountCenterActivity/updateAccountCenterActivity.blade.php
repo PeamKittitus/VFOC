@@ -72,14 +72,53 @@
         .select2-container {
             width: 100% !important;
         }
+
+        .plus-button {
+            border: 2px solid white;
+            background-color: #1dc9b7;
+            font-size: 16px;
+            height: 2.5em;
+            width: 2.5em;
+            border-radius: 999px;
+            position: relative;
+
+            &:after,
+            &:before {
+                content: "";
+                display: block;
+                background-color: white;
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+            }
+
+            &:before {
+                height: 1em;
+                width: 0.2em;
+            }
+
+            &:after {
+                height: 0.2em;
+                width: 1em;
+            }
+        }
+
+        .plus-button--small {
+            font-size: 12px;
+        }
+
+        .plus-button--large {
+            font-size: 17px;
+        }
     </style>
 </head>
 
 <body>
 
     <div class="w-box" style="margin: auto !important; padding: 10px">
-        <h4 style="text-align: center;color:black">รายละเอียดแผนงานโครงการย่อย</h4>
-        <form id="editAccountBudgetSubCenter" name="editAccountBudgetSubCenter" method="post" enctype="multipart/form-data">
+        <h4 style="text-align: center;color:black">สร้างกิจกรรมโครงการ</h4>
+        <form id="addAccountBudgetCenterActivity" name="addAccountBudgetCenterActivity" method="post" enctype="multipart/form-data">
             <div class="row">
                 <div class="col-12 col-sm-12 box-right">
                     <div class="box-right-d">
@@ -126,7 +165,7 @@
                         <div class="row mt-1">
                             <div class="col-sm-12">
                                 <div class="form-group">
-                                    <label>ชื่อแผนงาน/โครงการ <span style="color: red;">*</span></label>
+                                    <label>ชื่อแผนงาน/โครงการ </label>
                                     <input type="text" class="form-control" placeholder="ชื่อแผนงาน/โครงการ" id="AccName" value="{{$getAccountBudgetCenterSubById->AccName}}" disabled>
                                 </div>
                             </div>
@@ -134,7 +173,7 @@
                         <div class="row mt-1">
                             <div class="col-sm-12">
                                 <div class="form-group">
-                                    <label>ฝ่าย <span style="color: red;">*</span></label>
+                                    <label>ฝ่าย </label>
                                     <select class="form-control" id="DivisionId" disabled>
                                         <option value="0" disabled>----เลือกฝ่าย----</option>
                                         <?php foreach ($getDivision as $division) : ?>
@@ -201,9 +240,9 @@
                                 <div class="form-group" style="display: flex;gap: 1%;align-items: center;">
                                     <label>1.1 )</label>
                                     <?php
-                                        $projectType = $getAccountBudgetCenterSubDetailById->ProjectType;
-                                        $isCheckedValue1 = ($projectType == 1) ? 'checked' : '';
-                                        $isCheckedValue2 = ($projectType == 2) ? 'checked' : '';
+                                    $projectType = $getAccountBudgetCenterSubDetailById->ProjectType;
+                                    $isCheckedValue1 = ($projectType == 1) ? 'checked' : '';
+                                    $isCheckedValue2 = ($projectType == 2) ? 'checked' : '';
                                     ?>
                                     <label><input type="radio" name="ProjectType" value="1" <?= $isCheckedValue1 ?> disabled> พัฒนา </label>
                                     <label><input type="radio" name="ProjectType" value="2" <?= $isCheckedValue2 ?> disabled> ดำเนินการปกติ </label>
@@ -212,14 +251,14 @@
                         </div>
                         <div class="row mt-1">
                             <?php
-                                $ProjectExternal = $getAccountBudgetCenterSubDetailById->ProjectExternal;
-                                $isCheckedValue1 = ($ProjectExternal == 1) ? 'checked' : '';
-                                $isCheckedValue2 = ($ProjectExternal == 2) ? 'checked' : '';
-                                $isCheckedValue3 = ($ProjectExternal == 3) ? 'checked' : '';
+                            $ProjectExternal = $getAccountBudgetCenterSubDetailById->ProjectExternal;
+                            $isCheckedValue1 = ($ProjectExternal == 1) ? 'checked' : '';
+                            $isCheckedValue2 = ($ProjectExternal == 2) ? 'checked' : '';
+                            $isCheckedValue3 = ($ProjectExternal == 3) ? 'checked' : '';
 
-                                $externalAgencyHideStyle1 = ($ProjectExternal == 1) ? 'style="display: block;"' : 'style="display: none;"';
-                                $externalAgencyHideStyle2 = ($ProjectExternal == 2) ? 'style="display: block;"' : 'style="display: none;"';
-                                $externalAgencyHideStyle3 = ($ProjectExternal == 3) ? 'style="display: block;"' : 'style="display: none;"';
+                            $externalAgencyHideStyle1 = ($ProjectExternal == 1) ? 'style="display: block;"' : 'style="display: none;"';
+                            $externalAgencyHideStyle2 = ($ProjectExternal == 2) ? 'style="display: block;"' : 'style="display: none;"';
+                            $externalAgencyHideStyle3 = ($ProjectExternal == 3) ? 'style="display: block;"' : 'style="display: none;"';
                             ?>
                             <div class="col-sm-6">
                                 <div class="form-group" style="display: flex;gap:1%;align-items:baseline">
@@ -266,13 +305,13 @@
                             <div class="col-sm-12">
                                 <div class="form-group" style="display: flex;align-items:baseline;gap:1%">
                                     <?php
-                                        $ProjectCharacteristics = $getAccountBudgetCenterSubDetailById->ProjectCharacteristics;
-                                        $labels = array("ด้านเศรษฐกิจ", "ด้านสังคม", "ด้านสิ่งแวดล้อม", "ด้านความมั่นคง", "ด้านคุณภาพชีวิต");
+                                    $ProjectCharacteristics = $getAccountBudgetCenterSubDetailById->ProjectCharacteristics;
+                                    $labels = array("ด้านเศรษฐกิจ", "ด้านสังคม", "ด้านสิ่งแวดล้อม", "ด้านความมั่นคง", "ด้านคุณภาพชีวิต");
 
-                                        for ($i = 1; $i <= 5; $i++) {
-                                            $isChecked = ($ProjectCharacteristics == $i) ? 'checked' : '';
-                                            echo '<label><input type="radio" name="ProjectCharacteristics" disabled value="' . $i . '" ' . $isChecked . '> ' . $labels[$i-1] . '</label>';
-                                        }
+                                    for ($i = 1; $i <= 5; $i++) {
+                                        $isChecked = ($ProjectCharacteristics == $i) ? 'checked' : '';
+                                        echo '<label><input type="radio" name="ProjectCharacteristics" disabled value="' . $i . '" ' . $isChecked . '> ' . $labels[$i - 1] . '</label>';
+                                    }
                                     ?>
                                 </div>
                             </div>
@@ -286,13 +325,13 @@
                             <div class="col-sm-12">
                                 <div class="form-group" style="display: flex;align-items:baseline;gap:1%">
                                     <?php
-                                        $OperationalCharacteristics = $getAccountBudgetCenterSubDetailById->OperationalCharacteristics;
-                                        $labels = array("ทำครั้งเดียว", "ทำซ้ำทุกปีในกลุ่มเป้าหมายเดิม", "ทำซ้ำทุกปีโดยขยายกลุ่มเป้าหมายใหม่");
+                                    $OperationalCharacteristics = $getAccountBudgetCenterSubDetailById->OperationalCharacteristics;
+                                    $labels = array("ทำครั้งเดียว", "ทำซ้ำทุกปีในกลุ่มเป้าหมายเดิม", "ทำซ้ำทุกปีโดยขยายกลุ่มเป้าหมายใหม่");
 
-                                        for ($i = 1; $i <= 3; $i++) {
-                                            $isChecked = ($OperationalCharacteristics == $i) ? 'checked' : '';
-                                            echo '<label><input type="radio" disabled name="OperationalCharacteristics" value="' . $i . '" ' . $isChecked . '> ' . $labels[$i-1] . '</label>';
-                                        }
+                                    for ($i = 1; $i <= 3; $i++) {
+                                        $isChecked = ($OperationalCharacteristics == $i) ? 'checked' : '';
+                                        echo '<label><input type="radio" disabled name="OperationalCharacteristics" value="' . $i . '" ' . $isChecked . '> ' . $labels[$i - 1] . '</label>';
+                                    }
                                     ?>
                                     <!-- <label><input type="radio" name="OperationalCharacteristics" value="1"> ทำครั้งเดียว</label>
                                     <label><input type="radio" name="OperationalCharacteristics" value="2"> ทำซ้ำทุกปีในกลุ่มเป้าหมายเดิม</label>
@@ -309,12 +348,12 @@
                             <div class="col-sm-12">
                                 <div class="form-group" style="display: flex;align-items:baseline;gap:1%">
                                     <?php
-                                        $Experience = $getAccountBudgetCenterSubDetailById->Experience;
-                                        $isCheckedValue1 = ($Experience == 1) ? 'checked' : '';
-                                        $isCheckedValue2 = ($Experience == 2) ? 'checked' : '';
-                                        $isCheckedValue3 = ($Experience == 3) ? 'checked' : '';
+                                    $Experience = $getAccountBudgetCenterSubDetailById->Experience;
+                                    $isCheckedValue1 = ($Experience == 1) ? 'checked' : '';
+                                    $isCheckedValue2 = ($Experience == 2) ? 'checked' : '';
+                                    $isCheckedValue3 = ($Experience == 3) ? 'checked' : '';
 
-                                        $ExperienceHideStyle3 = ($Experience == 3) ? 'style="display: block;"' : 'style="display: none;"';
+                                    $ExperienceHideStyle3 = ($Experience == 3) ? 'style="display: block;"' : 'style="display: none;"';
                                     ?>
                                     <label><input type="radio" name="Experience" value="1" <?= $isCheckedValue1 ?> disabled> เป็นโครงการริเริ่มใหม่</label>
                                     <label><input type="radio" name="Experience" value="2" <?= $isCheckedValue2 ?> disabled> เป็นโครงการเดิมที่นำมาต่อยอดขยายผล</label>
@@ -351,9 +390,9 @@
                             </div>
                         </div>
                         <?php
-                            $Strategy = $getAccountBudgetCenterSubDetailById->StrategyId;
+                        $Strategy = $getAccountBudgetCenterSubDetailById->StrategyId;
 
-                            $StrategyHideStyle = ($Experience != 0) ? 'style="display: block;"' : 'style="display: none;"';
+                        $StrategyHideStyle = ($Experience != 0) ? 'style="display: block;"' : 'style="display: none;"';
                         ?>
                         <div <?= $StrategyHideStyle ?>>
                             <div class="row mt-1">
@@ -382,10 +421,10 @@
                             <div class="col-sm-12">
                                 <div class="form-group">
                                     <?php
-                                        $MasterPlan = $getAccountBudgetCenterSubDetailById->MasterPlan;
-                                        $isCheckedValue1 = ($MasterPlan == 1) ? 'checked' : '';
+                                    $MasterPlan = $getAccountBudgetCenterSubDetailById->MasterPlan;
+                                    $isCheckedValue1 = ($MasterPlan == 1) ? 'checked' : '';
 
-                                        $MasterPlaneHideStyle1 = ($MasterPlan == 1) ? 'style="display: block;"' : 'style="display: none;"';
+                                    $MasterPlaneHideStyle1 = ($MasterPlan == 1) ? 'style="display: block;"' : 'style="display: none;"';
                                     ?>
                                     <input type="checkbox" name="MasterPlan" id="MasterPlan" <?= $isCheckedValue1 ?> disabled>
                                     <label>แผนแม่บทภายใต้ยุทธศาสตร์ชาติ (23 ประเด็น)</label>
@@ -414,10 +453,10 @@
                             <div class="col-sm-12">
                                 <div class="form-group">
                                     <?php
-                                        $DevelopmentPlan = $getAccountBudgetCenterSubDetailById->DevelopmentPlan;
-                                        $isCheckedValue1 = ($DevelopmentPlan == 1) ? 'checked' : '';
+                                    $DevelopmentPlan = $getAccountBudgetCenterSubDetailById->DevelopmentPlan;
+                                    $isCheckedValue1 = ($DevelopmentPlan == 1) ? 'checked' : '';
 
-                                        $DevelopmentPlanHideStyle1 = ($DevelopmentPlan == 1) ? 'style="display: block;"' : 'style="display: none;"';
+                                    $DevelopmentPlanHideStyle1 = ($DevelopmentPlan == 1) ? 'style="display: block;"' : 'style="display: none;"';
                                     ?>
                                     <input type="checkbox" name="DevelopmentPlan" id="DevelopmentPlan" <?= $isCheckedValue1 ?> disabled>
                                     <label>แผนพัฒนาเศรษฐกิจและสังคมแห่งชาติ ฉบับที่ 13</label>
@@ -454,10 +493,10 @@
                             <div class="col-sm-12">
                                 <div class="form-group">
                                     <?php
-                                        $PolicyPlan = $getAccountBudgetCenterSubDetailById->PolicyPlan;
-                                        $isCheckedValue1 = ($PolicyPlan == 1) ? 'checked' : '';
+                                    $PolicyPlan = $getAccountBudgetCenterSubDetailById->PolicyPlan;
+                                    $isCheckedValue1 = ($PolicyPlan == 1) ? 'checked' : '';
 
-                                        $PolicyPlanHideStyle1 = ($PolicyPlan == 1) ? 'style="display: block;"' : 'style="display: none;"';
+                                    $PolicyPlanHideStyle1 = ($PolicyPlan == 1) ? 'style="display: block;"' : 'style="display: none;"';
                                     ?>
                                     <input type="checkbox" name="PolicyPlan" id="PolicyPlan" <?= $isCheckedValue1 ?> disabled>
                                     <label>แผน/นโยบาย</label>
@@ -480,17 +519,17 @@
                             <div class="col-sm-12">
                                 <div class="form-group">
                                     <?php
-                                        $ActionPlan = $getAccountBudgetCenterSubDetailById->ActionPlan;
-                                        $isCheckedValue1 = ($ActionPlan == 1) ? 'checked' : '';
+                                    $ActionPlan = $getAccountBudgetCenterSubDetailById->ActionPlan;
+                                    $isCheckedValue1 = ($ActionPlan == 1) ? 'checked' : '';
 
-                                        $ActionPlanHideStyle1 = ($ActionPlan == 1) ? 'style="display: block;"' : 'style="display: none;"';
+                                    $ActionPlanHideStyle1 = ($ActionPlan == 1) ? 'style="display: block;"' : 'style="display: none;"';
                                     ?>
                                     <input type="checkbox" name="ActionPlan" id="ActionPlan" <?= $isCheckedValue1 ?> disabled>
                                     <label>แผนปฎิบัติการ (ด้าน)</label>
                                 </div>
                             </div>
                         </div>
-                        <div class="row mt-1" <?= $ActionPlanHideStyle1 ?> id="ActionPlanHide">
+                        <div class="row mt-1" <?= $isCheckedValue1 ?> id="ActionPlanHide">
                             <div class="col-sm-12">
                                 <div class="form-group">
                                     <input type="text" class="form-control" placeholder="แผนปฎิบัติการ (ด้าน)" id="ActionPlanDetail" value="{{$getAccountBudgetCenterSubDetailById->ActionPlanDetail}}" disabled>
@@ -501,10 +540,10 @@
                             <div class="col-sm-12">
                                 <div class="form-group">
                                     <?php
-                                        $CommunityFundStrategicPlan = $getAccountBudgetCenterSubDetailById->CommunityFundStrategicPlan;
-                                        $isCheckedValue1 = ($CommunityFundStrategicPlan == 1) ? 'checked' : '';
+                                    $CommunityFundStrategicPlan = $getAccountBudgetCenterSubDetailById->CommunityFundStrategicPlan;
+                                    $isCheckedValue1 = ($CommunityFundStrategicPlan == 1) ? 'checked' : '';
 
-                                        $CommunityFundStrategicPlanHideStyle1 = ($CommunityFundStrategicPlan == 1) ? 'style="display: block;"' : 'style="display: none;"';
+                                    $CommunityFundStrategicPlanHideStyle1 = ($CommunityFundStrategicPlan == 1) ? 'style="display: block;"' : 'style="display: none;"';
                                     ?>
                                     <input type="checkbox" name="CommunityFundStrategicPlan" id="CommunityFundStrategicPlan" <?= $isCheckedValue1 ?> disabled>
                                     <label>แผนยุทธศาสตร์กองทุนหมู่บ้านและชุมชนเมืองแห่งชาติ</label>
@@ -522,10 +561,10 @@
                             <div class="col-sm-12">
                                 <div class="form-group">
                                     <?php
-                                        $OperationalPlans = $getAccountBudgetCenterSubDetailById->OperationalPlans;
-                                        $isCheckedValue1 = ($OperationalPlans == 1) ? 'checked' : '';
+                                    $OperationalPlans = $getAccountBudgetCenterSubDetailById->OperationalPlans;
+                                    $isCheckedValue1 = ($OperationalPlans == 1) ? 'checked' : '';
 
-                                        $OperationalPlansHideStyle1 = ($OperationalPlans == 1) ? 'style="display: block;"' : 'style="display: none;"';
+                                    $OperationalPlansHideStyle1 = ($OperationalPlans == 1) ? 'style="display: block;"' : 'style="display: none;"';
                                     ?>
                                     <input type="checkbox" name="OperationalPlans" id="OperationalPlans" <?= $isCheckedValue1 ?> disabled>
                                     <label>แผนปฎิบัติการ ระยะ 5 ปี และประจำปี</label>
@@ -549,16 +588,16 @@
                             <div class="col-sm-12">
                                 <div class="form-group">
                                     <?php
-                                        $ProjectOriginId = $getAccountBudgetCenterSubDetailById->ProjectOriginId;
-                                        $isCheckedValue0 = ($ProjectOriginId == 0) ? 'selected' : '';
-                                        $isCheckedValue1 = ($ProjectOriginId == 1) ? 'selected' : '';
-                                        $isCheckedValue2 = ($ProjectOriginId == 2) ? 'selected' : '';
-                                        $isCheckedValue3 = ($ProjectOriginId == 3) ? 'selected' : '';
-                                        $isCheckedValue4 = ($ProjectOriginId == 4) ? 'selected' : '';
+                                    $ProjectOriginId = $getAccountBudgetCenterSubDetailById->ProjectOriginId;
+                                    $isCheckedValue0 = ($ProjectOriginId == 0) ? 'selected' : '';
+                                    $isCheckedValue1 = ($ProjectOriginId == 1) ? 'selected' : '';
+                                    $isCheckedValue2 = ($ProjectOriginId == 2) ? 'selected' : '';
+                                    $isCheckedValue3 = ($ProjectOriginId == 3) ? 'selected' : '';
+                                    $isCheckedValue4 = ($ProjectOriginId == 4) ? 'selected' : '';
 
-                                        $ProjectOriginIdsHideStyle1 = ($ProjectOriginId != 0) ? 'style="display: block;"' : 'style="display: none;"';
+                                    $ProjectOriginIdsHideStyle1 = ($ProjectOriginId != 0) ? 'style="display: block;"' : 'style="display: none;"';
                                     ?>
-                                    <select disabled class="form-control" id="ProjectOriginId" onchange="showHideDiv()">
+                                    <select disabled class="form-control" id="ProjectOriginId">
                                         <option value="0" <?= $isCheckedValue0 ?> disabled>----เลือกที่มาของโครงการ----</option>
                                         <option value="1" <?= $isCheckedValue1 ?>>มติคณะรัฐมนตรี (ชุดปัจจุบัน)</option>
                                         <option value="2" <?= $isCheckedValue2 ?>>ข้อสั่งการของนายกรัฐมนตรี</option>
@@ -752,7 +791,7 @@
                                                 <th style="text-align: center;">กิจกรรม</th>
                                                 <th style="text-align: center;">รายละเอียด</th>
                                                 <th style="text-align: center;">งบประมาณ (บาท)</th>
-                                                <th style="text-align: center;">สถานะกิจกรรม</th>
+                                                <th style="text-align: center;">จัดการข้อมูล</th>
                                             </tr>
                                         </thead>
                                         <tbody style="background-color: white;">
@@ -762,13 +801,12 @@
                                                 <td style="text-align:center">{{ $value->ActivityName}}</td>
                                                 <td style="text-align:center">{{ $value->ActivityDetail}}</td>
                                                 <td style="text-align:center">{{ number_format($value->ActivityAmount, 2)}}</td>
-                                                @if($value->ActivityStatus == 1)
-                                                <td style="text-align:center;color:orange">กำลังดำเนินการ</td>
-                                                @elseif($value->ActivityStatus == 2)
-                                                <td style="text-align:center;color:#449d44">สำเร็จ</td>
-                                                @else
-                                                <td></td>
-                                                @endif
+                                                <td style="text-align:center; display: flex; gap: 1%; justify-content: center;">
+                                                    <a href="/viewAccountCenterActivityDetail/{{$value->id}}" class="btn" style="color: white; background-color: #1dc9b7;">ดูข้อมูล</a>
+                                                    @if($value->ActivityStatus == 1)
+                                                    <a href="/updateAccountCenterActivityDetail/{{$value->id}}" class="btn" style="color: white; background-color: #1dc9b7;">อัพเดทกิจกรรม</a>
+                                                    @endif
+                                                </td>
                                             </tr>
                                             @endforeach
                                         </tbody>
@@ -776,12 +814,16 @@
                                 </div>
                             </div>
                         </div>
+
+                        <hr>
                         <input type="hidden" id="DetailSub" name="DetailSub" value="{{$getAccountBudgetCenterSubById->Detail}}">
+                        <input type="hidden" value="{{$accSubId}}" id="accSubId">
                         <input type="hidden" id="DetailQuantitativeGoal" name="DetailQuantitativeGoal" value="{{$getAccountBudgetCenterSubDetailById->QuantitativeGoal}}">
+
                         <div class="row mt-1">
                             <div class="col-12">
                                 <div class="form-group" style="display: flex;justify-content:end;gap:1%">
-                                    <a href="/admin/accountBudgetCenter">
+                                    <a href="/admin/accountBudgetCenterActivity">
                                         <button type="button" class="btn" style="color: white ; background-color:red">ย้อนกลับ</button>
                                     </a>
                                 </div>
@@ -800,24 +842,36 @@
         formatCurrencyData(document.getElementById("AccAmount"));
         formatCurrency(document.getElementById("SubAmount"));
     };
+
     function formatCurrencyData(input) {
         input.value = input.value.replace(/[^\d]/g, '').replace(/\B(?=(\d{3})+(?!\d))/g, ',');
     }
+
     function formatCurrency(input) {
         input.value = input.value.replace(/[^\d]/g, '').replace(/\B(?=(\d{3})+(?!\d))/g, ',');
     }
-    $(document).ready(function() {
-        $('#BudgetYear').select2();
-        $('#DivisionId').select2();
 
-        let editor,editorQuantitativeGoal;
+    function formatCurrencyInput(input) {
+        // Check if input value is not empty
+        if (input.value.trim() !== "") {
+            // Remove non-numeric characters
+            let value = input.value.replace(/[^0-9]/g, "");
+            // Format the number to have commas every three digits
+            value = new Intl.NumberFormat('th-TH').format(value);
+            // Set the formatted value back to the input
+            input.value = value;
+        }
+    }
+    $(document).ready(function() {
+
+        let editor, editorQuantitativeGoal;
         var DetailSub = $('#DetailSub').val();
         var DetailQuantitativeGoal = $('#DetailQuantitativeGoal').val();
 
         ClassicEditor
             .create(document.querySelector('#Detail'), {
                 readOnly: true,
-                
+
             })
             .then(editor => {
                 editor.enableReadOnlyMode("editor");
@@ -843,156 +897,6 @@
             .catch(error => {
                 console.error(error);
             });
-        $("form[name=editAccountBudgetSubCenter]").submit(function(event) {
-            event.preventDefault();
-            var AccId = $('#AccId').val();
-            var AccSubId = $('#AccSubId').val();
-            var BudgetYear = $('#BudgetYear').val();
-            var AccName = $('#AccName').val();
-            var DivisionId = $('#DivisionId').val();
-            var SubAmount = $('#SubAmount').val();
-            var AccStartDate = $('#AccStartDate').val();
-            var AccEndDate = $('#AccEndDate').val();
-            var editorData = editor.getData();
-            var Detail = editorData;
-
-            if (!BudgetYear) {
-                showError('กรุณาเลือกปีงบประมาณ');
-                return;
-            }
-            if (!AccName) {
-                showError('กรุณากรอกชื่อยุทธศาสตร์');
-                return;
-            }
-            if (!DivisionId) {
-                showError('กรุณาเลือกฝ่าย');
-                return;
-            }
-            if (!SubAmount) {
-                showError('กรุณากรอกวงเงินงบประมาณ');
-                return;
-            }
-            if (!Detail) {
-                showError('กรุณากรอกแหล่งที่มา/วัตถุประสงค์');
-                return;
-            }
-            var startDate = new Date(AccStartDate);
-            var endDate = new Date(AccEndDate);
-
-            if (endDate < startDate) {
-                showError('วันที่สิ้นสุดต้องไม่เป็นวันที่ก่อนวันที่เริ่มต้น');
-                return;
-            }
-            var formData = new FormData();
-
-            formData.append('AccId', AccId);
-            formData.append('AccSubId', AccSubId);
-            formData.append('BudgetYear', BudgetYear);
-            formData.append('AccName', AccName);
-            formData.append('DivisionId', DivisionId);
-            formData.append('SubAmount', SubAmount);
-            formData.append('AccStartDate', AccStartDate);
-            formData.append('AccEndDate', AccEndDate);
-            formData.append('Detail', Detail);
-
-            confirmAction(formData);
-        });
-
-        // Function to handle form submission confirmation
-        function confirmAction(formData) {
-            Swal.fire({
-                title: "ยืนยัน",
-                text: "คุณต้องการแก้ไขแผนงานโครงการย่อย",
-                icon: "question",
-                showCancelButton: true,
-                confirmButtonText: "ใช่",
-                cancelButtonText: "ไม่",
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    submitFormData(formData);
-                }
-            });
-        }
-
-        // Function to handle form submission
-        function submitFormData(formData) {
-            $.ajax({
-                url: '/editAccountBudgetCenterSubApi',
-                method: 'POST',
-                data: formData,
-                contentType: false,
-                processData: false,
-                success: function(response) {
-                    handleSuccess();
-                    if (response.api_message == 'Success') {
-                        handleSuccess()
-                    } else {
-                        Swal.fire({
-                            title: "Error",
-                            text: response.api_message,
-                            icon: "error",
-                            showCancelButton: false,
-                            confirmButtonText: "OK",
-                        });
-                    }
-                },
-                error: function(xhr, status, error) {
-                    handleError();
-                }
-            });
-        }
-
-        // Function to handle form submission success
-        function handleSuccess() {
-            Swal.fire({
-                title: "สำเร็จ",
-                text: "บันทึกข้อมูลสำเร็จ!",
-                icon: "success",
-                showCancelButton: false,
-                confirmButtonText: "OK",
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    window.location.href = "/admin/accountBudgetCenter";
-                }
-            });
-        }
-
-        // Function to handle form submission error
-        function handleError() {
-            Swal.fire({
-                title: "Error",
-                text: "An error occurred while saving the form data.",
-                icon: "error",
-                showCancelButton: false,
-                confirmButtonText: "OK",
-            });
-        }
-
-        // Function to display error messages
-        function showError(message) {
-            Swal.fire({
-                icon: 'error',
-                title: 'Invalid Input',
-                text: message
-            });
-        }
-
-        // Function to restrict input to numeric characters
-        function bannedKey(evt, lang) {
-            var k = event.keyCode;
-            if (lang == 1) {
-                if ((k >= 48 && k <= 57) || k == 46) {
-                    return true;
-                } else {
-                    return false;
-                }
-            }
-        }
-
-        $(".check_number").keypress(function() {
-            var dInput = $(this).val();
-            return bannedKey(dInput, 1);
-        });
     });
 </script>
 @endsection

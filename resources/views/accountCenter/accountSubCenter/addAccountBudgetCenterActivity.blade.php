@@ -587,12 +587,14 @@
                                         $isCheckedValue1 = ($ProjectOriginId == 1) ? 'checked' : '';
                                         $isCheckedValue2 = ($ProjectOriginId == 2) ? 'checked' : '';
                                         $isCheckedValue3 = ($ProjectOriginId == 3) ? 'checked' : '';
+                                        $isCheckedValue4 = ($ProjectOriginId == 4) ? 'checked' : '';
                                     ?>
                                     <select disabled class="form-control" id="ProjectOriginId" onchange="showHideDiv()">
                                         <option value="0" disabled>----เลือกที่มาของโครงการ----</option>
                                         <option value="1" <?= $isCheckedValue1 ?>>มติคณะรัฐมนตรี (ชุดปัจจุบัน)</option>
-                                        <option value="2" <?= $isCheckedValue1 ?>>ข้อสั่งการของนายกรัฐมนตรี</option>
-                                        <option value="3" <?= $isCheckedValue1 ?>>นโยบายสำคัญของรัฐบาล</option>
+                                        <option value="2" <?= $isCheckedValue2 ?>>ข้อสั่งการของนายกรัฐมนตรี</option>
+                                        <option value="3" <?= $isCheckedValue3 ?>>นโยบายสำคัญของรัฐบาล</option>
+                                        <option value="4" <?= $isCheckedValue4 ?>>นโยบายสำคัญของรัฐบาล</option>
                                     </select>
                                 </div>
                             </div>

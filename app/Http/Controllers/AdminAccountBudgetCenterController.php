@@ -346,6 +346,7 @@ class AdminAccountBudgetCenterController extends \crocodicstudio\crudbooster\con
 	{
 		$getAccountBudgetCenter = $this->getAccountBudgetCenter();
 		$getAccountBudgetCenterSub = $this->getAccountBudgetCenterSub();
+
 		$generateYearOptions = (new FunctionController)->generateYearOptions();
 		$getDivision = (new FunctionController)->getDivision();
 		$data['getDivision'] = $getDivision;
@@ -566,6 +567,17 @@ class AdminAccountBudgetCenterController extends \crocodicstudio\crudbooster\con
 			)
 			->where('IsActive', 1)
 			->get();
+		foreach ($dataAccBudgetCenterSub as $key => $val) {
+			$AccountBudgetCenterActivity = DB::table('accountBudgetCenterActivity')
+				->where('AccBudgetCenterId', $val->id)
+				->count();
+			$StatusActivity = DB::table('accountBudgetCenterActivity')
+				->where('AccBudgetCenterId', $val->id)
+				->where('ActivityStatus', 2)
+				->count();
+			$percentage = ($AccountBudgetCenterActivity == 0 ? 0 : ($StatusActivity / $AccountBudgetCenterActivity) * 100);
+			$val->percentage = $percentage;
+		}
 		return $dataAccBudgetCenterSub;
 	}
 	function getNationalStrategy()
@@ -1311,7 +1323,17 @@ class AdminAccountBudgetCenterController extends \crocodicstudio\crudbooster\con
 
 		$getAccountBudgetCenter = $accountBudgetCenterQuery->get();
 		$getAccountBudgetCenterSub = $accountBudgetCenterSubQuery->get();
-
+		foreach ($getAccountBudgetCenterSub as $key => $val) {
+			$AccountBudgetCenterActivity = DB::table('accountBudgetCenterActivity')
+				->where('AccBudgetCenterId', $val->id)
+				->count();
+			$StatusActivity = DB::table('accountBudgetCenterActivity')
+				->where('AccBudgetCenterId', $val->id)
+				->where('ActivityStatus', 2)
+				->count();
+			$percentage = ($AccountBudgetCenterActivity == 0 ? 0 : ($StatusActivity / $AccountBudgetCenterActivity) * 100);
+			$val->percentage = $percentage;
+		}
 		$data = [];
 		$data['api_detail'] = ($BudgetYear != "null" && $DivisionId == "null") ? 'OnlyBudget' : (($DivisionId != "null" && $BudgetYear == "null") ? 'OnlyDivision' : 'Both');
 		$data['api_status'] = 1;
@@ -1614,6 +1636,10 @@ class AdminAccountBudgetCenterController extends \crocodicstudio\crudbooster\con
 			$ArrayInsert = [];
 			foreach ($dataCsv as $row => $val) {
 
+				if ($row === 0) {
+					continue;
+				}
+			
 				$ArrayAccountBudgetCenter = [];
 				$ArrayAccountBudgetCenter['AccName'] = $val[1];
 				$ArrayAccountBudgetCenter['BudgetYear'] = $val[2];

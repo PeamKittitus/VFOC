@@ -72,6 +72,11 @@ Route::get('/editAccountBudgetCenterSub/{id}', '\App\Http\Controllers\AdminAccou
 Route::get('/addAccountBudgetCenterActivity/{id}', '\App\Http\Controllers\AdminAccountBudgetCenterController@addAccountBudgetCenterActivity');
 Route::get('/viewAccountBudgetCenterSub/{id}', '\App\Http\Controllers\AdminAccountBudgetCenterController@viewAccountBudgetCenterSub');
 Route::get('/addAccountExpenses', '\App\Http\Controllers\AdminTransactionAccountBudgetCenterController@addAccountExpenses');
+Route::get('/addAccountBudgetActivity/{id}', '\App\Http\Controllers\AdminAccountBudgetCenterActivityController@addAccountBudgetActivity');
+Route::get('/updateAccountCenter/{id}', '\App\Http\Controllers\AdminAccountBudgetCenterActivityController@updateAccountCenter');
+Route::get('/updateAccountCenterActivity/{id}', '\App\Http\Controllers\AdminAccountBudgetCenterActivityController@updateAccountCenterActivity');
+Route::get('/updateAccountCenterActivityDetail/{id}', '\App\Http\Controllers\AdminAccountBudgetCenterActivityController@updateAccountCenterActivityDetail');
+Route::get('/viewAccountCenterActivityDetail/{id}', '\App\Http\Controllers\AdminAccountBudgetCenterActivityController@viewAccountCenterActivityDetail');
 //==========================================================================================Route
 
 
@@ -150,6 +155,7 @@ Route::post('/addAccountExpensesApi', '\App\Http\Controllers\AdminTransactionAcc
 Route::post('/updateStatusAccountBudgetCenterActivity', '\App\Http\Controllers\AdminAccountBudgetCenterController@updateStatusAccountBudgetCenterActivity');
 Route::post('/getAccountBudgetCenterSubDetailActivity', '\App\Http\Controllers\AdminTransactionAccountBudgetCenterController@getAccountBudgetCenterSubDetailActivity');
 Route::post('/UploadAccountBudgetCenter', '\App\Http\Controllers\AdminAccountBudgetCenterController@UploadAccountBudgetCenter');
+Route::post('/updateAccountActivityDetail', '\App\Http\Controllers\AdminAccountBudgetCenterActivityController@updateAccountActivityDetail');
 //========================================================================================== API
 
 //========================================================================================== Report

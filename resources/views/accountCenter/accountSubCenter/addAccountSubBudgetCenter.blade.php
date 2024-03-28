@@ -149,7 +149,7 @@
                         <div class="row">
                             <div class="col-sm-12">
                                 <div class="form-group">
-                                    <label>เจ้าหน้าที่รับผิดชอบ<span style="color: red;">*</span></label>
+                                    <label>เจ้าหน้าที่รับผิดชอบ</label>
                                 </div>
                             </div>
                         </div>
@@ -438,7 +438,7 @@
                             <div class="col-sm-12">
                                 <div class="form-group">
                                     <input type="checkbox" name="CommunityFundStrategicPlan" id="CommunityFundStrategicPlan">
-                                    <label>แผนยุทธศาสตร์กองทุนหมู่บ้านและชุมชนเมืองแห่งชาติ</label>
+                                    <label>แผนยุทธศาสตร์กองทุนหมู่บ้านและชุมชนเมืองแห่งชาติ<span style="color: red;">*</span></label>
                                 </div>
                             </div>
                         </div>
@@ -478,6 +478,7 @@
                                         <option value="1">มติคณะรัฐมนตรี (ชุดปัจจุบัน)</option>
                                         <option value="2">ข้อสั่งการของนายกรัฐมนตรี</option>
                                         <option value="3">นโยบายสำคัญของรัฐบาล</option>
+                                        <option value="4">อื่นๆ</option>
                                     </select>
                                 </div>
                             </div>
@@ -632,7 +633,7 @@
                             <div class="col-sm-12">
                                 <div class="form-group">
                                     <label>เอกสารแนบ<span style="color: red;">*</span></label>
-                                    <input type="file" class="form-control" id="file">
+                                    <input type="file" class="form-control" id="file" accept=".doc, .docx, .pdf, image/*" multiple onchange="checkFileSize(this)">
                                 </div>
                             </div>
                         </div>
@@ -663,6 +664,25 @@
 
     function formatCurrencyData(input) {
         input.value = input.value.replace(/[^\d]/g, '').replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    }
+
+    function checkFileSize(input) {
+        if (input.files && input.files.length > 0) {
+            var maxSize = 50 * 1024 * 1024; // 50 MB ในหน่วยไบต์
+            for (var i = 0; i < input.files.length; i++) {
+                var fileSize = input.files[i].size; // ขนาดของไฟล์แต่ละไฟล์
+
+                if (fileSize > maxSize) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'ขนาดไฟล์ใหญ่เกินไป',
+                        text: 'ไฟล์ที่คุณเลือกมีขนาดใหญ่เกินกว่าที่อนุญาต (50MB)',
+                    });
+                    input.value = ''; // ล้างการเลือกไฟล์
+                    return; // หยุดการทำงานหากพบไฟล์ที่มีขนาดใหญ่เกิน
+                }
+            }
+        }
     }
 
     function formatCurrency(input) {
@@ -823,87 +843,87 @@
             var endDate = new Date(AccEndDate);
 
             var OfficerFirstName = $('#OfficerFirstName').val();
-            if (!OfficerFirstName) {
-                showError('กรุณากรอกชื่อเจ้าหน้าที่');
-                return;
-            }
+            // if (!OfficerFirstName) {
+            //     showError('กรุณากรอกชื่อเจ้าหน้าที่');
+            //     return;
+            // }
             var OfficerLastName = $('#OfficerLastName').val();
-            if (!OfficerLastName) {
-                showError('กรุณากรอกนามสกุลเจ้าหน้าที่');
-                return;
-            }
+            // if (!OfficerLastName) {
+            //     showError('กรุณากรอกนามสกุลเจ้าหน้าที่');
+            //     return;
+            // }
             var OfficerDivisionId = $('#OfficerDivisionId').val();
-            if (!OfficerDivisionId) {
-                showError('กรุณาเลือกฝ่ายเจ้าหน้าที่');
-                return;
-            }
+            // if (!OfficerDivisionId) {
+            //     showError('กรุณาเลือกฝ่ายเจ้าหน้าที่');
+            //     return;
+            // }
             var OfficerPhone = $('#OfficerPhone').val();
-            if (!OfficerPhone) {
-                showError('กรุณากรอกเบอร์โทรเจ้าหน้าที่');
-                return;
-            }
+            // if (!OfficerPhone) {
+            //     showError('กรุณากรอกเบอร์โทรเจ้าหน้าที่');
+            //     return;
+            // }
             var ProjectType = $("input[name='ProjectType']:checked").val();
-            if (!ProjectType) {
-                showError('กรุณาเลือกประเภทของโครงการ');
-                return;
-            }
+            // if (!ProjectType) {
+            //     showError('กรุณาเลือกประเภทของโครงการ');
+            //     return;
+            // }
             var ProjectExternal = $("input[name='ProjectExternal']:checked").val();
-            if (!ProjectExternal) {
-                showError('กรุณาเลือกรายละเอียดประเภทของโครงการ');
-                return;
-            }
+            // if (!ProjectExternal) {
+            //     showError('กรุณาเลือกรายละเอียดประเภทของโครงการ');
+            //     return;
+            // }
             var ExternalAgency = $('#ExternalAgency').val();
             var Indicators = $('#Indicators').val();
             var Policy = $('#Policy').val();
             var ProjectCharacteristics = $("input[name='ProjectCharacteristics']:checked").val();
-            if (!ProjectCharacteristics) {
-                showError('กรุณาเลือกลักษณะโครงการ');
-                return;
-            }
+            // if (!ProjectCharacteristics) {
+            //     showError('กรุณาเลือกลักษณะโครงการ');
+            //     return;
+            // }
             var OperationalCharacteristics = $("input[name='OperationalCharacteristics']:checked").val();
-            if (!OperationalCharacteristics) {
-                showError('กรุณาเลือกลักษณะการดำเนินการ');
-                return;
-            }
+            // if (!OperationalCharacteristics) {
+            //     showError('กรุณาเลือกลักษณะการดำเนินการ');
+            //     return;
+            // }
             var Experience = $("input[name='Experience']:checked").val();
-            if (!Experience) {
-                showError('กรุณาเลือกประสบการณ์และความเชี่ยวชาญในการดำเนินการ');
-                return;
-            }
+            // if (!Experience) {
+            //     showError('กรุณาเลือกประสบการณ์และความเชี่ยวชาญในการดำเนินการ');
+            //     return;
+            // }
             var ExperienceDetail = $('#ExperienceDetail').val();
             var StrategyId = $('#StrategyId').val();
-            if (!StrategyId) {
-                showError('กรุณาเลือกแผนระดับ 1 ยุทธศาสตร์ชาติ');
-                return;
-            }
+            // if (!StrategyId) {
+            //     showError('กรุณาเลือกแผนระดับ 1 ยุทธศาสตร์ชาติ');
+            //     return;
+            // }
             var StrategyMain = $('#StrategyMain').val();
             var StrategySub = $('#StrategySub').val();
             var MasterPlan = $('#MasterPlan').prop('checked');
-            if (!MasterPlan) {
-                showError('กรุณาเลือกแผนแม่บทภายใต้ยุทธศาสตร์ชาติ (23 ประเด็น)');
-                return;
-            }
+            // if (!MasterPlan) {
+            //     showError('กรุณาเลือกแผนแม่บทภายใต้ยุทธศาสตร์ชาติ (23 ประเด็น)');
+            //     return;
+            // }
             var MasterPlanMain = $('#MasterPlanMain').val();
             var MasterPlanMainSub = $('#MasterPlanMainSub').val();
             var DevelopmentPlan = $('#DevelopmentPlan').prop('checked');
-            if (!DevelopmentPlan) {
-                showError('กรุณาเลือกแผนพัฒนาเศรษฐกิจและสังคมแห่งชาติ ฉบับที่ 13');
-                return;
-            }
+            // if (!DevelopmentPlan) {
+            //     showError('กรุณาเลือกแผนพัฒนาเศรษฐกิจและสังคมแห่งชาติ ฉบับที่ 13');
+            //     return;
+            // }
             var DevelopmentPlanNo = $('#DevelopmentPlanNo').val();
             var DevelopmentPlanMilestone = $('#DevelopmentPlanMilestone').val();
             var DevelopmentPlanIndicators = $('#DevelopmentPlanIndicators').val();
             var PolicyPlan = $('#PolicyPlan').prop('checked');
-            if (!PolicyPlan) {
-                showError('กรุณาเลือกแผน/นโยบาย');
-                return;
-            }
+            // if (!PolicyPlan) {
+            //     showError('กรุณาเลือกแผน/นโยบาย');
+            //     return;
+            // }
             var PolicyPlanDetail = $('#PolicyPlanDetail').val();
             var ActionPlan = $('#ActionPlan').prop('checked');
-            if (!ActionPlan) {
-                showError('กรุณาเลือกแผนปฎิบัติการ (ด้าน)');
-                return;
-            }
+            // if (!ActionPlan) {
+            //     showError('กรุณาเลือกแผนปฎิบัติการ (ด้าน)');
+            //     return;
+            // }
             var ActionPlanDetail = $('#ActionPlanDetail').val();
             var CommunityFundStrategicPlan = $('#CommunityFundStrategicPlan').prop('checked');
             if (!CommunityFundStrategicPlan) {
@@ -912,42 +932,42 @@
             }
             var CommunityFundStrategicPlanDetail = $('#CommunityFundStrategicPlanDetail').val();
             var OperationalPlans = $('#OperationalPlans').prop('checked');
-            if (!OperationalPlans) {
-                showError('กรุณาเลือกแผนยุทธศาสตร์กองทุนหมู่บ้านและชุมชนเมืองแห่งชาติ');
-                return;
-            }
+            // if (!OperationalPlans) {
+            //     showError('กรุณากรอกแผนปฎิบัติการ ระยะ 5 ปี และประจำปี');
+            //     return;
+            // }
             var OperationalPlansDetail = $('#OperationalPlansDetail').val();
             var ProjectOriginId = $('#ProjectOriginId').val();
-            if (!ProjectOriginId) {
-                showError('กรุณาเลือกที่มาของโครงการ');
-                return;
-            }
+            // if (!ProjectOriginId) {
+            //     showError('กรุณาเลือกที่มาของโครงการ');
+            //     return;
+            // }
             var ProjectOriginDetail = $('#ProjectOriginDetail').val();
             var PrinciplesReason = $('#PrinciplesReason').val();
-            if (!PrinciplesReason) {
-                showError('กรุณากรอกหลักการและเหตุผล');
-                return;
-            }
+            // if (!PrinciplesReason) {
+            //     showError('กรุณากรอกหลักการและเหตุผล');
+            //     return;
+            // }
             var Objective = $('#Objective').val();
-            if (!Objective) {
-                showError('กรุณากรอกวัตถุประสงค์');
-                return;
-            }
+            // if (!Objective) {
+            //     showError('กรุณากรอกวัตถุประสงค์');
+            //     return;
+            // }
             var ExpectedResults = $('#ExpectedResults').val();
-            if (!ExpectedResults) {
-                showError('กรุณากรอกผลที่คาดว่าจะได้รับ');
-                return;
-            }
+            // if (!ExpectedResults) {
+            //     showError('กรุณากรอกผลที่คาดว่าจะได้รับ');
+            //     return;
+            // }
             var SuccessIndicators = $('#SuccessIndicators').val();
-            if (!SuccessIndicators) {
-                showError('กรุณากรอกดัชนีชี้วัดความสำเร็จ');
-                return;
-            }
+            // if (!SuccessIndicators) {
+            //     showError('กรุณากรอกดัชนีชี้วัดความสำเร็จ');
+            //     return;
+            // }
             var Beneficiary = $('#Beneficiary').val();
-            if (!Beneficiary) {
-                showError('กรุณากรอกกลุ่มเป้าหมาย/ผู้ที่ได้รับผลประโยชน์');
-                return;
-            }
+            // if (!Beneficiary) {
+            //     showError('กรุณากรอกกลุ่มเป้าหมาย/ผู้ที่ได้รับผลประโยชน์');
+            //     return;
+            // }
             var Procurement = $('#Procurement').val();
             var ProjectLocation = $('#ProjectLocation').val();
             var Monitoring = $('#Monitoring').val();
@@ -957,7 +977,7 @@
                 return;
             }
             if (!AccName) {
-                showError('กรุณากรอกชื่อยุทธศาสตร์');
+                showError('กรุณากรอกชื่อแผนงาน/โครงการ');
                 return;
             }
             if (!DivisionId) {
@@ -969,7 +989,7 @@
                 return;
             }
             if (!Detail) {
-                showError('กรุณากรอกแหล่งที่มา/วัตถุประสงค์');
+                showError('กรุณากรอกแผนดำเนินการ/แผนงบประมาณ(โดยละเอียด)');
                 return;
             }
             if (!AccStartDate) {

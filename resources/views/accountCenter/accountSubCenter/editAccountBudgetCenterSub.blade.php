@@ -151,7 +151,7 @@
                         <div class="row">
                             <div class="col-sm-12">
                                 <div class="form-group">
-                                    <label>เจ้าหน้าที่รับผิดชอบ<span style="color: red;">*</span></label>
+                                    <label>เจ้าหน้าที่รับผิดชอบ</label>
                                 </div>
                             </div>
                         </div>
@@ -353,7 +353,12 @@
                                 </div>
                             </div>
                         </div>
-                        <div>
+                        <?php
+                            $Strategy = $getAccountBudgetCenterSubDetailById->StrategyId;
+
+                            $StrategyHideStyle = ($Experience != 0) ? 'style="display: block;"' : 'style="display: none;"';
+                        ?>
+                        <div <?= $StrategyHideStyle ?>>
                             <div class="row mt-1">
                                 <div class="col-sm-12">
                                     <div class="form-group">
@@ -488,7 +493,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="row mt-1" <?= $isCheckedValue1 ?> id="ActionPlanHide">
+                        <div class="row mt-1" <?= $ActionPlanHideStyle1 ?> id="ActionPlanHide">
                             <div class="col-sm-12">
                                 <div class="form-group">
                                     <input type="text" class="form-control" placeholder="แผนปฎิบัติการ (ด้าน)" id="ActionPlanDetail" value="{{$getAccountBudgetCenterSubDetailById->ActionPlanDetail}}">
@@ -548,20 +553,25 @@
                                 <div class="form-group">
                                     <?php
                                         $ProjectOriginId = $getAccountBudgetCenterSubDetailById->ProjectOriginId;
-                                        $isCheckedValue1 = ($ProjectOriginId == 1) ? 'checked' : '';
-                                        $isCheckedValue2 = ($ProjectOriginId == 2) ? 'checked' : '';
-                                        $isCheckedValue3 = ($ProjectOriginId == 3) ? 'checked' : '';
+                                        $isCheckedValue0 = ($ProjectOriginId == 0) ? 'selected' : '';
+                                        $isCheckedValue1 = ($ProjectOriginId == 1) ? 'selected' : '';
+                                        $isCheckedValue2 = ($ProjectOriginId == 2) ? 'selected' : '';
+                                        $isCheckedValue3 = ($ProjectOriginId == 3) ? 'selected' : '';
+                                        $isCheckedValue4 = ($ProjectOriginId == 4) ? 'selected' : '';
+
+                                        $ProjectOriginIdsHideStyle1 = ($ProjectOriginId != 0) ? 'style="display: block;"' : 'style="display: none;"';
                                     ?>
                                     <select class="form-control" id="ProjectOriginId" onchange="showHideDiv()">
-                                        <option value="0" disabled>----เลือกที่มาของโครงการ----</option>
+                                        <option value="0" <?= $isCheckedValue0 ?> disabled>----เลือกที่มาของโครงการ----</option>
                                         <option value="1" <?= $isCheckedValue1 ?>>มติคณะรัฐมนตรี (ชุดปัจจุบัน)</option>
-                                        <option value="2" <?= $isCheckedValue1 ?>>ข้อสั่งการของนายกรัฐมนตรี</option>
-                                        <option value="3" <?= $isCheckedValue1 ?>>นโยบายสำคัญของรัฐบาล</option>
+                                        <option value="2" <?= $isCheckedValue2 ?>>ข้อสั่งการของนายกรัฐมนตรี</option>
+                                        <option value="3" <?= $isCheckedValue3 ?>>นโยบายสำคัญของรัฐบาล</option>
+                                        <option value="4" <?= $isCheckedValue4 ?>>อื่นๆ</option>
                                     </select>
                                 </div>
                             </div>
                         </div>
-                        <div class="row mt-1" id="ProjectOriginHide">
+                        <div class="row mt-1" id="ProjectOriginHide" <?= $ProjectOriginIdsHideStyle1 ?>>
                             <div class="col-sm-12">
                                 <div class="form-group">
                                     <input type="text" class="form-control" placeholder="รายละเอียด" id="ProjectOriginDetail" value="{{$getAccountBudgetCenterSubDetailById->ProjectOriginDetail}}">
@@ -706,6 +716,11 @@
                             </div>
                         </div>
                         <hr>
+                        <div class="row mt-1">
+                            <div class="col-sm-12">
+                                <h4>เอกสารแนบ</h4>
+                            </div>
+                        </div>
                         <div class="row mt-1">
                             <div class="col-sm-12">
                                 <div class="form-group">
@@ -900,87 +915,87 @@
             var Detail = editorData;
 
             var OfficerFirstName = $('#OfficerFirstName').val();
-            if (!OfficerFirstName) {
-                showError('กรุณากรอกชื่อเจ้าหน้าที่');
-                return;
-            }
+            // if (!OfficerFirstName) {
+            //     showError('กรุณากรอกชื่อเจ้าหน้าที่');
+            //     return;
+            // }
             var OfficerLastName = $('#OfficerLastName').val();
-            if (!OfficerLastName) {
-                showError('กรุณากรอกนามสกุลเจ้าหน้าที่');
-                return;
-            }
+            // if (!OfficerLastName) {
+            //     showError('กรุณากรอกนามสกุลเจ้าหน้าที่');
+            //     return;
+            // }
             var OfficerDivisionId = $('#OfficerDivisionId').val();
-            if (!OfficerDivisionId) {
-                showError('กรุณาเลือกฝ่ายเจ้าหน้าที่');
-                return;
-            }
+            // if (!OfficerDivisionId) {
+            //     showError('กรุณาเลือกฝ่ายเจ้าหน้าที่');
+            //     return;
+            // }
             var OfficerPhone = $('#OfficerPhone').val();
-            if (!OfficerPhone) {
-                showError('กรุณากรอกเบอร์โทรเจ้าหน้าที่');
-                return;
-            }
+            // if (!OfficerPhone) {
+            //     showError('กรุณากรอกเบอร์โทรเจ้าหน้าที่');
+            //     return;
+            // }
             var ProjectType = $("input[name='ProjectType']:checked").val();
-            if (!ProjectType) {
-                showError('กรุณาเลือกประเภทของโครงการ');
-                return;
-            }
+            // if (!ProjectType) {
+            //     showError('กรุณาเลือกประเภทของโครงการ');
+            //     return;
+            // }
             var ProjectExternal = $("input[name='ProjectExternal']:checked").val();
-            if (!ProjectExternal) {
-                showError('กรุณาเลือกรายละเอียดประเภทของโครงการ');
-                return;
-            }
+            // if (!ProjectExternal) {
+            //     showError('กรุณาเลือกรายละเอียดประเภทของโครงการ');
+            //     return;
+            // }
             var ExternalAgency = $('#ExternalAgency').val();
             var Indicators = $('#Indicators').val();
             var Policy = $('#Policy').val();
             var ProjectCharacteristics = $("input[name='ProjectCharacteristics']:checked").val();
-            if (!ProjectCharacteristics) {
-                showError('กรุณาเลือกลักษณะโครงการ');
-                return;
-            }
+            // if (!ProjectCharacteristics) {
+            //     showError('กรุณาเลือกลักษณะโครงการ');
+            //     return;
+            // }
             var OperationalCharacteristics = $("input[name='OperationalCharacteristics']:checked").val();
-            if (!OperationalCharacteristics) {
-                showError('กรุณาเลือกลักษณะการดำเนินการ');
-                return;
-            }
+            // if (!OperationalCharacteristics) {
+            //     showError('กรุณาเลือกลักษณะการดำเนินการ');
+            //     return;
+            // }
             var Experience = $("input[name='Experience']:checked").val();
-            if (!Experience) {
-                showError('กรุณาเลือกประสบการณ์และความเชี่ยวชาญในการดำเนินการ');
-                return;
-            }
+            // if (!Experience) {
+            //     showError('กรุณาเลือกประสบการณ์และความเชี่ยวชาญในการดำเนินการ');
+            //     return;
+            // }
             var ExperienceDetail = $('#ExperienceDetail').val();
             var StrategyId = $('#StrategyId').val();
-            if (!StrategyId) {
-                showError('กรุณาเลือกแผนระดับ 1 ยุทธศาสตร์ชาติ');
-                return;
-            }
+            // if (!StrategyId) {
+            //     showError('กรุณาเลือกแผนระดับ 1 ยุทธศาสตร์ชาติ');
+            //     return;
+            // }
             var StrategyMain = $('#StrategyMain').val();
             var StrategySub = $('#StrategySub').val();
             var MasterPlan = $('#MasterPlan').prop('checked');
-            if (!MasterPlan) {
-                showError('กรุณาเลือกแผนแม่บทภายใต้ยุทธศาสตร์ชาติ (23 ประเด็น)');
-                return;
-            }
+            // if (!MasterPlan) {
+            //     showError('กรุณาเลือกแผนแม่บทภายใต้ยุทธศาสตร์ชาติ (23 ประเด็น)');
+            //     return;
+            // }
             var MasterPlanMain = $('#MasterPlanMain').val();
             var MasterPlanMainSub = $('#MasterPlanMainSub').val();
             var DevelopmentPlan = $('#DevelopmentPlan').prop('checked');
-            if (!DevelopmentPlan) {
-                showError('กรุณาเลือกแผนพัฒนาเศรษฐกิจและสังคมแห่งชาติ ฉบับที่ 13');
-                return;
-            }
+            // if (!DevelopmentPlan) {
+            //     showError('กรุณาเลือกแผนพัฒนาเศรษฐกิจและสังคมแห่งชาติ ฉบับที่ 13');
+            //     return;
+            // }
             var DevelopmentPlanNo = $('#DevelopmentPlanNo').val();
             var DevelopmentPlanMilestone = $('#DevelopmentPlanMilestone').val();
             var DevelopmentPlanIndicators = $('#DevelopmentPlanIndicators').val();
             var PolicyPlan = $('#PolicyPlan').prop('checked');
-            if (!PolicyPlan) {
-                showError('กรุณาเลือกแผน/นโยบาย');
-                return;
-            }
+            // if (!PolicyPlan) {
+            //     showError('กรุณาเลือกแผน/นโยบาย');
+            //     return;
+            // }
             var PolicyPlanDetail = $('#PolicyPlanDetail').val();
             var ActionPlan = $('#ActionPlan').prop('checked');
-            if (!ActionPlan) {
-                showError('กรุณาเลือกแผนปฎิบัติการ (ด้าน)');
-                return;
-            }
+            // if (!ActionPlan) {
+            //     showError('กรุณาเลือกแผนปฎิบัติการ (ด้าน)');
+            //     return;
+            // }
             var ActionPlanDetail = $('#ActionPlanDetail').val();
             var CommunityFundStrategicPlan = $('#CommunityFundStrategicPlan').prop('checked');
             if (!CommunityFundStrategicPlan) {
@@ -989,42 +1004,42 @@
             }
             var CommunityFundStrategicPlanDetail = $('#CommunityFundStrategicPlanDetail').val();
             var OperationalPlans = $('#OperationalPlans').prop('checked');
-            if (!OperationalPlans) {
-                showError('กรุณาเลือกแผนยุทธศาสตร์กองทุนหมู่บ้านและชุมชนเมืองแห่งชาติ');
-                return;
-            }
+            // if (!OperationalPlans) {
+            //     showError('กรุณากรอกแผนปฎิบัติการ ระยะ 5 ปี และประจำปี');
+            //     return;
+            // }
             var OperationalPlansDetail = $('#OperationalPlansDetail').val();
             var ProjectOriginId = $('#ProjectOriginId').val();
-            if (!ProjectOriginId) {
-                showError('กรุณาเลือกที่มาของโครงการ');
-                return;
-            }
+            // if (!ProjectOriginId) {
+            //     showError('กรุณาเลือกที่มาของโครงการ');
+            //     return;
+            // }
             var ProjectOriginDetail = $('#ProjectOriginDetail').val();
             var PrinciplesReason = $('#PrinciplesReason').val();
-            if (!PrinciplesReason) {
-                showError('กรุณากรอกหลักการและเหตุผล');
-                return;
-            }
+            // if (!PrinciplesReason) {
+            //     showError('กรุณากรอกหลักการและเหตุผล');
+            //     return;
+            // }
             var Objective = $('#Objective').val();
-            if (!Objective) {
-                showError('กรุณากรอกวัตถุประสงค์');
-                return;
-            }
+            // if (!Objective) {
+            //     showError('กรุณากรอกวัตถุประสงค์');
+            //     return;
+            // }
             var ExpectedResults = $('#ExpectedResults').val();
-            if (!ExpectedResults) {
-                showError('กรุณากรอกผลที่คาดว่าจะได้รับ');
-                return;
-            }
+            // if (!ExpectedResults) {
+            //     showError('กรุณากรอกผลที่คาดว่าจะได้รับ');
+            //     return;
+            // }
             var SuccessIndicators = $('#SuccessIndicators').val();
-            if (!SuccessIndicators) {
-                showError('กรุณากรอกดัชนีชี้วัดความสำเร็จ');
-                return;
-            }
+            // if (!SuccessIndicators) {
+            //     showError('กรุณากรอกดัชนีชี้วัดความสำเร็จ');
+            //     return;
+            // }
             var Beneficiary = $('#Beneficiary').val();
-            if (!Beneficiary) {
-                showError('กรุณากรอกกลุ่มเป้าหมาย/ผู้ที่ได้รับผลประโยชน์');
-                return;
-            }
+            // if (!Beneficiary) {
+            //     showError('กรุณากรอกกลุ่มเป้าหมาย/ผู้ที่ได้รับผลประโยชน์');
+            //     return;
+            // }
             var Procurement = $('#Procurement').val();
             var ProjectLocation = $('#ProjectLocation').val();
             var Monitoring = $('#Monitoring').val();
@@ -1034,7 +1049,7 @@
                 return;
             }
             if (!AccName) {
-                showError('กรุณากรอกชื่อยุทธศาสตร์');
+                showError('กรุณากรอกชื่อแผนงาน/โครงการ');
                 return;
             }
             if (!DivisionId) {
@@ -1046,7 +1061,7 @@
                 return;
             }
             if (!Detail) {
-                showError('กรุณากรอกแหล่งที่มา/วัตถุประสงค์');
+                showError('กรุณากรอกแผนดำเนินการ/แผนงบประมาณ(โดยละเอียด)');
                 return;
             }
             var startDate = new Date(AccStartDate);
